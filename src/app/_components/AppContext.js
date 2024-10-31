@@ -21,12 +21,12 @@ export function cartProductPrice(cartProduct) {
 export default function AppProvider({ children }) {
   const ls = typeof window !== "undefined" ? window.localStorage : null;
   const [cartProducts, setCartProducts] = useState(
-    JSON.parse(ls.getItem("cart")) || []
+    JSON.parse(ls?.getItem("cart")) || []
   );
 
   useEffect(() => {
-    if (ls && ls.getItem("cart")) {
-      setCartProducts(JSON.parse(ls.getItem("cart")));
+    if (ls && ls?.getItem("cart")) {
+      setCartProducts(JSON.parse(ls?.getItem("cart")));
     }
   }, [ls]);
 
