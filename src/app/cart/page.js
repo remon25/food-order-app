@@ -9,10 +9,12 @@ import Image from "next/image";
 import DeleteIcon from "../_components/icons/DeleteIcon";
 export default function CartPage() {
   const { cartProducts, removeCartProduct } = useContext(cartContext);
-  const totalPrice = cartProducts.reduce((acc, item) => acc + item.price, 0);
+  let totalPrice = 0;
+  for (const p of cartProducts) {
+    totalPrice += cartProductPrice(p);
+  }
   const [address, setAddress] = useState({});
   const { data: profileData } = useProfile();
-  console.log(profileData.streetAdress, "the profile dataaaa");
   useEffect(() => {
     if (profileData?.city) {
       const { phone, streetAdress, city, postalCode, country } = profileData;
@@ -28,6 +30,21 @@ export default function CartPage() {
   }, [profileData]);
   function handleAddressChange(propName, value) {
     setAddress((prevAddress) => ({ ...prevAddress, [propName]: value }));
+  }
+
+  async function proceedToCheckout(ev) {
+    ev.preventDefault();
+    const response = await fetch("/api/checkout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        cartProducts,
+        address,
+      }),
+    });
+    window.location = await response.json();
   }
   return (
     <section className="mt-24 max-w-4xl mx-auto">
@@ -83,20 +100,24 @@ export default function CartPage() {
                 </div>
               </div>
             ))}
-          <div className="py-0 text-right">
-            <span className="text-gray-500">Subtotal : </span>
-            <span className="font-semibold">${totalPrice}</span>
+          <div className="py-0 flex justify-end items-center">
+            <div className="text-gray-500">
+              Subtotal : <br /> Delivery : <br /> Total:
+            </div>
+            <div className="font-semibold">
+              ${totalPrice} <br />${5} <br />${totalPrice + 5}
+            </div>
           </div>
         </div>
         <div className="bg-gray-100 p-4 rounded-lg">
           <h2>Checkout</h2>
-          <form>
+          <form onSubmit={proceedToCheckout}>
             <AddressInputs
               addressProps={address}
               setAddressProp={handleAddressChange}
             />
             <button className="button" type="submit">
-              Pay ${totalPrice}
+              Pay ${totalPrice + 5}
             </button>
           </form>
         </div>
