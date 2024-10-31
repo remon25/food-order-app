@@ -15,7 +15,7 @@ export default function MenuItemForm({ handleFormSubmit, menuItem }) {
   );
 
   const [categories, setCategories] = useState([]);
-
+  console.log(category);
   useEffect(() => {
     if (menuItem) {
       setImage(menuItem.image || null);
@@ -30,8 +30,14 @@ export default function MenuItemForm({ handleFormSubmit, menuItem }) {
       .then((response) => response.json())
       .then((data) => {
         setCategories(data);
+        if (!category && data.length > 0) {
+          setCategory(data[0]._id);
+        }
       });
-  }, []);
+  }, [category]);
+
+  console.log(category);
+
   return (
     <form
       className="mt-8"
