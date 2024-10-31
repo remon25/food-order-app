@@ -3,8 +3,8 @@ import { SessionProvider } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { createContext } from "react";
 import toast from "react-hot-toast";
-export const cartContext = createContext({});
 
+export const cartContext = createContext({});
 
 export function cartProductPrice(cartProduct) {
   let price = cartProduct.price;
@@ -18,23 +18,29 @@ export function cartProductPrice(cartProduct) {
   }
   return price;
 }
+
 export default function AppProvider({ children }) {
-  const ls = typeof window !== "undefined" ? window.localStorage : null;
-  const [cartProducts, setCartProducts] = useState(
-    JSON.parse(ls?.getItem("cart")) || []
-  );
+  const [cartProducts, setCartProducts] = useState([]);
+  const [isClient, setIsClient] = useState(false); // Track if we are on the client
 
   useEffect(() => {
-    if (ls && ls?.getItem("cart")) {
-      setCartProducts(JSON.parse(ls?.getItem("cart")));
-    }
-  }, [ls]);
+    setIsClient(true); // Set to true on client mount
+  }, []);
 
-  
+  useEffect(() => {
+    if (isClient) {
+      const storedCart = window.localStorage.getItem("cart");
+      if (storedCart) {
+        setCartProducts(JSON.parse(storedCart));
+      }
+    }
+  }, [isClient]);
+
   function clearCart() {
     setCartProducts([]);
     saveCartProductsToLocalStorage([]);
   }
+
   function removeCartProduct(index) {
     setCartProducts((prev) => {
       const newProducts = prev.filter((_, i) => i !== index);
@@ -45,8 +51,8 @@ export default function AppProvider({ children }) {
   }
 
   function saveCartProductsToLocalStorage(cartProducts) {
-    if (ls) {
-      ls.setItem("cart", JSON.stringify(cartProducts));
+    if (isClient) {
+      window.localStorage.setItem("cart", JSON.stringify(cartProducts));
     }
   }
 
@@ -58,6 +64,7 @@ export default function AppProvider({ children }) {
       return newProducts;
     });
   }
+
   return (
     <SessionProvider>
       <cartContext.Provider
