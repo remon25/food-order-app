@@ -62,11 +62,6 @@ export default function ProfilePage() {
   return (
     <section className="mt-24">
       <UserTabs admin={admin} />
-      {!admin && (
-        <h1 className="text-center text-primary text-4xl font-bold mb-6">
-          Profile
-        </h1>
-      )}
       <UserForm user={user} onSave={handleNameChange} />
     </section>
   );

@@ -41,17 +41,16 @@ export default function CategoriesPage() {
         });
 
         if (response.ok) {
-          const result = await response.json(); // Parse JSON only if the request was successful
-          console.log(result);
-          setCategoryName(""); // Clear the form only after successful update
-          setEditCategory(null); // Reset the edit state
-          fetchCategories(); // Refresh categories list
-          resolve(); // Resolve the promise on success
+          const result = await response.json(); 
+          setCategoryName(""); 
+          setEditCategory(null); 
+          fetchCategories(); 
+          resolve(); 
         } else {
-          reject("Failed to update/create category"); // Reject with a message
+          reject("Failed to update/create category"); 
         }
       } catch (error) {
-        reject(error); // Reject in case of a network error
+        reject(error); 
       }
     });
 
@@ -98,8 +97,8 @@ export default function CategoriesPage() {
     <section className="mt-24 max-w-lg mx-auto">
       <UserTabs admin={isAdmin} />
       <form className="mt-8" onSubmit={handleCategorySubmit}>
-        <div className="flex gap-2 items-center">
-          <div className="grow pb-4">
+        <div className="flex flex-col md:flex-row gap-2 items-center">
+          <div className="grow md:pb-4">
             <label htmlFor="categoryName">
               {editCategory ? "Edit category" : "New category"}
               {editCategory ? `: ${editCategory.name}` : ""}

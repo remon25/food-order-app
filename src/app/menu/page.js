@@ -21,9 +21,11 @@ export default async function page() {
         categories.map((c) => (
           <div key={c._id}>
             <div className="text-center">
-             <h2 className="text-gray-600 font-bold text-4xl mt-10 mb-8">{c.name}</h2>
+              <h2 className="text-gray-600 font-bold text-4xl mt-10 mb-8">
+                {c.name}
+              </h2>
             </div>
-            <div className="grid sm:grid-cols-3 justify-center gap-6 mt-6 mb-12">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 md:justify-center gap-6 mt-10 mb-12 px-5">
               {menu
                 .filter((item) => item.category === c._id)
                 .map((item) => (

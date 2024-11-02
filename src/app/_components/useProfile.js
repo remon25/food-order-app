@@ -3,18 +3,17 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { useSession } from "next-auth/react"; // Import useSession
+import { useSession } from "next-auth/react"; 
 
 export function useProfile() {
-  const [isAdmin, setIsAdmin] = useState(false); // Set initial state to false
+  const [isAdmin, setIsAdmin] = useState(false); 
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(false);
   const router = useRouter();
-  const { status } = useSession(); // Get session status
+  const { status } = useSession(); 
 
   useEffect(() => {
     if (status === "authenticated") {
-      // Fetch profile data only when authenticated
       setLoading(true);
       const fetchProfile = async () => {
         try {
@@ -27,7 +26,7 @@ export function useProfile() {
             toast.error("You do not have permission!", { id: "no-permission" });
             setIsAdmin(false);
             setLoading(false);
-            router.push("/"); // Redirect to home page
+            router.push("/");
           } else {
             setIsAdmin(true);
             setLoading(false);
@@ -41,7 +40,7 @@ export function useProfile() {
 
       fetchProfile();
     } else if (status === "unauthenticated") {
-      router.push("/login"); // Redirect to login if not authenticated
+      router.push("/login");
     }
   }, [status, router]);
 

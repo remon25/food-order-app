@@ -15,7 +15,6 @@ export default function MenuItemForm({ handleFormSubmit, menuItem }) {
   );
 
   const [categories, setCategories] = useState([]);
-  console.log(category);
   useEffect(() => {
     if (menuItem) {
       setImage(menuItem.image || null);
@@ -36,7 +35,6 @@ export default function MenuItemForm({ handleFormSubmit, menuItem }) {
       });
   }, [category]);
 
-  console.log(category);
 
   return (
     <form
@@ -53,8 +51,8 @@ export default function MenuItemForm({ handleFormSubmit, menuItem }) {
         })
       }
     >
-      <div className="flex gap-2 items-start">
-        <div className="flex items-start gap-2">
+      <div className="flex flex-col md:flex-row gap-2 items-center md:items-start">
+        <div className="w-full flex items-start gap-2 md:w-auto justify-center">
           <div className="p-2 rounded-lg flex flex-col items-center">
             <Image
               className="rounded-lg"
@@ -84,7 +82,7 @@ export default function MenuItemForm({ handleFormSubmit, menuItem }) {
             </CldUploadWidget>
           </div>
         </div>
-        <div className="grow pb-4">
+        <div className="grow pb-4 w-full md:w-auto">
           <label htmlFor="menuItemName">Item name</label>
           <input
             id="menuItemName"

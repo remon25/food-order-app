@@ -13,7 +13,7 @@ export default function UserForm({ user, onSave, isAdmin = false }) {
   const [admin, setAdmin] = useState(user?.admin || false);
   return (
     <div className="max-w-2xl mx-auto">
-      <div className="flex gap-4 p-4">
+      <div className="flex flex-col gap-4 md:flex-row p-4">
         <div>
           <div className="p-2 rounded-lg flex flex-col items-center">
             <Image
@@ -123,7 +123,7 @@ export default function UserForm({ user, onSave, isAdmin = false }) {
                   type="checkbox"
                   value={"1"}
                   checked={admin}
-                  onClick={(e) => setAdmin(e.target.checked)}
+                  onChange={(e) => setAdmin(e.target.checked)}
                 />
                 <span>Admin</span>
               </label>

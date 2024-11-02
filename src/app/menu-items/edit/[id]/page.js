@@ -110,8 +110,8 @@ export default function MenuItemPage() {
       ) : (
         <p>No menu item found</p>
       )}
-      <div className="max-w-2xl mx-auto  mt-4">
-        <div className="max-w-lg ml-auto">
+      <div className="md:max-w-2xl mx-auto  mt-4">
+        <div className="md:max-w-lg ml-auto">
           <DeleteButton label="Delete" onDelete={() => handleDelete(menuItem._id)} />
         </div>
       </div>

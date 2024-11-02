@@ -82,10 +82,10 @@ export default function MenuItem({ menuItemInfo }) {
                   >
                     <input
                       type="radio"
-                      onClick={() => setSelectedSize(size)}
+                      onChange={() => setSelectedSize(size)}
                       checked={selectedSize?.name === size.name}
                       name="size"
-                    />{" "}
+                    />
                     {size.name} ${price + size.price}
                   </label>
                 ))}
@@ -104,8 +104,9 @@ export default function MenuItem({ menuItemInfo }) {
                   >
                     <input
                       type="checkbox"
-                      onClick={(ev) => handleExtrasClick(ev, extraIngredient)}
+                      checked={selectedExtras.map(e => e._id).includes(extraIngredient._id)}
                       name={extraIngredient.name}
+                      onChange={(ev) => handleExtrasClick(ev, extraIngredient)}
                     />
                     {extraIngredient.name} ${extraIngredient.price}
                   </label>

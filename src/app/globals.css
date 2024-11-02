@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 section.hero {
   @apply grid;
   grid-template-columns: 0.4fr 0.6fr;
@@ -56,6 +57,10 @@ div.tabs .active {
   @apply bg-primary text-white;
 }
 
-.flying-button-parent button{
+.flying-button-parent button {
   @apply border-primary bg-primary text-white rounded-full w-full;
+}
+
+.user_row {
+  @apply grid grid-cols-1 gap-2 place-items-center md:grid-cols-2 lg:flex lg:justify-between bg-gray-100 rounded-lg mb-2 p-4 mt-4;
 }

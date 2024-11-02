@@ -33,12 +33,12 @@ export default function UsersPage() {
         {users.length > 0 &&
           users.map((user) => (
             <div
-              key={user.email}
-              className="flex justify-between items-center bg-gray-100 rounded-lg mb-2 p-4 mt-4"
+              key={user._id}
+              className="user_row"
             >
               <div>
                 <Image
-                  src={user?.image || '/avatar.png'}
+                  src={user?.image || "/avatar.png"}
                   alt={user?.name || "Anonymous"}
                   width={40}
                   height={40}
@@ -48,11 +48,15 @@ export default function UsersPage() {
               <div>
                 <span>{user.name || "Anonymous"}</span>
               </div>
-              <div>
+              <div className="mb-2 md:mb-0">
                 <span>{user?.email}</span>
               </div>
               <div>
-                <Link href={`/users/${user._id}`} className="button" type="button">
+                <Link
+                  href={`/users/${user._id}`}
+                  className="button"
+                  type="button"
+                >
                   Edit
                 </Link>
               </div>
