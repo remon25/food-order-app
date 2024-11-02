@@ -9,11 +9,11 @@ const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
 export const metadata = {
   title: {
-    template: "%s | Antalya",
-    default: "Antalya",
+    template: "%s | Nice Sushi",
+    default: "Nice Sushi",
   },
   description:
-    "Antalya in Hamburg bietet frisches und leckeres Sushi mit schneller Lieferung. Genießen Sie hochwertige Sushi-Kreationen, bequem und frisch direkt nach Hause geliefert. Jetzt bestellen!",
+    "Nice Sushi in Hamburg bietet frisches und leckeres Sushi mit schneller Lieferung. Genießen Sie hochwertige Sushi-Kreationen, bequem und frisch direkt nach Hause geliefert. Jetzt bestellen!",
   icons: {
     icon: "/logo.png",
   },

@@ -136,7 +136,6 @@ export default function MenuItem({ menuItemInfo }) {
 
 <div className='w-full h-full bg-[#f1f2f3] flex flex-col justify-center items-center rounded-3xl rounded-br-none'>
       <div className='relative w-full h-full flex justify-center items-center bg-primary rounded-bl-[100px] rounded-br-none rounded-3xl'>
-        <Link href={`/product/`}>
           <div className='relative w-64 h-64 hover:scale-110 transition-all'>
             <Image
               src={image}
@@ -147,7 +146,6 @@ export default function MenuItem({ menuItemInfo }) {
               priority
             />
           </div>
-        </Link>
       </div>
       <div className='w-full m-4 py-4 px-6 min-h-[170px]'>
         <span className='font-bold '>{name}</span>
