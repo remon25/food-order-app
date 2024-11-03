@@ -15,22 +15,26 @@ export default function OrderPage() {
   const searchParams = useSearchParams();
   const clearCartParam = searchParams.get("clear-cart");
 
-  console.log(typeof clearCartParam);
   useEffect(() => {
-    if (!isCleared && typeof window !== "undefined" && clearCartParam === "1") {
-      setTimeout(() => {
-        clearCart();
-        setIsCleared(true);
-      }, 1000);
-    }
     if (id) {
       setLoadingOrder(true);
-      fetch("/api/orders?_id=" + id).then((res) => {
-        res.json().then((orderData) => {
-          setOrder(orderData);
-          setLoadingOrder(false);
+      fetch("/api/orders?_id=" + id)
+        .then((res) => {
+          res.json().then((orderData) => {
+            setOrder(orderData);
+            setLoadingOrder(false);
+          });
+        })
+        .then(() => {
+          if (
+            !isCleared &&
+            typeof window !== "undefined" &&
+            clearCartParam === "1"
+          ) {
+            clearCart();
+            setIsCleared(true);
+          }
         });
-      });
     }
   }, [isCleared, clearCart, id, clearCartParam]);
 
