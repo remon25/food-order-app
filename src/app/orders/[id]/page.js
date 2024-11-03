@@ -3,7 +3,7 @@ import { cartContext, cartProductPrice } from "@/app/_components/AppContext";
 import AddressInputs from "@/app/_components/layout/AdressInputs";
 import SectionHeader from "@/app/_components/layout/SectionHeader";
 import CartProduct from "@/app/_components/menu/CartProduct";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
 export default function OrderPage() {
@@ -12,15 +12,16 @@ export default function OrderPage() {
   const [order, setOrder] = useState(null);
   const [loadingOrder, setLoadingOrder] = useState(true);
   const { id } = useParams();
+  const searchParams = useSearchParams();
+  const clearCartParam = searchParams.get("clear-cart");
 
+  console.log(typeof clearCartParam);
   useEffect(() => {
-    if (
-      !isCleared &&
-      typeof window !== "undefined" &&
-      window.location.href.includes("clear-cart=1")
-    ) {
-      clearCart();
-      setIsCleared(true);
+    if (!isCleared && typeof window !== "undefined" && clearCartParam === "1") {
+      setTimeout(() => {
+        clearCart();
+        setIsCleared(true);
+      }, 1000);
     }
     if (id) {
       setLoadingOrder(true);
@@ -31,7 +32,7 @@ export default function OrderPage() {
         });
       });
     }
-  }, [isCleared, clearCart, id]);
+  }, [isCleared, clearCart, id, clearCartParam]);
 
   let subtotal = 0;
   if (order?.cartProducts) {
@@ -53,8 +54,8 @@ export default function OrderPage() {
       {order && (
         <div className="grid md:grid-cols-2 md:gap-16">
           <div>
-            {order.cartProducts.map((product) => (
-              <CartProduct key={product._id} product={product} />
+            {order.cartProducts.map((product, index) => (
+              <CartProduct key={`${product._id}-${index}`} product={product} />
             ))}
             <div className="text-right py-2 text-gray-500">
               Subtotal:
