@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-export default function LoginPage() {
+import withAuthRedirect from "../_components/withAuthRedirect";
+function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loggingIn, setLoggingIn] = useState(false);
@@ -16,9 +17,9 @@ export default function LoginPage() {
     await signIn("credentials", {
       email,
       password,
-      callbackUrl: "/"
-    })
-    
+      callbackUrl: "/",
+    });
+
     setLoggingIn(false);
   }
   return (
@@ -53,7 +54,11 @@ export default function LoginPage() {
         <div className="text-center my-4 text-gray-500">
           Oder mit Anbieter anmelden
         </div>
-        <button type="button" onClick={() => signIn("google",{callbackUrl: "/"})} className="mybutton mt-4 flex justify-center items-center gap-4">
+        <button
+          type="button"
+          onClick={() => signIn("google", { callbackUrl: "/" })}
+          className="mybutton mt-4 flex justify-center items-center gap-4"
+        >
           <Image
             src="/google-logo.png"
             alt="Mit Google anmelden"
@@ -72,3 +77,5 @@ export default function LoginPage() {
     </section>
   );
 }
+
+export default withAuthRedirect(LoginPage);

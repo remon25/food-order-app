@@ -5,26 +5,35 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import UserForm from "../_components/layout/UserForm";
+import isAuth from "../_components/isAuth";
+import AdminTabs from "../_components/layout/AdminTabs";
 
-export default function ProfilePage() {
-  const { data: session, status, update } = useSession();
+function ProfilePage() {
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [admin, setAdmin] = useState(false);
   const [profileFetched, setProfileFetched] = useState(false);
 
   useEffect(() => {
-    if (status === "authenticated") {
-      fetch("/api/profile")
-        .then((res) => res.json())
-        .then((data) => {
+    const fetchProfile = async () => {
+      if (status === "authenticated") {
+        try {
+          const res = await fetch("/api/profile");
+          const data = await res.json();
           setUser(data);
-          setAdmin(data?.admin);
+          setAdmin(data?.admin); // Update admin state here
           setProfileFetched(true);
-        });
-    } else if (status === "unauthenticated") {
-      router.push("/login");
-    }
+        } catch (error) {
+          console.error("Failed to fetch profile:", error);
+          // Optionally redirect or show an error
+        }
+      } else if (status === "unauthenticated") {
+        router.push("/login");
+      }
+    };
+
+    fetchProfile();
   }, [status, router]);
 
   async function handleNameChange(e, data) {
@@ -61,8 +70,10 @@ export default function ProfilePage() {
 
   return (
     <section className="mt-24">
-      <UserTabs admin={admin} />
+      {admin ? <AdminTabs /> : <UserTabs />}
       <UserForm user={user} onSave={handleNameChange} />
     </section>
   );
 }
+
+export default isAuth(ProfilePage);

@@ -25,13 +25,12 @@ export default function CartPage() {
   }, []);
   useEffect(() => {
     if (profileData?.city) {
-      const { phone, streetAdress, city, postalCode, country } = profileData;
+      const { phone, streetAdress, city, postalCode } = profileData;
       const addressFromProfile = {
         phone,
         streetAdress,
         city,
         postalCode,
-        country,
       };
       setAddress(addressFromProfile);
     }
@@ -39,9 +38,18 @@ export default function CartPage() {
   function handleAddressChange(propName, value) {
     setAddress((prevAddress) => ({ ...prevAddress, [propName]: value }));
   }
-
   async function proceedToCheckout(ev) {
     ev.preventDefault();
+
+    // Validate all address fields
+    const requiredFields = ["phone", "streetAdress", "postalCode", "city"];
+    const isComplete = requiredFields.every((field) => address[field]);
+
+    if (!isComplete) {
+      toast.error("Please complete all address fields before proceeding.");
+      return;
+    }
+
     const promise = new Promise((resolve, reject) => {
       fetch("/api/checkout", {
         method: "POST",
@@ -68,6 +76,7 @@ export default function CartPage() {
       error: "Something went wrong! Please try again.",
     });
   }
+
   if (cartProducts?.length === 0) {
     return (
       <section className="mt-24 text-center">

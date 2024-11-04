@@ -2,20 +2,20 @@
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import MenutItemForm from "../../../_components/layout/MenuItemForm";
-import UserTabs from "../../../_components/layout/UserTabs";
 import { useProfile } from "../../../_components/useProfile";
 import { useEffect, useState } from "react";
-import DeleteButton from "../../../_components/DeleteButton"
+import DeleteButton from "../../../_components/DeleteButton";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import Left from "../../../_components/icons/Left";
+import withAdminAuth from "@/app/_components/withAdminAuth";
+import AdminTabs from "@/app/_components/layout/AdminTabs";
 
-
-export default function MenuItemPage() {
+function MenuItemPage() {
   const params = useParams();
   const { isAdmin, loading: profileLoading, status } = useProfile();
   const [menuItem, setMenuItem] = useState(null);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -60,7 +60,6 @@ export default function MenuItemPage() {
   }
 
   async function handleDelete(_id) {
-  
     try {
       await toast.promise(
         fetch("/api/menu-items/?_id=" + _id, {
@@ -72,9 +71,8 @@ export default function MenuItemPage() {
           error: "Error deleting menu item!",
         }
       );
-  
-      router.push('/menu-items');
-      
+
+      router.push("/menu-items");
     } catch (error) {
       console.error("Error deleting menu item:", error);
     }
@@ -92,7 +90,7 @@ export default function MenuItemPage() {
 
   return (
     <section className="mt-24 max-w-2xl mx-auto">
-      <UserTabs admin={isAdmin} />
+      <AdminTabs />
       <div className="max-w-md mx-auto mt-8">
         <Link
           href={"/menu-items"}
@@ -112,9 +110,14 @@ export default function MenuItemPage() {
       )}
       <div className="md:max-w-2xl mx-auto  mt-4">
         <div className="md:max-w-lg ml-auto">
-          <DeleteButton label="Delete" onDelete={() => handleDelete(menuItem._id)} />
+          <DeleteButton
+            label="Delete"
+            onDelete={() => handleDelete(menuItem._id)}
+          />
         </div>
       </div>
     </section>
   );
 }
+
+export default withAdminAuth(MenuItemPage);

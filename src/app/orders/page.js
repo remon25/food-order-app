@@ -4,8 +4,9 @@ import { useProfile } from "../_components/useProfile";
 import UserTabs from "../_components/layout/UserTabs";
 import Link from "next/link";
 import { dbTimeForHuman } from "../libs/datetime";
+import isAuth from "../_components/isAuth";
 
-export default function OrdersPage() {
+function OrdersPage() {
   const [orders, setOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
   const {loading, data:profile} = useProfile();
@@ -65,3 +66,5 @@ export default function OrdersPage() {
     </section>
   );
 }
+
+export default isAuth(OrdersPage);

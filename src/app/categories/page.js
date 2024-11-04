@@ -1,11 +1,12 @@
 "use client";
 import toast from "react-hot-toast";
-import UserTabs from "../_components/layout/UserTabs";
 import { useProfile } from "../_components/useProfile";
 import { useEffect, useState } from "react";
 import DeleteButton from "../_components/DeleteButton";
+import withAdminAuth from "../_components/withAdminAuth";
+import AdminTabs from "../_components/layout/AdminTabs";
 
-export default function CategoriesPage() {
+function CategoriesPage() {
   const { isAdmin, loading, status } = useProfile();
   const [CategoryName, setCategoryName] = useState("");
   const [categories, setCategories] = useState([]);
@@ -41,16 +42,16 @@ export default function CategoriesPage() {
         });
 
         if (response.ok) {
-          const result = await response.json(); 
-          setCategoryName(""); 
-          setEditCategory(null); 
-          fetchCategories(); 
-          resolve(); 
+          const result = await response.json();
+          setCategoryName("");
+          setEditCategory(null);
+          fetchCategories();
+          resolve();
         } else {
-          reject("Failed to update/create category"); 
+          reject("Failed to update/create category");
         }
       } catch (error) {
-        reject(error); 
+        reject(error);
       }
     });
 
@@ -95,7 +96,7 @@ export default function CategoriesPage() {
 
   return (
     <section className="mt-24 max-w-lg mx-auto">
-      <UserTabs admin={isAdmin} />
+      <AdminTabs/>
       <form className="mt-8" onSubmit={handleCategorySubmit}>
         <div className="flex flex-col md:flex-row gap-2 items-center">
           <div className="grow md:pb-4">
@@ -134,7 +135,7 @@ export default function CategoriesPage() {
         {categories &&
           categories.map((category) => (
             <div
-              key={category.id}
+              key={category._id}
               className="w-full flex items-center gap-1 bg-gray-100 rounded-xl py-2 px-4 mt-1 mb-2"
             >
               <div className="grow">{category.name}</div>
@@ -160,3 +161,5 @@ export default function CategoriesPage() {
     </section>
   );
 }
+
+export default withAdminAuth(CategoriesPage);

@@ -11,6 +11,7 @@ export default function UserForm({ user, onSave, isAdmin = false }) {
   const [postalCode, setPostalCode] = useState(user?.postalCode || "");
   const [city, setCity] = useState(user?.city || "");
   const [admin, setAdmin] = useState(user?.admin || false);
+
   return (
     <div className="max-w-2xl mx-auto">
       <div className="flex flex-col gap-4 md:flex-row p-4">

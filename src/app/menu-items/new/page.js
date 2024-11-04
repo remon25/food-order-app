@@ -1,15 +1,13 @@
 "use client";
-import Image from "next/image";
-import UserTabs from "../../_components/layout/UserTabs";
 import { useProfile } from "../../_components/useProfile";
-import { CldUploadWidget } from "next-cloudinary";
-import { useState } from "react";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import Left from "../../_components/icons/Left";
 import MenuItemForm from "../../_components/layout/MenuItemForm";
+import withAdminAuth from "@/app/_components/withAdminAuth";
+import AdminTabs from "@/app/_components/layout/AdminTabs";
 
-export default function NewMenuItemsPage() {
+function NewMenuItemsPage() {
   const { isAdmin, loading, status } = useProfile();
   async function handleFormSubmit(e, data) {
     e.preventDefault();
@@ -53,7 +51,7 @@ export default function NewMenuItemsPage() {
   if (isAdmin === null) return null;
   return (
     <section className="mt-24 max-w-2xl mx-auto">
-      <UserTabs admin={isAdmin} />
+      <AdminTabs />
       <div className="max-w-md mx-auto mt-8">
         <Link
           href={"/menu-items"}
@@ -67,3 +65,5 @@ export default function NewMenuItemsPage() {
     </section>
   );
 }
+
+export default withAdminAuth(NewMenuItemsPage);

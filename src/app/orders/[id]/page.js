@@ -1,12 +1,13 @@
 "use client";
 import { cartContext, cartProductPrice } from "@/app/_components/AppContext";
+import isAuth from "@/app/_components/isAuth";
 import AddressInputs from "@/app/_components/layout/AdressInputs";
 import SectionHeader from "@/app/_components/layout/SectionHeader";
 import CartProduct from "@/app/_components/menu/CartProduct";
 import { useParams, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
-export default function OrderPage() {
+function OrderPage() {
   const { clearCart } = useContext(cartContext);
   const [isCleared, setIsCleared] = useState(false);
   const [order, setOrder] = useState(null);
@@ -86,3 +87,5 @@ export default function OrderPage() {
     </section>
   );
 }
+
+export default isAuth(OrderPage);

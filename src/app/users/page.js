@@ -1,11 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import UserTabs from "../_components/layout/UserTabs";
 import { useProfile } from "../_components/useProfile";
 import Image from "next/image";
 import Link from "next/link";
+import withAdminAuth from "../_components/withAdminAuth";
+import AdminTabs from "../_components/layout/AdminTabs";
 
-export default function UsersPage() {
+function UsersPage() {
   const { loading, status, isAdmin } = useProfile();
   const [users, setUsers] = useState([]);
 
@@ -28,14 +29,11 @@ export default function UsersPage() {
 
   return (
     <section className="mt-24 max-w-2xl mx-auto">
-      <UserTabs admin={isAdmin} />
+      <AdminTabs />
       <div className="mt-8">
         {users.length > 0 &&
           users.map((user) => (
-            <div
-              key={user._id}
-              className="user_row"
-            >
+            <div key={user._id} className="user_row">
               <div>
                 <Image
                   src={user?.image || "/avatar.png"}
@@ -66,3 +64,5 @@ export default function UsersPage() {
     </section>
   );
 }
+
+export default withAdminAuth(UsersPage);

@@ -1,36 +1,50 @@
-export default function AddressInputs({addressProps,setAddressProp,disabled=false}) {
-    const {phone, streetAdress, postalCode, city, country} = addressProps;
-    return (
-      <>
-        <label>Phone</label>
-        <input
-          disabled={disabled}
-          type="tel" placeholder="Phone number"
-          value={phone || ''} onChange={ev => setAddressProp('phone', ev.target.value)} />
-        <label>Street address</label>
-        <input
-          disabled={disabled}
-          type="text" placeholder="Street address"
-          value={streetAdress || ''} onChange={ev => setAddressProp('streetAddress', ev.target.value)}
-        />
-        <div className="grid grid-cols-2 gap-2">
-          <div>
-            <label>Postal code</label>
-            <input
-              disabled={disabled}
-              type="text" placeholder="Postal code"
-              value={postalCode || ''} onChange={ev => setAddressProp('postalCode', ev.target.value)}
-            />
-          </div>
-          <div>
-            <label>City</label>
-            <input
-              disabled={disabled}
-              type="text" placeholder="City"
-              value={city || ''} onChange={ev => setAddressProp('city', ev.target.value)}
-            />
-          </div>
+export default function AddressInputs({
+  addressProps,
+  setAddressProp,
+  disabled = false,
+}) {
+  const { phone, streetAdress, postalCode, city } = addressProps;
+
+  return (
+    <>
+      <label>Phone</label>
+      <input
+        disabled={disabled}
+        type="tel"
+        placeholder="Phone number"
+        value={phone || ""}
+        onChange={(ev) => setAddressProp("phone", ev.target.value)}
+      />
+      <label>Street address</label>
+      <input
+        disabled={disabled}
+        type="text"
+        placeholder="Street address"
+        value={streetAdress || ""}
+        onChange={(ev) => setAddressProp("streetAdress", ev.target.value)} // Fixed typo here
+      />
+      <div className="grid grid-cols-2 gap-2">
+        <div>
+          <label>Postal code</label>
+          <input
+            disabled={disabled}
+            type="text"
+            placeholder="Postal code"
+            value={postalCode || ""}
+            onChange={(ev) => setAddressProp("postalCode", ev.target.value)}
+          />
         </div>
-      </>
-    );
-  }
+        <div>
+          <label>City</label>
+          <input
+            disabled={disabled}
+            type="text"
+            placeholder="City"
+            value={city || ""}
+            onChange={(ev) => setAddressProp("city", ev.target.value)}
+          />
+        </div>
+      </div>
+    </>
+  );
+}

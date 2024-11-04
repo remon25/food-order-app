@@ -1,38 +1,54 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import UserForm from "../../_components/layout/UserForm";
-import UserTabs from "../../_components/layout/UserTabs";
 import { useProfile } from "../../_components/useProfile";
 import { useParams } from "next/navigation";
 import toast from "react-hot-toast";
+import AdminTabs from "@/app/_components/layout/AdminTabs";
 
-export default function EditUserPage() {
-  const { loading: profileLoading, status, isAdmin } = useProfile();
-  const [user, setUser] = useState(null); // Manage user data
-  const [isLoadingUser, setIsLoadingUser] = useState(true); // Separate loading for user fetch
+function EditUserPage() {
+  const { loading: profileLoading, status } = useProfile(); 
+  const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(null); 
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
   const { id } = useParams();
-
-  const hasFetched = useRef(false); // Ref to track if the user has already been fetched
+  const hasFetched = useRef(false);
 
   useEffect(() => {
+    
+    const fetchAdminStatus = async () => {
+      try {
+        const response = await fetch("/api/check-admin"); 
+        if (!response.ok) {
+          throw new Error("Failed to check admin status");
+        }
+        const data = await response.json();
+        setIsAdmin(data.isAdmin); 
+      } catch (error) {
+        console.error("Error fetching admin status:", error);
+      }
+    };
+
+   
     if (id && !hasFetched.current) {
-      setIsLoadingUser(true); // Set loading state before fetching
+      setIsLoadingUser(true);
       fetch(`/api/profile?_id=${id}`)
         .then((response) => response.json())
         .then((user) => {
-          setUser(user); // Set the fetched user data
-          hasFetched.current = true; // Mark that the user has been fetched
-          setIsLoadingUser(false); // Stop loading when done
+          setUser(user);
+          hasFetched.current = true;
+          setIsLoadingUser(false);
         })
         .catch(() => {
-          setIsLoadingUser(false); // Stop loading even if there's an error
+          setIsLoadingUser(false);
         });
     }
-  }, [id, isAdmin]);
+
+    fetchAdminStatus(); // Call the admin status fetch on component mount
+  }, [id]);
 
   async function handleSaveUser(ev, data) {
     ev.preventDefault();
-
     toast.promise(
       fetch("/api/profile/", {
         method: "PUT",
@@ -63,13 +79,14 @@ export default function EditUserPage() {
   }
 
   if (isAdmin === null || user === null) return null; // Ensure user and admin data are available
-
   return (
     <section className="mt-24 max-w-2xl mx-auto">
-      <UserTabs admin={isAdmin} />
+      <AdminTabs />
       <div className="mt-8">
         <UserForm user={user} onSave={handleSaveUser} isAdmin={isAdmin} />
       </div>
     </section>
   );
 }
+
+export default EditUserPage;
