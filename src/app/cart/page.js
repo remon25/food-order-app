@@ -7,6 +7,12 @@ import AddressInputs from "../_components/layout/AdressInputs";
 import SectionHeader from "../_components/layout/SectionHeader";
 import toast from "react-hot-toast";
 import CartProduct from "../_components/menu/CartProduct";
+import {
+  PayPalScriptProvider,
+  PayPalButtons,
+  FUNDING,
+} from "@paypal/react-paypal-js";
+
 export default function CartPage() {
   const { cartProducts, removeCartProduct } = useContext(cartContext);
   let totalPrice = 0;
@@ -19,29 +25,26 @@ export default function CartPage() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (window.location.href.includes("canceled=1")) {
-        toast.error("Payment failed !");
+        toast.error("Payment failed!");
       }
     }
   }, []);
+
   useEffect(() => {
     if (profileData?.city) {
       const { phone, streetAdress, city, postalCode } = profileData;
-      const addressFromProfile = {
-        phone,
-        streetAdress,
-        city,
-        postalCode,
-      };
+      const addressFromProfile = { phone, streetAdress, city, postalCode };
       setAddress(addressFromProfile);
     }
   }, [profileData]);
+
   function handleAddressChange(propName, value) {
     setAddress((prevAddress) => ({ ...prevAddress, [propName]: value }));
   }
+
   async function proceedToCheckout(ev) {
     ev.preventDefault();
 
-    // Validate all address fields
     const requiredFields = ["phone", "streetAdress", "postalCode", "city"];
     const isComplete = requiredFields.every((field) => address[field]);
 
@@ -77,6 +80,34 @@ export default function CartPage() {
     });
   }
 
+  const handlePayPalSuccess = async (details) => {
+    console.log(details);
+    const promise = new Promise((resolve, reject) => {
+      fetch("/api/paypal_checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cartProducts,
+          address,
+          paid: true,
+        }),
+      }).then(async (response) => {
+        if (response.ok) {
+          resolve();
+          window.location = await response.json();
+        } else {
+          reject();
+        }
+      });
+    });
+    await toast.promise(promise, {
+      loading: "Creating order...",
+    });
+    toast.success(`Transaction completed`);
+  };
+
   if (cartProducts?.length === 0) {
     return (
       <section className="mt-24 text-center">
@@ -85,6 +116,7 @@ export default function CartPage() {
       </section>
     );
   }
+
   return (
     <section className="mt-24 max-w-4xl mx-auto">
       <div className="text-center">
@@ -122,6 +154,41 @@ export default function CartPage() {
               Pay ${totalPrice + 5}
             </button>
           </form>
+
+          {/* PayPal Integration */}
+          <div className="mt-4">
+            <PayPalScriptProvider
+              options={{
+                "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+                currency: "USD",
+              }}
+            >
+              <PayPalButtons
+                fundingSource={FUNDING.PAYPAL}
+                style={{ layout: "vertical", color: "blue" }}
+                createOrder={(data, actions) => {
+                  return actions.order.create({
+                    purchase_units: [
+                      {
+                        amount: {
+                          value: (totalPrice + 5).toString(),
+                        },
+                      },
+                    ],
+                  });
+                }}
+                onApprove={(data, actions) => {
+                  return actions.order
+                    .capture()
+                    .then(handlePayPalSuccess)
+                    .catch((error) => {
+                      toast.error("Payment capture failed. Please try again.");
+                    });
+                }}
+                onError={(err) => toast.error("PayPal payment failed")}
+              />
+            </PayPalScriptProvider>
+          </div>
         </div>
       </div>
     </section>
