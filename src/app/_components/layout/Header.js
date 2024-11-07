@@ -80,7 +80,7 @@ export default function Header() {
       <div className="hidden md:flex items-center justify-between">
         <nav className="flex items-center gap-8 text-white font-semibold">
           <Link className="text-primary font-semibold text-2xl" href={'/'}>
-          <Image src="/antalya.png" width={100} height={100} alt="Antalya restaurant logo" />
+          <Image src="/antalya.png" width={80} height={80} alt="Antalya restaurant logo" />
           </Link>
           <Link href={'/'}>Home</Link>
           <Link href={'/menu'}>Menu</Link>
