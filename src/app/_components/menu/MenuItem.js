@@ -1,11 +1,9 @@
 "use client";
 import { useContext, useState } from "react";
 import { cartContext } from "../AppContext";
-import MenuItemTile from "./MenuItemTile";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import Cart from "../icons/Cart";
-import Link from "next/link";
 
 export default function MenuItem({ menuItemInfo }) {
   const { name, description, image, price, sizes, extraIngredientPrice } =
@@ -15,15 +13,24 @@ export default function MenuItem({ menuItemInfo }) {
   const [showPopup, setShowPopup] = useState(false);
   const { addToCart } = useContext(cartContext);
 
+  function handlePopupToggle() {
+    if (!showPopup) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    setShowPopup((prev) => !prev);
+  }
+
   async function handleAddToCartButtonClick() {
     const hasOptions = sizes.length > 0 || extraIngredientPrice.length > 0;
     if (hasOptions && !showPopup) {
-      setShowPopup(true);
+      handlePopupToggle();
       return;
     }
     addToCart(menuItemInfo, selectedSize, selectedExtras);
     toast.success("Added to cart successfully!");
-    setShowPopup(false);
+    handlePopupToggle(); // Close the popup after adding to cart
   }
 
   function handleExtrasClick(ev, extraThing) {
@@ -53,11 +60,11 @@ export default function MenuItem({ menuItemInfo }) {
       {showPopup && (
         <div
           onClick={() => setShowPopup(false)}
-          className="fixed z-30 inset-0 w-full h-full bg-black/80 flex items-center justify-center"
+          className="fixed z-30 top-0 left-0 w-full h-full bg-black/80 flex items-center justify-center"
         >
           <div
             onClick={(ev) => ev.stopPropagation()}
-            className="bg-white p-8 rounded-lg flex flex-col items-center max-h-screen overflow-auto"
+            className="bg-white p-8 rounded-lg flex flex-col items-center max-h-screen overflow-auto -webkit-overflow-scrolling: touch;"
           >
             <Image
               alt={image}
@@ -104,7 +111,9 @@ export default function MenuItem({ menuItemInfo }) {
                   >
                     <input
                       type="checkbox"
-                      checked={selectedExtras.map(e => e._id).includes(extraIngredient._id)}
+                      checked={selectedExtras
+                        .map((e) => e._id)
+                        .includes(extraIngredient._id)}
                       name={extraIngredient.name}
                       onChange={(ev) => handleExtrasClick(ev, extraIngredient)}
                     />
@@ -113,11 +122,13 @@ export default function MenuItem({ menuItemInfo }) {
                 ))}
               </div>
             )}
-            <div className="w-full flex justify-center font-semibold bg-primary text-white text-sm rounded-xl px-6 py-2">
-                <button type="button" onClick={handleAddToCartButtonClick}>
-                  Add to cart ${selectedPrice}
-                </button>
-            </div>
+            <button
+              type="button"
+              onClick={handleAddToCartButtonClick}
+              className="w-full flex justify-center font-semibold bg-primary text-white text-sm rounded-xl px-6 py-2"
+            >
+              Add to cart ${selectedPrice}
+            </button>
 
             <button
               onClick={() => setShowPopup(false)}
@@ -134,35 +145,35 @@ export default function MenuItem({ menuItemInfo }) {
         handleAddToCartButtonClick={handleAddToCartButtonClick}
       /> */}
 
-<div className='w-full h-full bg-[#f1f2f3] flex flex-col justify-center items-center rounded-3xl rounded-br-none'>
-      <div className='relative w-full h-full flex justify-center items-center bg-primary rounded-bl-[100px] rounded-br-none rounded-3xl'>
-          <div className='relative w-64 h-64 hover:scale-110 transition-all'>
+      <div className="w-full h-full bg-[#f1f2f3] flex flex-col justify-center items-center rounded-3xl rounded-br-none">
+        <div className="relative w-full h-full flex justify-center items-center bg-primary rounded-bl-[100px] rounded-br-none rounded-3xl">
+          <div className="relative w-64 h-64 hover:scale-110 transition-all">
             <Image
               src={image}
               alt={name}
               quality={50}
-              layout='fill'
-              objectFit='contain'
+              layout="fill"
+              objectFit="contain"
               priority
             />
           </div>
-      </div>
-      <div className='w-full m-4 py-4 px-6 min-h-[170px]'>
-        <span className='font-bold '>{name}</span>
-        <span className='block text-gray-500 text-sm pt-3 min-h-[80px]'>
-          {description}
-        </span>
-        <div className='flex justify-between items-center mt-3'>
-          <span>${price}</span>
-          <button
-            className='btn-primary w-10 h-10 rounded-full !p-0 grid place-content-center'
-            onClick={handleAddToCartButtonClick}
-          >
-            <Cart className="w-10 h-10 bg-primary text-white p-2 rounded-full" />
-          </button>
+        </div>
+        <div className="w-full m-4 py-4 px-6 min-h-[170px]">
+          <span className="font-bold ">{name}</span>
+          <span className="block text-gray-500 text-sm pt-3 min-h-[80px]">
+            {description}
+          </span>
+          <div className="flex justify-between items-center mt-3">
+            <span>${price}</span>
+            <button
+              className="btn-primary w-10 h-10 rounded-full !p-0 grid place-content-center"
+              onClick={handleAddToCartButtonClick}
+            >
+              <Cart className="w-10 h-10 bg-primary text-white p-2 rounded-full" />
+            </button>
+          </div>
         </div>
       </div>
-    </div>
     </>
   );
 }
