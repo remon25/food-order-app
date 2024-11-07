@@ -45,10 +45,10 @@ export default function Header() {
     userName = userName.split(' ')[0];
   }
   return (
-    <header className="relative z-20">
+    <header className="fixed top-0 left-0 bg-gray-950 right-0 px-8 py-2 w-full z-20">
       <div className="flex items-center md:hidden justify-between">
         <Link className="text-primary font-semibold text-2xl" href={'/'}>
-         <Image src="/logo.png" width={75} height={75} alt="Antalya restaurant logo" />
+         <Image src="/antalya.png" width={75} height={75} alt="Antalya restaurant logo" />
         </Link>
         <div className="flex gap-8 items-center">
           <Link href={'/cart'} className="relative">
@@ -69,7 +69,7 @@ export default function Header() {
       {mobileNavOpen && (
         <div
           onClick={() => setMobileNavOpen(false)}
-          className="md:hidden p-4 bg-gray-200 rounded-lg mt-2 flex flex-col gap-2 text-center">
+          className="md:hidden p-4 bg-gray-950 text-white rounded-lg mt-2 flex flex-col gap-2 text-center">
           <Link href={'/'}>Home</Link>
           <Link href={'/menu'}>Menu</Link>
           <Link href={'/#about'}>About</Link>
@@ -78,16 +78,16 @@ export default function Header() {
         </div>
       )}
       <div className="hidden md:flex items-center justify-between">
-        <nav className="flex items-center gap-8 text-gray-500 font-semibold">
+        <nav className="flex items-center gap-8 text-white font-semibold">
           <Link className="text-primary font-semibold text-2xl" href={'/'}>
-          <Image src="/logo.png" width={100} height={100} alt="Antalya restaurant logo" />
+          <Image src="/antalya.png" width={100} height={100} alt="Antalya restaurant logo" />
           </Link>
           <Link href={'/'}>Home</Link>
           <Link href={'/menu'}>Menu</Link>
           <Link href={'/#about'}>About</Link>
           <Link href={'/#contact'}>Contact</Link>
         </nav>
-        <nav className="flex items-center gap-4 text-gray-500 font-semibold">
+        <nav className="flex items-center gap-4 text-white font-semibold">
           <AuthLinks status={status} userName={userName} />
           <Link href={'/cart'} className="relative">
             <ShoppingCart />

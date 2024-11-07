@@ -1,39 +1,8 @@
 "use client";
 
-// import Image from "next/image";
-// import heroImg from "/public/hero.png";
-import heroOne from "/public/hero-one.jpg";
-import heroTwo from "/public/hero-two.jpg";
+import heroOne from "/public/banner-1.jpg";
+import heroTwo from "/public/banner-2.jpg";
 import Right from "../icons/Right";
-
-// export default function Hero() {
-//   return (
-//     <section className="hero">
-//       <div className="py-12">
-//         <h1 className="text-4xl font-semibold leading-normal">
-//           Frisches <span className="text-primary">Sushi</span> Schnell Geliefert
-//         </h1>
-//         <p className="my-6 text-gray-500">
-//           Leckere Sushi-Kreationen direkt zu Ihnen nach Hause geliefert.
-//         </p>
-//         <div className="flex gap-6 text-sm">
-//           <button className="flex gap-2 items-center uppercase bg-primary text-white px-4 py-2 rounded-full">
-//             Bestelle jetzt
-//             <Right />
-//           </button>
-//           <button className="flex items-center gap-2 text-gray-600 font-semibold py-2 rounded-full">
-//             Erfahre mehr <Right />
-//           </button>
-//         </div>
-//       </div>
-
-//       <div className="relative">
-//         <Image src={heroImg} layout="fill" objectFit="contain" alt="sushi" />
-//       </div>
-//     </section>
-//   );
-// }
-
 import Image from "next/image";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -74,7 +43,7 @@ const Carousel = () => {
       </div>
       <Slider {...settings}>
         <div>
-          <div className="mt-48  text-gray-900 flex flex-col items-center gap-y-10">
+          <div className="mt-48  text-white flex flex-col items-center gap-y-10">
             <h1 className="text-6xl text-center font-semibold">
               Fast Food Restaurant
             </h1>
@@ -92,7 +61,7 @@ const Carousel = () => {
           </div>
         </div>
         <div>
-          <div className="mt-48  text-gray-900 flex flex-col items-center gap-y-10">
+          <div className="mt-48  text-white flex flex-col items-center gap-y-10">
             <h1 className="text-6xl text-center font-semibold">
               Fast Food Restaurant
             </h1>

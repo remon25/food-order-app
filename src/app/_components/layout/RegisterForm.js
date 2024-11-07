@@ -87,7 +87,7 @@ export default function RegisterForm() {
           </div>
           <button type="button" onClick={() => signIn("google",{callbackUrl: "/"})} className="mybutton mt-4 flex justify-center items-center gap-4">
             <Image
-              src="/google-logo.png"
+              src="/google-antalya.png"
               alt="Mit Google anmelden"
               width={32}
               height={32}
