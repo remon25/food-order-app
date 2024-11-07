@@ -22,6 +22,11 @@ export default function MenuItem({ menuItemInfo }) {
     setShowPopup((prev) => !prev);
   }
 
+  function handleCancel() {
+    setShowPopup(false);
+    document.body.style.overflow = "auto";
+  }
+
   async function handleAddToCartButtonClick() {
     const hasOptions = sizes.length > 0 || extraIngredientPrice.length > 0;
     if (hasOptions && !showPopup) {
@@ -64,13 +69,14 @@ export default function MenuItem({ menuItemInfo }) {
         >
           <div
             onClick={(ev) => ev.stopPropagation()}
-            className="bg-white p-8 rounded-lg flex flex-col items-center max-h-screen overflow-auto -webkit-overflow-scrolling: touch;"
+            className="bg-white p-8 rounded-lg flex flex-col items-center overflow-auto -webkit-overflow-scrolling: touch;"
+            style={{ maxHeight: "80vh" }}
           >
             <Image
               alt={image}
               src={image}
-              width={300}
-              height={300}
+              width={200}
+              height={200}
               quality={50}
             />
             <h2 className="text-lg font-bold text-center mb-4">{name}</h2>
@@ -131,7 +137,7 @@ export default function MenuItem({ menuItemInfo }) {
             </button>
 
             <button
-              onClick={() => setShowPopup(false)}
+              onClick={handleCancel}
               type="button"
               className="button mt-2"
             >
@@ -140,10 +146,6 @@ export default function MenuItem({ menuItemInfo }) {
           </div>
         </div>
       )}
-      {/* <MenuItemTile
-        menuItemInfo={menuItemInfo}
-        handleAddToCartButtonClick={handleAddToCartButtonClick}
-      /> */}
 
       <div className="w-full h-full bg-[#f1f2f3] flex flex-col justify-center items-center rounded-3xl rounded-br-none">
         <div className="relative w-full h-full flex justify-center items-center bg-primary rounded-bl-[100px] rounded-br-none rounded-3xl">
