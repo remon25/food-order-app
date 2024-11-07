@@ -30,12 +30,13 @@ export default function MenuItem({ menuItemInfo }) {
   async function handleAddToCartButtonClick() {
     const hasOptions = sizes.length > 0 || extraIngredientPrice.length > 0;
     if (hasOptions && !showPopup) {
-      handlePopupToggle();
+      setShowPopup(true);
       return;
     }
     addToCart(menuItemInfo, selectedSize, selectedExtras);
-    toast.success("Added to cart successfully!");
-    handlePopupToggle(); // Close the popup after adding to cart
+    await new Promise(resolve => setTimeout(resolve, 100));
+    setShowPopup(false);
+    toast.success(`Added ${name} to cart`);
   }
 
   function handleExtrasClick(ev, extraThing) {
