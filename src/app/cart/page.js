@@ -42,11 +42,10 @@ export default function CartPage() {
     setAddress((prevAddress) => ({ ...prevAddress, [propName]: value }));
   }
 
+  const requiredFields = ["phone", "streetAdress", "postalCode", "city"];
+  const isComplete = requiredFields.every((field) => address[field]);
   async function proceedToCheckout(ev) {
     ev.preventDefault();
-
-    const requiredFields = ["phone", "streetAdress", "postalCode", "city"];
-    const isComplete = requiredFields.every((field) => address[field]);
 
     if (!isComplete) {
       toast.error("Please complete all address fields before proceeding.");
@@ -164,6 +163,7 @@ export default function CartPage() {
               }}
             >
               <PayPalButtons
+                disabled={!isComplete}
                 fundingSource={FUNDING.PAYPAL}
                 style={{ layout: "vertical", color: "blue" }}
                 createOrder={(data, actions) => {
