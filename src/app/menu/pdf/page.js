@@ -10,7 +10,7 @@ export const metadata = {
   openGraph: {
     type: "website",
     url: "https://antalya-harsefeld.de/menu/pdf",
-    title: "Antalya Harsefeld",
+    title: "OUR MENU - Antalya Harsefeld",
     description:
       "Antalya in Harsefeld bietet frisches und leckeres Sushi mit schneller Lieferung. Genießen Sie hochwertige Sushi-Kreationen, bequem und frisch direkt nach Hause geliefert. Jetzt bestellen!",
     images: [
