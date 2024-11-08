@@ -5,6 +5,9 @@ import Footer from "./_components/layout/Footer";
 import AppProvider from "./_components/AppContext";
 import { Toaster } from "react-hot-toast";
 
+
+
+
 const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
 export const metadata = {
@@ -19,7 +22,7 @@ export const metadata = {
   },
   openGraph: {
     type: "website",
-    url: "https://antalya-harsefeld.de", // Replace with your website URL
+    url: "https://antalya-harsefeld.de",
     title: "Antalya Harsefeld",
     description:
       "Antalya in Harsefeld bietet frisches und leckeres Sushi mit schneller Lieferung. Genießen Sie hochwertige Sushi-Kreationen, bequem und frisch direkt nach Hause geliefert. Jetzt bestellen!",

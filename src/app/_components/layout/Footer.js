@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer className="bg-secondary p-8 text-white mt-24">
+    <footer id="footer" className="bg-secondary p-8 text-white mt-24">
       <div className="w-full flex justify-center">
         <Image src="/antalya.png" alt="logo" width={150} height={150} />
       </div>

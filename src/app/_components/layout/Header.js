@@ -45,7 +45,7 @@ export default function Header() {
     userName = userName.split(' ')[0];
   }
   return (
-    <header className="fixed top-0 left-0 bg-gray-950 right-0 px-8 py-2 w-full z-20">
+    <header id="header" className="fixed top-0 left-0 bg-gray-950 right-0 px-8 py-2 w-full z-20">
       <div className="flex items-center md:hidden justify-between">
         <Link className="text-primary font-semibold text-2xl" href={'/'}>
          <Image src="/antalya.png" width={75} height={75} alt="Antalya restaurant logo" />
