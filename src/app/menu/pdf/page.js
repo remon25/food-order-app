@@ -15,7 +15,7 @@ export const metadata = {
       "Antalya in Harsefeld bietet frisches und leckeres Sushi mit schneller Lieferung. Genießen Sie hochwertige Sushi-Kreationen, bequem und frisch direkt nach Hause geliefert. Jetzt bestellen!",
     images: [
       {
-        url: "/pdf-og.jpg",
+        url: "/pdf-og.png",
         width: 1200, 
         height: 630,  
         alt: "Antalya Harsefeld",
