@@ -15,9 +15,25 @@ export const metadata = {
   description:
     "Antalya in Harsefeld bietet frisches und leckeres Sushi mit schneller Lieferung. Genießen Sie hochwertige Sushi-Kreationen, bequem und frisch direkt nach Hause geliefert. Jetzt bestellen!",
   icons: {
-    icon: "/antalya.png",
+    icon: "/logo-favi.png",
+  },
+  openGraph: {
+    type: "website",
+    url: "https://antalya-harsefeld.de", // Replace with your website URL
+    title: "Antalya Harsefeld",
+    description:
+      "Antalya in Harsefeld bietet frisches und leckeres Sushi mit schneller Lieferung. Genießen Sie hochwertige Sushi-Kreationen, bequem und frisch direkt nach Hause geliefert. Jetzt bestellen!",
+    images: [
+      {
+        url: "/logo-og.jpg",
+        width: 1200, 
+        height: 630,  
+        alt: "Antalya Harsefeld",
+      },
+    ],
   },
 };
+
 
 export default function RootLayout({ children }) {
   return (
