@@ -80,7 +80,6 @@ export default function CartPage() {
   }
 
   const handlePayPalSuccess = async (details) => {
-    console.log(details);
     const promise = new Promise((resolve, reject) => {
       fetch("/api/paypal_checkout", {
         method: "POST",
@@ -103,8 +102,36 @@ export default function CartPage() {
     });
     await toast.promise(promise, {
       loading: "Creating order...",
+      success: "Order created successfully",
+      error: "Something went wrong! Please try again.",
     });
-    toast.success(`Transaction completed`);
+  };
+
+  const handlePayOnDelivery = async () => {
+    const promise = new Promise((resolve, reject) => {
+      fetch("/api/delivery", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cartProducts,
+          address,
+        }),
+      }).then(async (response) => {
+        if (response.ok) {
+          resolve();
+          window.location = await response.json();
+        } else {
+          reject();
+        }
+      });
+    });
+    await toast.promise(promise, {
+      loading: "Creating order...",
+      success: "Order created successfully",
+      error: "Something went wrong! Please try again.",
+    });
   };
 
   if (cartProducts?.length === 0) {
@@ -188,6 +215,16 @@ export default function CartPage() {
                 onError={(err) => toast.error("PayPal payment failed")}
               />
             </PayPalScriptProvider>
+          </div>
+          <div className="mt-4">
+            <button
+              disabled={!isComplete}
+              onClick={handlePayOnDelivery}
+              type="button"
+              className="button"
+            >
+              Pay on delivery
+            </button>
           </div>
         </div>
       </div>

@@ -6,7 +6,7 @@ import { Order } from "@/app/models/Order";
 export async function POST(req) {
   mongoose.connect(process.env.MONGO_URL);
 
-  const { cartProducts, address, paid } = await req.json();
+  const { cartProducts, address } = await req.json();
   const session = await getServerSession(authOptions);
   const userEmail = session?.user?.email;
 
@@ -14,7 +14,8 @@ export async function POST(req) {
     userEmail,
     cartProducts,
     ...address,
-    paid,
+    paid: false,
+    payOnDelivery: true,
   });
 
   const success_url =
