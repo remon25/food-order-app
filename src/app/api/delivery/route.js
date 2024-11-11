@@ -1,21 +1,27 @@
 import mongoose from "mongoose";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
 import { Order } from "@/app/models/Order";
 
 export async function POST(req) {
   mongoose.connect(process.env.MONGO_URL);
 
-  const { cartProducts, address } = await req.json();
-  const session = await getServerSession(authOptions);
-  const userEmail = session?.user?.email;
+  const { cartProducts, address, subtotal, deliveryPrice } = await req.json();
 
+  const finalTotalPrice = subtotal + deliveryPrice;
   const orderDoc = await Order.create({
-    userEmail,
+    name: address.name,
+    email: address.email,
+    phone: address.phone,
+    city: address.city,
+    streetAdress: address.streetAdress,
+    buildNumber: address.buildNumber,
+    postalCode: address.postalCode,
+    deliveryTime:address.deliveryTime,
     cartProducts,
-    ...address,
     paid: false,
     payOnDelivery: true,
+    subtotal,
+    deliveryPrice,
+    finalTotalPrice,
   });
 
   const success_url =

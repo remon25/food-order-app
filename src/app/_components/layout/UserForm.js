@@ -11,6 +11,40 @@ export default function UserForm({ user, onSave, isAdmin = false }) {
   const [postalCode, setPostalCode] = useState(user?.postalCode || "");
   const [city, setCity] = useState(user?.city || "");
   const [admin, setAdmin] = useState(user?.admin || false);
+  const citiesWithDeliveryPrices = [
+    { name: "Harsefeld", price: 10 },
+    { name: "Ahlerstedt", price: 20 },
+    { name: "Bargstdet", price: 20 },
+    { name: "Griemshorst", price: 20 },
+    { name: "Issendorf", price: 20 },
+    { name: "Hollenbeck", price: 20 },
+    { name: "Kakerbeck", price: 20 },
+    { name: "Ohrensen", price: 20 },
+    { name: "Ahrensmoor", price: 30 },
+    { name: "Ahrenswohlde", price: 30 },
+    { name: "Apensen", price: 30 },
+    { name: "Aspe", price: 30 },
+    { name: "Beckdorf Bokel", price: 30 },
+    { name: "Brest", price: 30 },
+    { name: "Bliedersdorf", price: 30 },
+    { name: "Deinste", price: 30 },
+    { name: "Frankenmoor", price: 30 },
+    { name: "Grundoldendorf", price: 30 },
+    { name: "Hedendorf", price: 30 },
+    { name: "Helmste", price: 30 },
+    { name: "Horneburg", price: 30 },
+    { name: "Kammerbusch", price: 30 },
+    { name: "Kutenholz", price: 30 },
+    { name: "Nottensdorf", price: 30 },
+    { name: "Oersdorf", price: 30 },
+    { name: "Ottendorf", price: 30 },
+    { name: "Revenahe", price: 30 },
+    { name: "Ruschwedet", price: 30 },
+    { name: "Sauensiek", price: 30 },
+    { name: "Wangersen", price: 30 },
+    { name: "Wiegersen", price: 30 },
+    { name: "Wohlerst", price: 30 },
+  ];
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -91,14 +125,18 @@ export default function UserForm({ user, onSave, isAdmin = false }) {
           <div className="grid grid-cols-2 gap-4 justify-between">
             <div>
               <label htmlFor="city">City</label>
-              <input
+              <select
                 id="city"
-                className="mt-0"
-                type="text"
-                placeholder="City"
                 value={city}
-                onChange={(e) => setCity(e.target.value)}
-              />
+                onChange={(ev) => setCity(ev.target.value)}
+              >
+                <option value="">Select a city</option>
+                {citiesWithDeliveryPrices.map((city) => (
+                  <option key={city.name} value={city.name}>
+                    {city.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <label htmlFor="postalCode">Postal Code</label>

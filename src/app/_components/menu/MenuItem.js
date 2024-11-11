@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import Cart from "../icons/Cart";
 
-export default function MenuItem({ menuItemInfo }) {
+export default function MenuItem({ menuItemInfo, isOffersCategory }) {
   const { name, description, image, price, sizes, extraIngredientPrice } =
     menuItemInfo;
   const [selectedSize, setSelectedSize] = useState(sizes?.[0] || null);
@@ -34,7 +34,7 @@ export default function MenuItem({ menuItemInfo }) {
       return;
     }
     addToCart(menuItemInfo, selectedSize, selectedExtras);
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
     setShowPopup(false);
     toast.success(`Added ${name} to cart`);
   }
@@ -148,9 +148,13 @@ export default function MenuItem({ menuItemInfo }) {
         </div>
       )}
 
-      <div className="w-full h-full bg-[#f1f2f3] flex flex-col justify-center items-center rounded-3xl rounded-br-none">
+      <div
+        className={`w-full h-full bg-[#f1f2f3] flex ${
+          !isOffersCategory ? "flex-col" : "flex-row"
+        } justify-center items-center rounded-3xl rounded-br-none`}
+      >
         <div className="relative w-full h-full flex justify-center items-center bg-accent rounded-bl-[100px] rounded-br-none rounded-3xl">
-          <div className="relative w-64 h-64 hover:scale-110 transition-all">
+          <div className="image-holder relative w-64 h-64 hover:scale-110 transition-all">
             <Image
               src={image}
               alt={name}

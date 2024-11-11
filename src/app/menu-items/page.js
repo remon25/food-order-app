@@ -62,9 +62,9 @@ function MenuItemPage() {
         <h2 className="text-sm text-gray-500 mt-8">Edit menu item:</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 md:justify-center gap-6 mt-10 mb-12 px-5">
           {menuItems?.length > 0 &&
-            menuItems.map((item) => (
+            menuItems.map((item, index) => (
               <Link
-                key={item._id}
+                key={`${item._id}-${index}`}
                 href={"/menu-items/edit/" + item._id}
                 className="flex flex-col justify-center items-center bg-gray-200 rounded-lg p-4"
               >

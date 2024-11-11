@@ -27,27 +27,29 @@ export async function GET(req) {
 
   const url = new URL(req.url);
   const _id = url.searchParams.get("_id");
+  
+  // Handle specific order retrieval by ID
   if (_id) {
     const order = await Order.findById(_id);
     if (!order) {
       return new Response("Order not found", { status: 404 });
     }
     // Only allow admins or the owner of the order to view it
-    if (isAdmin || order.userEmail === userEmail) {
-      return Response.json(order);
+    if (isAdmin || order.email === userEmail) {
+      return new Response(JSON.stringify(order), { status: 200 });
     } else {
       return new Response("Forbidden", { status: 403 });
     }
   }
 
-  // If no specific order is requested, return orders based on the user's role
+  // If no specific order ID, retrieve all orders based on role
   if (isAdmin) {
     // Admin can access all orders
     const orders = await Order.find();
-    return Response.json(orders);
+    return new Response(JSON.stringify(orders), { status: 200 });
   } else {
     // Regular users can only access their own orders
     const userOrders = await Order.find({ userEmail });
-    return Response.json(userOrders);
+    return new Response(JSON.stringify(userOrders), { status: 200 });
   }
 }

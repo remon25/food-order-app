@@ -13,14 +13,42 @@ import {
   FUNDING,
 } from "@paypal/react-paypal-js";
 
+function generateTimeSlots() {
+  const timeSlots = [];
+  const now = new Date();
+
+  // Set time to 1 hour from now and round to the next 15-minute interval
+  now.setMinutes(Math.ceil((now.getMinutes() + 60) / 15) * 15, 0, 0);
+
+  for (let i = 0; i < 16; i++) {
+    // Generate 16 time slots (4 hours)
+    const localTime = now.toLocaleTimeString("en-GB", {
+      timeZone: "Europe/Berlin",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    timeSlots.push(localTime);
+    now.setMinutes(now.getMinutes() + 15); // Increment by 15 minutes
+  }
+  return timeSlots;
+}
+
 export default function CartPage() {
   const { cartProducts, removeCartProduct } = useContext(cartContext);
+  const [address, setAddress] = useState({});
+  const { data: profileData } = useProfile();
+  const [deliveryPrices, setDeliveryPrices] = useState({});
+  const [loadingDeliveryPrices, setLoadingDeliveryPrices] = useState(true);
+  const [finalTotalPrice, setFinalTotalPrice] = useState(0);
+  const [timeOptions, setTimeOptions] = useState([]);
+
+  let deliveryTime = "ASAP";
   let totalPrice = 0;
+  let buildNumber = "";
+
   for (const p of cartProducts) {
     totalPrice += cartProductPrice(p);
   }
-  const [address, setAddress] = useState({});
-  const { data: profileData } = useProfile();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -31,27 +59,70 @@ export default function CartPage() {
   }, []);
 
   useEffect(() => {
-    if (profileData?.city) {
-      const { phone, streetAdress, city, postalCode } = profileData;
-      const addressFromProfile = { phone, streetAdress, city, postalCode };
-      setAddress(addressFromProfile);
+    const fetchDeliveryPrices = async () => {
+      try {
+        const response = await fetch("/api/delivery-prices");
+        if (!response.ok) throw new Error("Failed to fetch");
+        const data = await response.json();
+        const prices = {};
+        data.forEach((price) => (prices[price.name] = price.price));
+        setDeliveryPrices(prices);
+        setLoadingDeliveryPrices(false);
+      } catch (error) {
+        console.error("Error fetching");
+      }
+    };
+    fetchDeliveryPrices();
+  }, []);
+
+  useEffect(() => {
+    if (deliveryPrices[address.city]) {
+      const deliveryPrice = deliveryPrices[address.city] || 0;
+      setFinalTotalPrice(totalPrice + deliveryPrice);
     }
-  }, [profileData]);
+  }, [totalPrice, address.city, deliveryPrices]);
+
+  useEffect(() => {
+    if (profileData) {
+      const { phone, streetAdress, city, postalCode, name, email } =
+        profileData;
+      const addressFromProfile = {
+        phone,
+        streetAdress,
+        city,
+        postalCode,
+        email,
+        name,
+      };
+      setAddress({ ...addressFromProfile, buildNumber, deliveryTime });
+    }
+  }, [profileData, buildNumber, deliveryTime]);
+
+  useEffect(() => {
+    setTimeOptions(["ASAP", ...generateTimeSlots()]); // Populate with "ASAP" + 15-minute slots
+  }, []);
 
   function handleAddressChange(propName, value) {
     setAddress((prevAddress) => ({ ...prevAddress, [propName]: value }));
   }
 
-  const requiredFields = ["phone", "streetAdress", "postalCode", "city"];
+  const requiredFields = [
+    "name",
+    "email",
+    "phone",
+    "streetAdress",
+    "postalCode",
+    "city",
+    "buildNumber",
+  ];
   const isComplete = requiredFields.every((field) => address[field]);
+
   async function proceedToCheckout(ev) {
     ev.preventDefault();
-
     if (!isComplete) {
       toast.error("Please complete all address fields before proceeding.");
       return;
     }
-
     const promise = new Promise((resolve, reject) => {
       fetch("/api/checkout", {
         method: "POST",
@@ -61,6 +132,8 @@ export default function CartPage() {
         body: JSON.stringify({
           cartProducts,
           address,
+          subtotal: totalPrice,
+          deliveryPrice: deliveryPrices[address.city],
         }),
       }).then(async (response) => {
         if (response.ok) {
@@ -89,7 +162,8 @@ export default function CartPage() {
         body: JSON.stringify({
           cartProducts,
           address,
-          paid: true,
+          subtotal: totalPrice,
+          deliveryPrice: deliveryPrices[address.city],
         }),
       }).then(async (response) => {
         if (response.ok) {
@@ -106,7 +180,7 @@ export default function CartPage() {
       error: "Something went wrong! Please try again.",
     });
   };
-
+  console.log(address);
   const handlePayOnDelivery = async () => {
     const promise = new Promise((resolve, reject) => {
       fetch("/api/delivery", {
@@ -117,6 +191,8 @@ export default function CartPage() {
         body: JSON.stringify({
           cartProducts,
           address,
+          subtotal: totalPrice,
+          deliveryPrice: deliveryPrices[address.city],
         }),
       }).then(async (response) => {
         if (response.ok) {
@@ -142,7 +218,6 @@ export default function CartPage() {
       </section>
     );
   }
-
   return (
     <section className="mt-24 max-w-4xl mx-auto">
       <div className="text-center">
@@ -150,7 +225,6 @@ export default function CartPage() {
       </div>
       <div className="grid md:grid-cols-2 gap-4 mt-8">
         <div>
-          {cartProducts?.length === 0 && <div>No products in your cart!</div>}
           {cartProducts?.length > 0 &&
             cartProducts.map((product, index) => (
               <CartProduct
@@ -165,7 +239,8 @@ export default function CartPage() {
               Subtotal : <br /> Delivery : <br /> Total:
             </div>
             <div className="font-semibold">
-              ${totalPrice} <br />${5} <br />${totalPrice + 5}
+              ${totalPrice} <br />${deliveryPrices[address.city] || 0} <br />$
+              {totalPrice + (deliveryPrices[address.city] || 0)}
             </div>
           </div>
         </div>
@@ -175,46 +250,48 @@ export default function CartPage() {
             <AddressInputs
               addressProps={address}
               setAddressProp={handleAddressChange}
+              deliveryPrices={deliveryPrices}
+              deliveryTime={deliveryTime}
+              timeOptions={timeOptions}
             />
             <button className="button" type="submit">
-              Pay ${totalPrice + 5}
+              Pay ${finalTotalPrice}
             </button>
           </form>
-
-          {/* PayPal Integration */}
           <div className="mt-4">
-            <PayPalScriptProvider
-              options={{
-                "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
-                currency: "USD",
-              }}
-            >
-              <PayPalButtons
-                disabled={!isComplete}
-                fundingSource={FUNDING.PAYPAL}
-                style={{ layout: "vertical", color: "blue" }}
-                createOrder={(data, actions) => {
-                  return actions.order.create({
-                    purchase_units: [
-                      {
-                        amount: {
-                          value: (totalPrice + 5).toString(),
-                        },
-                      },
-                    ],
-                  });
+            {!loadingDeliveryPrices && (
+              <PayPalScriptProvider
+                options={{
+                  "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+                  currency: "USD",
                 }}
-                onApprove={(data, actions) => {
-                  return actions.order
-                    .capture()
-                    .then(handlePayPalSuccess)
-                    .catch((error) => {
-                      toast.error("Payment capture failed. Please try again.");
+              >
+                <PayPalButtons
+                  forceReRender={[finalTotalPrice, address]}
+                  disabled={
+                    !isComplete || loadingDeliveryPrices || !finalTotalPrice
+                  }
+                  fundingSource={FUNDING.PAYPAL}
+                  style={{ layout: "vertical", color: "blue" }}
+                  createOrder={(data, actions) => {
+                    return actions.order.create({
+                      purchase_units: [
+                        { amount: { value: finalTotalPrice.toFixed(2) } },
+                      ],
                     });
-                }}
-                onError={(err) => toast.error("PayPal payment failed")}
-              />
-            </PayPalScriptProvider>
+                  }}
+                  onApprove={(data, actions) => {
+                    return actions.order
+                      .capture()
+                      .then(handlePayPalSuccess)
+                      .catch(() =>
+                        toast.error("Payment capture failed. Please try again.")
+                      );
+                  }}
+                  onError={() => toast.error("PayPal payment failed")}
+                />
+              </PayPalScriptProvider>
+            )}
           </div>
           <div className="mt-4">
             <button

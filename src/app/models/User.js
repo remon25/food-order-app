@@ -13,12 +13,6 @@ const UserSchema = new Schema(
     },
     password: {
       type: String,
-      // required: true,
-      // validate: (value) => {
-      //   if (!value.length || value.length < 6) {
-      //     throw new Error("Das Passwort muss mindestens 6 Zeichen lang sein.");
-      //   }
-      // },
     },
     image: {
       type: String,

@@ -14,7 +14,6 @@ export default async function RegisterPage() {
   if (session) {
     redirect("/profile");
   }
-  console.log(session);
 
   // Render the registration page for unauthenticated users
   return (

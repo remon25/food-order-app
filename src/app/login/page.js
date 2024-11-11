@@ -60,7 +60,7 @@ function LoginPage() {
           className="mybutton mt-4 flex justify-center items-center gap-4"
         >
           <Image
-            src="/google-antalya.png"
+            src="/google-logo.png"
             alt="Mit Google anmelden"
             width={32}
             height={32}
