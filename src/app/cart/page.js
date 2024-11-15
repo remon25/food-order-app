@@ -18,6 +18,7 @@ import Paypal from "../_components/icons/Paypal";
 import Cash from "../_components/icons/Cash";
 import Credit from "../_components/icons/Credit";
 import Check from "../_components/icons/Check";
+import Cart from "../_components/icons/Cart";
 
 function generateTimeSlots() {
   const timeSlots = [];
@@ -223,7 +224,11 @@ export default function CartPage() {
         <div className="text-center">
           <h2 className="text-gray-950 font-bold text-4xl">Checkout</h2>
         </div>
+        <div className="flex flex-col items-center gap-8">
         <p className="mt-4">No products in your Basket!</p>
+        <Cart className="w-16 h-16"/>
+        </div>
+       
       </section>
     );
   }
@@ -392,7 +397,7 @@ export default function CartPage() {
             )}
           </form>
         </div>
-         <div>
+         <div className="p-3">
           {cartProducts?.length > 0 &&
             cartProducts.map((product, index) => (
               <CartProduct
@@ -402,7 +407,7 @@ export default function CartPage() {
                 index={index}
               />
             ))}
-          <div className="py-0 flex justify-end items-center">
+          <div className="py-0 px-2 flex justify-end items-center">
             <div className="text-gray-500">
               Subtotal : <br /> Delivery : <br /> Total:
             </div>

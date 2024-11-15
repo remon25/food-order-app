@@ -53,8 +53,8 @@ export default function RootLayout({ children }) {
             <Sidebar />
             <MobileCart />
             {children}
-            <Footer />
           </main>
+          <Footer />
         </AppProvider>
       </body>
     </html>
