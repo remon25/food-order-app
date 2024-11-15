@@ -5,7 +5,7 @@ export default function SectionHeader({ title, subtitle }) {
       <h3 className="uppercase text-gray-600 font-semibold leading-6">
         {title}
       </h3>
-      <h2 className="text-primary font-bold text-4xl">{subtitle}</h2>
+      <h2 className="text-gray-800 font-bold text-4xl">{subtitle}</h2>
     </div>
   );
 }

@@ -4,7 +4,8 @@ import { Order } from "@/app/models/Order";
 export async function POST(req) {
   mongoose.connect(process.env.MONGO_URL);
 
-  const { cartProducts, address, subtotal, deliveryPrice } = await req.json();
+  const { cartProducts, address, subtotal, deliveryPrice, paymentMethod } =
+    await req.json();
 
   const finalTotalPrice = subtotal + deliveryPrice;
   const orderDoc = await Order.create({
@@ -15,13 +16,14 @@ export async function POST(req) {
     streetAdress: address.streetAdress,
     buildNumber: address.buildNumber,
     postalCode: address.postalCode,
-    deliveryTime:address.deliveryTime,
+    deliveryTime: address.deliveryTime,
     cartProducts,
     paid: false,
     payOnDelivery: true,
     subtotal,
     deliveryPrice,
     finalTotalPrice,
+    paymentMethod: "cash",
   });
 
   const success_url =

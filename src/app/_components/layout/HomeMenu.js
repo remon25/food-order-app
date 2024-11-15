@@ -16,14 +16,14 @@ export default async function HomeMenu() {
   const categories = await Categoryresponse.json();
 
   // Reorder categories to make "offers" the first category
-  const reorderedCategories = categories.sort((a, b) => {
+  const reorderedCategories = categories?.sort((a, b) => {
     if (a.name.toLowerCase() === "offers") return -1;
     if (b.name.toLowerCase() === "offers") return 1;
     return 0; // Keep the other categories in the same order
   });
 
   return (
-    <section className="mt-24">
+    <section className="home-menu mt-24 pr-[330px] mr-4">
       {/* Render "offers" category first with a custom class */}
       {reorderedCategories?.length > 0 &&
         reorderedCategories.map((c) => {
@@ -44,7 +44,7 @@ export default async function HomeMenu() {
                 </h2>
               </div>
               <div
-                className={`grid md:grid-cols-2 lg:grid-cols-3 md:justify-center gap-6 mt-10 mb-12 px-5 ${
+                className={`grid md:grid-cols-1 md:justify-center gap-6 mt-10 mb-12 px-5 ${
                   isOffersCategory ? "custom-offers-grid" : ""
                 }`}
               >

@@ -149,12 +149,11 @@ export default function MenuItem({ menuItemInfo, isOffersCategory }) {
       )}
 
       <div
-        className={`w-full h-full bg-[#f1f2f3] flex ${
-          !isOffersCategory ? "flex-col" : "flex-row"
-        } justify-center items-center rounded-3xl rounded-br-none`}
+        onClick={handleAddToCartButtonClick}
+        className={`menu-item-container w-full h-full cursor-pointer bg-[#ffff] border flex flex-row-reverse justify-center items-center rounded-3xl rounded-br-none hover:bg-[#f5f5f5] transition-all`}
       >
-        <div className="relative w-full h-full flex justify-center items-center bg-accent rounded-bl-[100px] rounded-br-none rounded-3xl">
-          <div className="image-holder relative w-64 h-64 hover:scale-110 transition-all">
+        <div className="menu-item-image flex-[1] relative w-full h-full flex justify-center items-center bg-accent rounded-bl-[100px] rounded-br-none rounded-3xl">
+          <div className="image-holder relative w-[120px] h-[120px] hover:scale-110 transition-all">
             <Image
               src={image}
               alt={name}
@@ -165,18 +164,19 @@ export default function MenuItem({ menuItemInfo, isOffersCategory }) {
             />
           </div>
         </div>
-        <div className="w-full m-4 py-4 px-6 min-h-[170px]">
-          <span className="font-bold ">{name}</span>
-          <span className="block text-gray-500 text-sm pt-3 min-h-[80px]">
+        <div className="w-full flex-[2] m-4 px-6">
+          <h2 className="text-[20px] text-slate-900 font-bold ">{name}</h2>
+          <span className="block text-[#242e30] text-[16px] pt-3">
             {description}
           </span>
           <div className="flex justify-between items-center mt-3">
-            <span>${price}</span>
+            <span className="text-[20px] text-slate-900 font-bold">
+              {price}&euro;
+            </span>
             <button
-              className="btn-primary w-10 h-10 rounded-full !p-0 grid place-content-center"
-              onClick={handleAddToCartButtonClick}
+              className="btn-primary bg-primary w-10 h-10 rounded-full !p-0 grid place-content-center"
             >
-              <Cart className="w-10 h-10 bg-primary text-white p-2 rounded-full" />
+              <Cart className="w-[38px] h-[30px] fill-white p-1 rounded-full" />
             </button>
           </div>
         </div>

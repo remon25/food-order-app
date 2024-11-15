@@ -4,9 +4,8 @@ import Header from "./_components/layout/Header";
 import Footer from "./_components/layout/Footer";
 import AppProvider from "./_components/AppContext";
 import { Toaster } from "react-hot-toast";
-
-
-
+import Sidebar from "./_components/layout/Sidebar";
+import MobileCart from "./_components/layout/MobileCart";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
@@ -29,27 +28,34 @@ export const metadata = {
     images: [
       {
         url: "/logo-og.jpg",
-        width: 1200, 
-        height: 630,  
+        width: 1200,
+        height: 630,
         alt: "Antalya Harsefeld",
       },
     ],
   },
 };
 
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${roboto.className}`}>
-        <main style={{ minHeight: "100vh",paddingTop: "130px" }} className="max-w-6xl mx-auto p-4">
-          <AppProvider>
+      <body
+        className={`${roboto.className}`}
+        style={{ backgroundColor: "#FcFcFc" }}
+      >
+        <AppProvider>
+          <main
+            style={{ minHeight: "100vh", paddingTop: "130px" }}
+            className=""
+          >
             <Toaster />
             <Header />
+            <Sidebar />
+            <MobileCart />
             {children}
-          </AppProvider>
-        </main>
-        <Footer />
+            <Footer />
+          </main>
+        </AppProvider>
       </body>
     </html>
   );

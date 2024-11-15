@@ -12,6 +12,11 @@ section.hero {
   @apply grid;
   grid-template-columns: 0.4fr 0.6fr;
 }
+aside {
+  box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.02),
+    0px 2px 12px -2px rgba(0, 0, 0, 0.08), 0px 3px 6px 0px rgba(0, 0, 0, 0.06);
+}
+
 select,
 input[type="text"],
 input[name="name"],
@@ -40,6 +45,8 @@ button.mybutton,
 }
 
 button[type="submit"],
+.Dialog_button,
+.sidebar_button,
 .submit {
   @apply bg-primary w-full font-semibold border-0 text-white;
   &:disabled {
@@ -71,9 +78,33 @@ div.tabs .active {
   @apply grid grid-cols-1 gap-2 place-items-center md:grid-cols-2 lg:flex lg:justify-between bg-gray-100 rounded-lg mb-2 p-4 mt-4;
 }
 .custom-offers-grid {
-  grid-template-columns: repeat(2, 1fr) !important;
+  grid-template-columns: repeat(1, 1fr) !important;
 }
 .custom-offers-grid .image-holder {
-  width: 170px !important;
-  height: 170px !important;
+  width: 120px !important;
+  height: 120px !important;
+}
+
+/* Responsive design */
+@media (max-width: 992px) {
+  aside {
+    display: none !important;
+  }
+  .home-menu {
+    padding-right: 0;
+  }
+  .mobile-cart-button,
+  .mobile-sidebar {
+    display: block !important;
+  }
+  footer.mobile {
+    padding: 0.75rem 0.75rem 84px 0.75rem !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .menu-item-image .image-holder {
+    width: 70px !important;
+    height: 70px !important;
+  }
 }

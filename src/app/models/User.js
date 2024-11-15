@@ -33,12 +33,14 @@ const UserSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    verified: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
 
-// UserSchema.post("validate", (user) => {
 
-// });
 
 export const User = models?.User || model("User", UserSchema);

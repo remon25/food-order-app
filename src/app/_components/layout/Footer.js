@@ -1,23 +1,39 @@
 import Image from "next/image";
+import Facebook from "../icons/Facebook";
+import Instagram from "../icons/Instagram";
+import Whatsapp from "../icons/Whatsapp";
 
 export default function Footer() {
   return (
-    <footer id="footer" className="bg-secondary p-8 text-white mt-24">
-      <div className="w-full flex justify-center">
-        <Image src="/antalya.png" alt="logo" width={150} height={150} />
-      </div>
-      <div className="flex flex-col gap-2 mt-5">
-        <div>
-          <h4 className="uppercase font-bold">Kontakt</h4>
-          <p>
-           Harsefeld <br />
-            21077 
-          </p>
+    <footer id="footer" className="relative bg-[#747969] p-3 text-white mt-24 z-[3] overflow-hidden">
+      <div className="flex flex-col-reverse sm:flex-row">
+        <div className="flex flex-col gap-2 mt-2">
+          <div>
+            <h4 className="uppercase font-bold">Kontakt</h4>
+            <p>
+              Harsefeld <br />
+              21077
+            </p>
+          </div>
+          <a className="text-nowrap" href="tel:+04164 909 55 22">
+            04164 909 55 22
+          </a>
         </div>
-        <a href="tel:+49 40 78053764">+49 40 00000000</a>
+        <div className="relative sm:absolute w-full flex justify-center">
+          <div className="flex flex-col items-center">
+            <Image src="/antalya.png" alt="logo" width={70} height={70} />
+            <div className="h-full flex items-center justify-between gap-4 mt-2">
+              <Facebook />
+              <Instagram />
+              <Whatsapp />
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="text-center mt-5">© Antalya Harsefeld. Alle Rechte vorbehalten.</div>
+      <div className="w-full text-center mt-2">
+        © Antalya Harsefeld. Alle Rechte vorbehalten.
+      </div>
     </footer>
   );
 }

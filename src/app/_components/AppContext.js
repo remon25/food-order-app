@@ -47,7 +47,7 @@ export default function AppProvider({ children }) {
       saveCartProductsToLocalStorage(newProducts);
       return newProducts;
     });
-    toast.success('Product removed');
+    toast.success("Product removed");
   }
 
   function saveCartProductsToLocalStorage(cartProducts) {

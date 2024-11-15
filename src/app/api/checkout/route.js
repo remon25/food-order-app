@@ -7,7 +7,8 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 export async function POST(req) {
   mongoose.connect(process.env.MONGO_URL);
 
-  const { cartProducts, address, deliveryPrice, subtotal } = await req.json(); // Get deliveryPrice from request
+  const { cartProducts, address, deliveryPrice, subtotal, paymentMethod } =
+    await req.json(); // Get deliveryPrice from request
 
   const finalTotalPrice = subtotal + deliveryPrice;
   const orderDoc = await Order.create({
@@ -18,13 +19,14 @@ export async function POST(req) {
     streetAdress: address.streetAdress,
     buildNumber: address.buildNumber,
     postalCode: address.postalCode,
-    deliveryTime:address.deliveryTime,
+    deliveryTime: address.deliveryTime,
     cartProducts,
     paid: false,
     payOnDelivery: false,
     subtotal,
     deliveryPrice,
     finalTotalPrice,
+    paymentMethod: "credit card",
   });
 
   const stripeLineItems = [];

@@ -4,10 +4,11 @@ import { Order } from "@/app/models/Order";
 export async function POST(req) {
   mongoose.connect(process.env.MONGO_URL);
 
-  const { cartProducts, address, subtotal, deliveryPrice } = await req.json();
+  const { cartProducts, address, subtotal, deliveryPrice} =
+    await req.json();
 
   const finalTotalPrice = subtotal + deliveryPrice;
-  console.log(address);
+
   const orderDoc = await Order.create({
     name: address.name,
     email: address.email,
@@ -23,6 +24,7 @@ export async function POST(req) {
     subtotal,
     deliveryPrice,
     finalTotalPrice,
+    paymentMethod: "paypal",
   });
 
   const success_url =

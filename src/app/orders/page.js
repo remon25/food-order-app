@@ -58,7 +58,7 @@ function OrdersPage() {
                 </div>
                 <div className="grow">
                   <div className="flex gap-2 items-center mb-1">
-                    <div className="grow">{order.userEmail}</div>
+                    <div className="grow">{order.email}</div>
                     <div className="text-gray-500 text-sm">
                       {dbTimeForHuman(order.createdAt)}
                     </div>

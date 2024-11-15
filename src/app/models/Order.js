@@ -16,6 +16,11 @@ const OrderSchema = new Schema(
     subtotal: Number,
     deliveryPrice: Number,
     finalTotalPrice: Number,
+    paymentMethod: {
+      type: String,
+      enum: ["paypal", "credit card", "cash"],
+      required: true,
+    },
   },
 
   { timestamps: true }
