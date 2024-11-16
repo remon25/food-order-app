@@ -1,3 +1,4 @@
+import Sidebar from "../_components/layout/Sidebar";
 import MenuItem from "../_components/menu/MenuItem";
 
 export default async function page() {
@@ -23,11 +24,14 @@ export default async function page() {
   });
 
   return (
-    <section className="mt-24">
-      {/* Render "offers" category first with a custom class */}
-      {reorderedCategories?.length > 0 &&
+    <section className="home-menu pr-[330px] mr-4">
+      <Sidebar />
+      <h1 className="text-[#222] text-center font-bold text-3xl mb-10 p-2">
+        🍕 Antalya Menu 🍕
+      </h1>
+      {reorderedCategories.length > 0 &&
         reorderedCategories.map((c) => {
-          const isOffersCategory = c.name.toLowerCase() === "offers"; // Check if the category is "offers"
+          const isOffersCategory = c.name.toLowerCase() === "offers";
 
           return (
             <div
@@ -35,16 +39,16 @@ export default async function page() {
               className={isOffersCategory ? "offers-category" : ""}
             >
               <div
-                className={`text-center ${
+                className={`pl-7 ${
                   isOffersCategory ? "custom-offers-header" : ""
                 }`}
               >
-                <h2 className="text-gray-600 font-bold text-4xl mt-10 mb-8">
+                <h2 className="text-gray-800 font-bold text-3xl mt-14 mb-4">
                   {c.name}
                 </h2>
               </div>
               <div
-                className={`grid md:grid-cols-2 lg:grid-cols-3 md:justify-center gap-6 mt-10 mb-12 px-5 ${
+                className={`grid md:grid-cols-1 md:justify-center gap-6 mt-6 mb-12 px-5 ${
                   isOffersCategory ? "custom-offers-grid" : ""
                 }`}
               >

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import UserForm from "../_components/layout/UserForm";
 import isAuth from "../_components/isAuth";
 import AdminTabs from "../_components/layout/AdminTabs";
+import Spinner from "../_components/layout/Spinner";
 
 function ProfilePage() {
   const { data: session, status } = useSession();
@@ -62,14 +63,14 @@ function ProfilePage() {
 
   if (status === "loading" || !profileFetched) {
     return (
-      <h1 className="mt-24 text-center text-primary text-4xl font-bold mb-6">
-        Loading...
-      </h1>
+      <div className="w-full h-screen flex items-center justify-center overflow-hidden">
+        <Spinner />
+      </div>
     );
   }
 
   return (
-    <section className="mt-24">
+    <section className="mt-24 !overflow-hidden">
       {admin ? <AdminTabs /> : <UserTabs />}
       <UserForm user={user} onSave={handleNameChange} />
     </section>

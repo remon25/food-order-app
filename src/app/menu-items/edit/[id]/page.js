@@ -10,6 +10,7 @@ import Link from "next/link";
 import Left from "../../../_components/icons/Left";
 import withAdminAuth from "@/app/_components/withAdminAuth";
 import AdminTabs from "@/app/_components/layout/AdminTabs";
+import Spinner from "@/app/_components/layout/Spinner";
 
 function MenuItemPage() {
   const params = useParams();
@@ -80,9 +81,9 @@ function MenuItemPage() {
 
   if (profileLoading || status === "loading" || loading) {
     return (
-      <h1 className="mt-24 text-center text-primary text-4xl font-bold mb-6">
-        Loading...
-      </h1>
+      <div className="w-full h-screen flex items-center justify-center overflow-hidden">
+        <Spinner />
+      </div>
     );
   }
 

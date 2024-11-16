@@ -67,22 +67,22 @@ export default function PDFMenuPage(props) {
         ) : (
           <HTMLFlipBook width={500} height={600} showCover={true}>
             <div className="demoPage">
-              <Image src={imageOne} className="w-full h-full" alt="" />
+              <Image src={imageOne} className="w-full h-full" alt="menu page" />
             </div>
             <div className="demoPage">
-              <Image src={imageTwo} className="w-full h-full" alt="" />
+              <Image src={imageTwo} className="w-full h-full" alt="menu page" />
             </div>
             <div className="demoPage">
-              <Image src={imageThree} className="w-full h-full" alt="" />
+              <Image src={imageThree} className="w-full h-full" alt="menu page" />
             </div>
             <div className="demoPage">
-              <Image src={imageFour} className="w-full h-full" alt="" />
+              <Image src={imageFour} className="w-full h-full" alt="menu page" />
             </div>
             <div className="demoPage">
-              <Image src={imageFive} className="w-full h-full" alt="" />
+              <Image src={imageFive} className="w-full h-full" alt="menu page" />
             </div>
             <div className="demoPage">
-              <Image src={imageSix} className="w-full h-full" alt="" />
+              <Image src={imageSix} className="w-full h-full" alt="menu page" />
             </div>
           </HTMLFlipBook>
         )}

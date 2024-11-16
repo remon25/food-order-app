@@ -2,6 +2,7 @@
 import { isAuthenticated } from "../_utilis/isAuthenticated";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Spinner from "./layout/Spinner";
 
 export default function isAuth(Component) {
   return function IsAuth(props) {
@@ -17,7 +18,7 @@ export default function isAuth(Component) {
 
         if (!authenticated) {
           // Redirect if not authenticated
-          router.push("/login"); 
+          router.push("/login");
         }
       };
 
@@ -25,7 +26,11 @@ export default function isAuth(Component) {
     }, [router]);
 
     if (loading) {
-      return <div>Loading...</div>; 
+      return (
+        <div className="w-full h-screen flex items-center justify-center overflow-hidden">
+          <Spinner />
+        </div>
+      );
     }
 
     if (!auth) {

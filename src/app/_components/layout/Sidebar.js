@@ -6,11 +6,13 @@ import { cartContext, cartProductPrice } from "../AppContext";
 import Cart from "../icons/Cart";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Spinner from "./Spinner";
 
 export default function Sidebar() {
   const { cartProducts, removeCartProduct } = useContext(cartContext);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [showSidebar, setShowSidebar] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
+  const [loading, setLoading] = useState(true);
   let totalPrice = 0;
   const pathname = usePathname();
 
@@ -19,10 +21,10 @@ export default function Sidebar() {
   }
 
   useEffect(() => {
-    if (pathname === "/" || pathname === "/menu") {
-      setShowSidebar(true);
-    } else {
+    if (pathname !== "/" && pathname !== "/menu") {
       setShowSidebar(false);
+    } else {
+      setShowSidebar(true);
     }
   }, [pathname]);
 
@@ -37,6 +39,26 @@ export default function Sidebar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (cartProducts !== undefined) {
+      setLoading(false);
+    }
+  }, [cartProducts]);
+
+  if (loading) {
+    return (
+      <aside
+        id="sidebar"
+        className={`sidebar ${
+          showSidebar ? "translate-x-0" : "translate-x-full"
+        } fixed top-0 bottom-0 right-0 h-screen w-[330px] z-10 px-6 ${
+          isScrolled ? "pt-1" : "pt-20"
+        } flex flex-col justify-center items-center bg-white transition-all`}
+      >
+        <Spinner />
+      </aside>
+    );
+  }
   return (
     <aside
       id="sidebar"

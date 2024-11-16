@@ -102,6 +102,15 @@ div.tabs .active {
     padding: 0.75rem 0.75rem 84px 0.75rem !important;
   }
 }
+@media (max-width: 767px) {
+.nav-logo{
+  width: 60px !important;
+  height: 60px !important;
+}
+.hero-section{
+  top: -54px !important;
+}
+}
 
 @media (max-width: 600px) {
   .menu-item-image .image-holder {

@@ -49,7 +49,7 @@ export async function GET(req) {
     return new Response(JSON.stringify(orders), { status: 200 });
   } else {
     // Regular users can only access their own orders
-    const userOrders = await Order.find({ userEmail });
+    const userOrders = await Order.find({ email: userEmail });
     return new Response(JSON.stringify(userOrders), { status: 200 });
   }
 }

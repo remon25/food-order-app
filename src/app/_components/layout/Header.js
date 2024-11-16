@@ -7,12 +7,22 @@ import Image from "next/image";
 import Bars2 from "../icons/Bars2";
 import ShoppingCart from "../icons/Cart";
 
-function AuthLinks({ status, userName }) {
+function AuthLinks({ status, userName, image, mobile = false }) {
   if (status === "authenticated") {
     return (
       <>
         <Link href={"/profile"} className="whitespace-nowrap">
-          Hello, {userName}
+          <div className="flex flex-col gap-1 items-center justify-center">
+            {!mobile && (
+              <Image
+                src={image || "/avatar.png"}
+                alt={userName}
+                className="rounded-full"
+                width={40}
+                height={40}
+              />
+            )}
+          </div>
         </Link>
         <button
           onClick={() => signOut()}
@@ -51,11 +61,12 @@ export default function Header() {
   return (
     <header
       id="header"
-      className="absolute top-0 left-0 bg-gray-950 right-0 px-8 py-2 w-full z-20"
+      className="fixed md:absolute top-0 left-0 bg-gray-950 right-0 px-8 py-2 w-full z-20"
     >
       <div className="flex items-center md:hidden justify-between">
         <Link className="text-primary font-semibold text-2xl" href={"/"}>
           <Image
+            className="nav-logo"
             src="/antalya.png"
             width={75}
             height={75}
@@ -63,14 +74,24 @@ export default function Header() {
           />
         </Link>
         <div className="flex gap-8 items-center">
-          <Link href={"/cart"} className="relative">
+          {/* <Link href={"/cart"} className="relative">
             <ShoppingCart />
             {cartProducts?.length > 0 && (
               <span className="absolute -top-2 -right-4 bg-primary text-white text-xs py-1 px-1 rounded-full leading-3">
                 {cartProducts.length}
               </span>
             )}
+          </Link> */}
+          <Link href={"/profile"}>
+            <Image
+              src={userData?.image || "/avatar.png"}
+              alt={userName}
+              className="rounded-full"
+              width={40}
+              height={40}
+            />
           </Link>
+
           <button
             className="p-1 border"
             onClick={() => setMobileNavOpen((prev) => !prev)}
@@ -82,13 +103,13 @@ export default function Header() {
       {mobileNavOpen && (
         <div
           onClick={() => setMobileNavOpen(false)}
-          className="md:hidden p-4 bg-gray-950 text-white rounded-lg mt-2 flex flex-col gap-2 text-center"
+          className="md:hidden top-0 p-4 bg-gray-950 text-white rounded-lg mt-2 flex flex-col gap-2 text-center"
         >
           <Link href={"/"}>Home</Link>
           <Link href={"/menu"}>Menu</Link>
           <Link href={"/#about"}>About</Link>
           <Link href={"/#contact"}>Contact</Link>
-          <AuthLinks status={status} userName={userName} />
+          <AuthLinks status={status} userName={userName} mobile={true} />
         </div>
       )}
       <div className="hidden md:flex items-center justify-between">
@@ -107,15 +128,19 @@ export default function Header() {
           <Link href={"/#contact"}>Contact</Link>
         </nav>
         <nav className="flex items-center gap-4 text-white font-semibold">
-          <AuthLinks status={status} userName={userName} />
-          <Link href={"/cart"} className="relative">
+          <AuthLinks
+            status={status}
+            userName={userName}
+            image={userData?.image}
+          />
+          {/* <Link href={"/cart"} className="relative">
             <ShoppingCart />
             {cartProducts?.length > 0 && (
               <span className="absolute -top-2 -right-4 bg-primary text-white text-xs py-1 px-1 rounded-full leading-3">
                 {cartProducts.length}
               </span>
             )}
-          </Link>
+          </Link> */}
         </nav>
       </div>
     </header>

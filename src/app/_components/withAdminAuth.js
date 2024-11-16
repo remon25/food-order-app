@@ -3,13 +3,14 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import Spinner from "./layout/Spinner";
 
 export default function withAdminAuth(Component) {
   return function AdminAuth(props) {
     const { data: session, status } = useSession();
     const router = useRouter();
     const [loading, setLoading] = useState(true);
-    
+
     useEffect(() => {
       const checkAdmin = async () => {
         if (status === "loading") return;
@@ -22,7 +23,7 @@ export default function withAdminAuth(Component) {
 
         // If the user is authenticated, check admin status
         try {
-          const res = await fetch('/api/check-admin');
+          const res = await fetch("/api/check-admin");
           if (!res.ok) {
             throw new Error("Not an admin");
           }
@@ -39,7 +40,11 @@ export default function withAdminAuth(Component) {
     }, [session, status, router]);
 
     if (loading) {
-      return <div>Loading...</div>;
+      return (
+        <div className="w-full h-screen flex items-center justify-center overflow-hidden">
+          <Spinner />
+        </div>
+      );
     }
 
     return <Component {...props} />;

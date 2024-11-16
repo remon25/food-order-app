@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import withAdminAuth from "../_components/withAdminAuth";
 import AdminTabs from "../_components/layout/AdminTabs";
+import Spinner from "../_components/layout/Spinner";
 
 function UsersPage() {
   const { loading, status, isAdmin } = useProfile();
@@ -20,9 +21,9 @@ function UsersPage() {
 
   if (loading || status === "loading") {
     return (
-      <h1 className="mt-24 text-center text-primary text-4xl font-bold mb-6">
-        Loading...
-      </h1>
+      <div className="w-full h-screen flex items-center justify-center overflow-hidden">
+        <Spinner />
+      </div>
     );
   }
   if (isAdmin === null) return null;

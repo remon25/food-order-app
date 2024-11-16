@@ -5,6 +5,7 @@ import { useProfile } from "../../_components/useProfile";
 import { useParams } from "next/navigation";
 import toast from "react-hot-toast";
 import AdminTabs from "@/app/_components/layout/AdminTabs";
+import Spinner from "@/app/_components/layout/Spinner";
 
 function EditUserPage() {
   const { loading: profileLoading, status } = useProfile(); 
@@ -72,9 +73,9 @@ function EditUserPage() {
 
   if (profileLoading || status === "loading" || isLoadingUser) {
     return (
-      <h1 className="mt-24 text-center text-primary text-4xl font-bold mb-6">
-        Loading...
-      </h1>
+      <div className="w-full h-screen flex items-center justify-center overflow-hidden">
+        <Spinner />
+      </div>
     );
   }
 

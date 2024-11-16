@@ -1,33 +1,51 @@
 import MenuItem from "../menu/MenuItem";
 
 export default async function HomeMenu() {
-  // Fetch data directly in the Server Component
-  const response = await fetch(`${process.env.NEXTAUTH_URL}/api/menu-items`, {
-    cache: "no-store",
-  });
-  const menu = await response.json();
-  // Fetch data directly in the Server Component
-  const Categoryresponse = await fetch(
-    `${process.env.NEXTAUTH_URL}/api/categories`,
-    {
+  // Fetch menu items
+  let menu = [];
+  try {
+    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/menu-items`, {
       cache: "no-store",
+    });
+    if (response.ok) {
+      menu = await response.json();
     }
-  );
-  const categories = await Categoryresponse.json();
+  } catch (error) {
+    console.error("Error fetching menu items:", error);
+  }
+
+  // Fetch categories
+  let categories = [];
+  try {
+    const Categoryresponse = await fetch(
+      `${process.env.NEXTAUTH_URL}/api/categories`,
+      {
+        cache: "no-store",
+      }
+    );
+    if (Categoryresponse.ok) {
+      const jsonResponse = await Categoryresponse.json();
+      categories = Array.isArray(jsonResponse) ? jsonResponse : [];
+    }
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+  }
 
   // Reorder categories to make "offers" the first category
-  const reorderedCategories = categories?.sort((a, b) => {
-    if (a.name.toLowerCase() === "offers") return -1;
-    if (b.name.toLowerCase() === "offers") return 1;
-    return 0; // Keep the other categories in the same order
-  });
+  const reorderedCategories = categories?.length
+    ? categories.sort((a, b) => {
+        if (a.name.toLowerCase() === "offers") return -1;
+        if (b.name.toLowerCase() === "offers") return 1;
+        return 0;
+      })
+    : [];
 
   return (
-    <section className="home-menu mt-24 pr-[330px] mr-4">
-      {/* Render "offers" category first with a custom class */}
-      {reorderedCategories?.length > 0 &&
+    <section className="home-menu pr-[330px] mr-4">
+      <h1 className="text-[#222] text-center font-bold text-3xl mb-10 p-2">🍕 Antalya Menu 🍕</h1>
+      {reorderedCategories.length > 0 &&
         reorderedCategories.map((c) => {
-          const isOffersCategory = c.name.toLowerCase() === "offers"; // Check if the category is "offers"
+          const isOffersCategory = c.name.toLowerCase() === "offers";
 
           return (
             <div
@@ -35,16 +53,16 @@ export default async function HomeMenu() {
               className={isOffersCategory ? "offers-category" : ""}
             >
               <div
-                className={`text-center ${
+                className={`pl-7 ${
                   isOffersCategory ? "custom-offers-header" : ""
                 }`}
               >
-                <h2 className="text-gray-600 font-bold text-4xl mt-10 mb-8">
+                <h2 className="text-gray-800 font-bold text-3xl mt-14 mb-4">
                   {c.name}
                 </h2>
               </div>
               <div
-                className={`grid md:grid-cols-1 md:justify-center gap-6 mt-10 mb-12 px-5 ${
+                className={`grid md:grid-cols-1 md:justify-center gap-6 mt-6 mb-12 px-5 ${
                   isOffersCategory ? "custom-offers-grid" : ""
                 }`}
               >

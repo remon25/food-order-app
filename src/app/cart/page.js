@@ -19,6 +19,8 @@ import Cash from "../_components/icons/Cash";
 import Credit from "../_components/icons/Credit";
 import Check from "../_components/icons/Check";
 import Cart from "../_components/icons/Cart";
+import Spinner from "../_components/layout/Spinner";
+import { useSession } from "next-auth/react";
 
 function generateTimeSlots() {
   const timeSlots = [];
@@ -43,13 +45,19 @@ function generateTimeSlots() {
 export default function CartPage() {
   const { cartProducts, removeCartProduct } = useContext(cartContext);
   const [address, setAddress] = useState({});
-  const { data: profileData } = useProfile();
+  const {
+    data: profileData,
+    loading: profileLoading,
+    error: profileError,
+  } = useProfile();
   const [deliveryPrices, setDeliveryPrices] = useState({});
   const [loadingDeliveryPrices, setLoadingDeliveryPrices] = useState(true);
   const [finalTotalPrice, setFinalTotalPrice] = useState(0);
   const [timeOptions, setTimeOptions] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("credit");
+  const [loading, setLoading] = useState(true);
+  const {session} = useSession();
 
   let deliveryTime = "ASAP";
   let totalPrice = 0;
@@ -58,6 +66,15 @@ export default function CartPage() {
   for (const p of cartProducts) {
     totalPrice += cartProductPrice(p);
   }
+
+  useEffect(() => {
+    if (profileLoading || !cartProducts || session) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [profileLoading, cartProducts, session]);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (window.location.href.includes("canceled=1")) {
@@ -218,6 +235,14 @@ export default function CartPage() {
     });
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner />
+      </div>
+    );
+  }
+
   if (cartProducts?.length === 0) {
     return (
       <section className="mt-24 text-center">
@@ -225,10 +250,9 @@ export default function CartPage() {
           <h2 className="text-gray-950 font-bold text-4xl">Checkout</h2>
         </div>
         <div className="flex flex-col items-center gap-8">
-        <p className="mt-4">No products in your Basket!</p>
-        <Cart className="w-16 h-16"/>
+          <p className="mt-4">No products in your Basket!</p>
+          <Cart className="w-16 h-16" />
         </div>
-       
       </section>
     );
   }
@@ -397,7 +421,7 @@ export default function CartPage() {
             )}
           </form>
         </div>
-         <div className="p-3">
+        <div className="p-3">
           {cartProducts?.length > 0 &&
             cartProducts.map((product, index) => (
               <CartProduct
