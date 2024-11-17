@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import DeleteIcon from "./icons/DeleteIcon";
 
 export default function DeleteButton({ label, onDelete }) {
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -99,9 +100,11 @@ export default function DeleteButton({ label, onDelete }) {
   return (
     <button
       type="button"
-      className="button"
+      className="button flex gap-2 items-center justify-center"
       onClick={() => setShowConfirmation(true)}
     >
+      <DeleteIcon />
+
       {label}
     </button>
   );

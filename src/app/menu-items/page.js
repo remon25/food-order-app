@@ -50,7 +50,7 @@ function MenuItemPage() {
   return (
     <section className="mt-24 max-w-2xl mx-auto">
       <AdminTabs />
-      <div className="mt-8">
+      <div className="mt-8 p-4">
         <Link
           className="button flex items-center justify-center gap-2"
           href="/menu-items/new"
@@ -59,7 +59,7 @@ function MenuItemPage() {
           <Right />
         </Link>
       </div>
-      <div>
+      <div className="p-4">
         <h2 className="text-sm text-gray-500 mt-8">Edit menu item:</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 md:justify-center gap-6 mt-10 mb-12 px-5">
           {menuItems?.length > 0 &&

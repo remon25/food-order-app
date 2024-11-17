@@ -53,7 +53,7 @@ function NewMenuItemsPage() {
   return (
     <section className="mt-24 max-w-2xl mx-auto">
       <AdminTabs />
-      <div className="max-w-md mx-auto mt-8">
+      <div className="max-w-md mx-auto mt-8 p-4">
         <Link
           href={"/menu-items"}
           className="button w-full  flex justify-center gap-2"

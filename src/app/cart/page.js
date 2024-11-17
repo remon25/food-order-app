@@ -351,7 +351,7 @@ export default function CartPage() {
             </div>
 
             {selectedPaymentMethod === "credit" ? (
-              <button className="button" type="submit">
+              <button disabled={!isComplete} className="button" type="submit">
                 Order & Pay ${finalTotalPrice}
               </button>
             ) : selectedPaymentMethod === "paypal" ? (

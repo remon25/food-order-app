@@ -57,7 +57,7 @@ function OrdersPage() {
   }
 
   return (
-    <section className="mt-8 max-w-2xl mx-auto">
+    <section className="mt-8 max-w-2xl mx-auto p-4">
       {admin ? <AdminTabs /> : <UserTabs />}
       {loadingOrders ? (
         <div className="w-full flex items-center justify-center overflow-hidden">
@@ -90,13 +90,13 @@ function OrdersPage() {
                   </div>
                 </div>
                 <div className="grow">
-                  <div className="flex gap-2 items-center mb-1">
+                  <div className="flex flex-col gap-2 items-center mb-1">
                     <div className="grow">{order.email}</div>
                     <div className="text-gray-500 text-sm">
                       {dbTimeForHuman(order.createdAt)}
                     </div>
                   </div>
-                  <div className="text-gray-500 text-xs">
+                  <div className="text-gray-500 text-center text-xs">
                     {order.cartProducts.map((p) => p.name).join(", ")}
                   </div>
                 </div>
@@ -114,8 +114,8 @@ function OrdersPage() {
           <Link href="/menu">
             <Image src="/no-order.png" alt="empty" width={300} height={300} />
           </Link>
-          <h1 className="text-2xl text-center font-semibold">
-            You have no orders yet! <br /> Go to menu and order something
+          <h1 className="text-[20px] text-center font-semibold">
+            You have no orders yet! <br /> Go to menu and order something.
           </h1>
         </div>
       )}

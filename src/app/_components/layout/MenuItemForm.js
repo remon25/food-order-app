@@ -38,7 +38,7 @@ export default function MenuItemForm({ handleFormSubmit, menuItem }) {
 
   return (
     <form
-      className="mt-8"
+      className="mt-8 p-4"
       onSubmit={(e) =>
         handleFormSubmit(e, {
           image,

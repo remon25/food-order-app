@@ -131,7 +131,7 @@ function CategoriesPage() {
           </div>
         </div>
       </form>
-      <div>
+      <div className="p-4">
         <h2 className="mt-8 text-sm text-gray-500">Existing categories:</h2>
         {categories &&
           categories.map((category) => (

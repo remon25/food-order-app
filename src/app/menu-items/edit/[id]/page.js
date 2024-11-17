@@ -92,7 +92,7 @@ function MenuItemPage() {
   return (
     <section className="mt-24 max-w-2xl mx-auto">
       <AdminTabs />
-      <div className="max-w-md mx-auto mt-8">
+      <div className="max-w-md mx-auto mt-8 p-4">
         <Link
           href={"/menu-items"}
           className="button w-full flex justify-center gap-2"
@@ -109,7 +109,7 @@ function MenuItemPage() {
       ) : (
         <p>No menu item found</p>
       )}
-      <div className="md:max-w-2xl mx-auto  mt-4">
+      <div className="md:max-w-2xl mx-auto mt-4 p-4">
         <div className="md:max-w-lg ml-auto">
           <DeleteButton
             label="Delete"

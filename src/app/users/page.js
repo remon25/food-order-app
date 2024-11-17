@@ -31,7 +31,7 @@ function UsersPage() {
   return (
     <section className="mt-24 max-w-2xl mx-auto">
       <AdminTabs />
-      <div className="mt-8">
+      <div className="mt-8 p-4">
         {users.length > 0 &&
           users.map((user) => (
             <div key={user._id} className="user_row">
