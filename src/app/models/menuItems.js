@@ -16,7 +16,6 @@ const MenuItemSchema = new Schema(
     },
     description: {
       type: String,
-      required: true,
     },
     category: {
       type: mongoose.Types.ObjectId,

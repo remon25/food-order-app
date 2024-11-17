@@ -49,7 +49,7 @@ function CategoriesPage() {
           fetchCategories();
           resolve();
         } else {
-          reject("Failed to update/create category");
+          reject("Fehler beim Aktualisieren/Erstellen der Kategorie");
         }
       } catch (error) {
         reject(error);
@@ -57,13 +57,13 @@ function CategoriesPage() {
     });
 
     await toast.promise(creatingPromise, {
-      loading: editCategory ? "Updating category..." : "Creating category...",
+      loading: editCategory ? "Kategorie wird aktualisiert..." : "Kategorie wird erstellt...",
       success: editCategory
-        ? "Category updated successfully"
-        : "Category created successfully",
+        ? "Kategorie erfolgreich aktualisiert"
+        : "Kategorie erfolgreich erstellt",
       error: editCategory
-        ? "Could not update category"
-        : "Could not create category",
+        ? "Kategorie konnte nicht aktualisiert werden"
+        : "Kategorie konnte nicht erstellt werden",
     });
   }
 
@@ -74,13 +74,13 @@ function CategoriesPage() {
           method: "DELETE",
         }),
         {
-          loading: "Deleting category...",
-          success: "Category deleted successfully!",
-          error: "Error deleting category!",
+          loading: "Kategorie wird gelöscht...",
+          success: "Kategorie erfolgreich gelöscht!",
+          error: "Fehler beim Löschen der Kategorie!",
         }
       );
     } catch (error) {
-      console.error("Error deleting category:", error);
+      console.error("Fehler beim Löschen der Kategorie:", error);
     }
     fetchCategories();
   }
@@ -102,21 +102,21 @@ function CategoriesPage() {
         <div className="flex flex-col md:flex-row gap-2 items-center">
           <div className="grow md:pb-4">
             <label htmlFor="categoryName">
-              {editCategory ? "Edit category" : "New category"}
+              {editCategory ? "Kategorie bearbeiten" : "Neue Kategorie"}
               {editCategory ? `: ${editCategory.name}` : ""}
             </label>
             <input
               type="text"
               id="categoryName"
               name="categoryName"
-              placeholder="Category name"
+              placeholder="Kategoriename"
               value={CategoryName}
               onChange={(e) => setCategoryName(e.target.value)}
             />
           </div>
           <div className="pb-2 flex gap-2">
             <button className="button rounded-xl p-2" type="submit">
-              {!editCategory ? "Create" : "Update"}
+              {!editCategory ? "Erstellen" : "Aktualisieren"}
             </button>
             <button
               type="button"
@@ -126,13 +126,13 @@ function CategoriesPage() {
               }}
               className="button rounded-xl p-2"
             >
-              Cancel
+              Abbrechen
             </button>
           </div>
         </div>
       </form>
       <div className="p-4">
-        <h2 className="mt-8 text-sm text-gray-500">Existing categories:</h2>
+        <h2 className="mt-8 text-sm text-gray-500">Bestehende Kategorien:</h2>
         {categories &&
           categories.map((category) => (
             <div
@@ -149,10 +149,10 @@ function CategoriesPage() {
                   className="button"
                   type="button"
                 >
-                  Edit
+                  Bearbeiten
                 </button>
                 <DeleteButton
-                  label="Delete"
+                  label="Löschen"
                   onDelete={() => handleCategoryDelete(category._id)}
                 />
               </div>

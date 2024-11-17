@@ -100,7 +100,7 @@ export default function MenuItem({ menuItemInfo, isOffersCategory }) {
                       checked={selectedSize?.name === size.name}
                       name="size"
                     />
-                    {size.name} ${price + size.price}
+                    {size.name} {price + size.price}&euro;
                   </label>
                 ))}
               </div>
@@ -124,7 +124,7 @@ export default function MenuItem({ menuItemInfo, isOffersCategory }) {
                       name={extraIngredient.name}
                       onChange={(ev) => handleExtrasClick(ev, extraIngredient)}
                     />
-                    {extraIngredient.name} ${extraIngredient.price}
+                    {extraIngredient.name} {extraIngredient.price}&euro;
                   </label>
                 ))}
               </div>
@@ -134,7 +134,7 @@ export default function MenuItem({ menuItemInfo, isOffersCategory }) {
               onClick={handleAddToCartButtonClick}
               className="w-full flex justify-center font-semibold bg-primary text-white text-sm rounded-xl px-6 py-2"
             >
-              Add to cart ${selectedPrice}
+              Add to cart {selectedPrice}&euro;
             </button>
 
             <button

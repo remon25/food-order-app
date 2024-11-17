@@ -14,7 +14,6 @@ export default function AddressInputs({
   timeOptions,
   disabled = false,
   orderPage = false,
-  selectedPaymentMethod,
 }) {
   const {
     phone,
@@ -45,64 +44,64 @@ export default function AddressInputs({
           }}
         ></div>
       </div>
-      <label>First and last name</label>
+      <label>Name und Nachname</label>
       <input
         disabled={disabled}
         type="text"
-        placeholder="First and last name"
+        placeholder="Name und Nachname"
         value={name || ""}
         onChange={(ev) => setAddressProp("name", ev.target.value)}
       />
-      <label>E-mail</label>
+      <label>E-Mail</label>
       <input
         disabled={disabled}
         type="email"
-        placeholder="email"
+        placeholder="E-Mail"
         value={email || ""}
         onChange={(ev) => setAddressProp("email", ev.target.value)}
       />
-      <label>Phone</label>
+      <label>Telefon</label>
       <input
         disabled={disabled}
         type="tel"
-        placeholder="Phone number"
+        placeholder="Telefonnummer"
         value={phone || ""}
         onChange={(ev) => setAddressProp("phone", ev.target.value)}
       />
-      <label>Street address</label>
+      <label>Straßenadresse</label>
       <input
         disabled={disabled}
         type="text"
-        placeholder="Street address"
+        placeholder="Straßenadresse"
         value={streetAdress || ""}
         onChange={(ev) => setAddressProp("streetAdress", ev.target.value)}
       />
-      <label>Build number</label>
+      <label>Hausnummer</label>
       <input
         disabled={disabled}
         type="text"
-        placeholder="Build bumber"
+        placeholder="Hausnummer"
         value={buildNumber || ""}
         onChange={(ev) => setAddressProp("buildNumber", ev.target.value)}
       />
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <label>Postal code</label>
+          <label>Postleitzahl</label>
           <input
             disabled={disabled}
             type="text"
-            placeholder="Postal code"
+            placeholder="Postleitzahl"
             value={postalCode || ""}
             onChange={(ev) => setAddressProp("postalCode", ev.target.value)}
           />
         </div>
         <div>
-          <label>City</label>
+          <label>Stadt</label>
           {orderPage ? (
             <input
               disabled={disabled}
               type="text"
-              placeholder="City"
+              placeholder="Stadt"
               value={city || ""}
             />
           ) : (
@@ -111,7 +110,7 @@ export default function AddressInputs({
               value={city || ""}
               onChange={(ev) => setAddressProp("city", ev.target.value)}
             >
-              <option value={""}>Select a city</option>
+              <option value={""}>Wählen Sie eine Stadt</option>
               {cities.map((city) => (
                 <option key={city} value={city}>
                   {city}
@@ -132,7 +131,7 @@ export default function AddressInputs({
               <Time />
               <div>
                 <h3 className="text-sm sm:text-xl text-left text-gray-900 font-semibold">
-                  Delivery time
+                  Lieferzeit
                 </h3>
                 <div className="text-left"> {deliveryTime}</div>
               </div>
@@ -141,32 +140,30 @@ export default function AddressInputs({
           </button>
         )}
         {showPopup && (
-          <>
-            <Dialog setShowPopup={setShowPopup}>
-              <label
-                htmlFor="deliveryTime"
-                className="text-2xl text-gray-950 font-semibold block mt-4 mb-4"
+          <Dialog setShowPopup={setShowPopup}>
+            <label
+              htmlFor="deliveryTime"
+              className="text-2xl text-gray-950 font-semibold block mt-4 mb-4"
+            >
+              Lieferzeit
+            </label>
+            {!orderPage && (
+              <select
+                id="deliveryTime"
+                value={deliveryTime}
+                onChange={(e) =>
+                  setAddressProp("deliveryTime", e.target.value)
+                }
+                className="block w-full mt-2 p-2 border"
               >
-                Delivery time
-              </label>
-              {!orderPage && (
-                <select
-                  id="deliveryTime"
-                  value={deliveryTime}
-                  onChange={(e) =>
-                    setAddressProp("deliveryTime", e.target.value)
-                  }
-                  className="block w-full mt-2 p-2 border"
-                >
-                  {timeOptions.map((time, index) => (
-                    <option key={index} value={time}>
-                      {time === "ASAP" ? "As soon as possible" : time}
-                    </option>
-                  ))}
-                </select>
-              )}
-            </Dialog>
-          </>
+                {timeOptions.map((time, index) => (
+                  <option key={index} value={time}>
+                    {time === "ASAP" ? "So schnell wie möglich" : time}
+                  </option>
+                ))}
+              </select>
+            )}
+          </Dialog>
         )}
         {orderPage && (
           <>
@@ -179,7 +176,7 @@ export default function AddressInputs({
                 <Time />
                 <div>
                   <h3 className="text-xl text-left text-gray-900 font-semibold">
-                    Delivery time
+                    Lieferzeit
                   </h3>
                   <div className="text-left"> {deliveryTime}</div>
                 </div>
@@ -199,15 +196,15 @@ export default function AddressInputs({
                   <Credit />
                 )}
                 <div>
-                  <p className="text-xs">Selected payment method</p>
+                  <p className="text-xs">Ausgewählte Zahlungsmethode</p>
                   <h3 className="text-xl text-left text-gray-900 font-semibold">
-                  {paymentMethod === "cash" ? (
-                 "Cash"
-                ) : paymentMethod === "paypal" ? (
-                  "Paypal"
-                ) : (
-                  "Credit card"
-                )}
+                    {paymentMethod === "cash" ? (
+                      "Bargeld"
+                    ) : paymentMethod === "paypal" ? (
+                      "PayPal"
+                    ) : (
+                      "Kreditkarte"
+                    )}
                   </h3>
                 </div>
               </div>

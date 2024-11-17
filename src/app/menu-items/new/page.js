@@ -27,9 +27,9 @@ function NewMenuItemsPage() {
           }
         }),
         {
-          loading: "Saving...",
-          success: "Saved!",
-          error: "Failed to save!",
+          loading: "Speichern...",
+          success: "Gespeichert!",
+          error: "Speichern fehlgeschlagen!",
         }
       );
       setImage(null);
@@ -59,7 +59,7 @@ function NewMenuItemsPage() {
           className="button w-full  flex justify-center gap-2"
         >
           <Left />
-          <span>Show all menu items</span>
+          <span>Alle Menüeinträge anzeigen</span>
         </Link>
       </div>
       <MenuItemForm menuItem={null} handleFormSubmit={handleFormSubmit} />

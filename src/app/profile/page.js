@@ -55,9 +55,9 @@ function ProfilePage() {
     });
 
     await toast.promise(savingPromise, {
-      loading: "Saving...",
-      success: "Profile saved successfully",
-      error: "Could not save profile",
+      loading: "Speichern...",
+      success: "Profil erfolgreich gespeichert",
+      error: "Profil konnte nicht gespeichert werden",
     });
   }
 

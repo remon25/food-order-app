@@ -81,10 +81,10 @@ function OrdersPage() {
                         : "bg-red-500"
                     } p-2 rounded-md text-white w-24 text-center`}
                   >
-                    {order.paid ? "Paid" : "Not paid"}
+                    {order.paid ? "Bezahlt" : "Nicht bezahlt"}
                     {order.payOnDelivery && (
                       <div className="text-xs font-bold text-gray-700">
-                        on delivery
+                        bei Lieferung
                       </div>
                     )}
                   </div>
@@ -103,7 +103,7 @@ function OrdersPage() {
               </div>
               <div className="justify-end flex gap-2 items-center whitespace-nowrap">
                 <Link href={"/orders/" + order._id} className="button">
-                  Show order
+                Anzeigen
                 </Link>
               </div>
             </div>
@@ -115,7 +115,7 @@ function OrdersPage() {
             <Image src="/no-order.png" alt="empty" width={300} height={300} />
           </Link>
           <h1 className="text-[20px] text-center font-semibold">
-            You have no orders yet! <br /> Go to menu and order something.
+            Sie haben noch keine Bestellungen! <br /> Gehen Sie zum Menü und bestellen Sie etwas.
           </h1>
         </div>
       )}

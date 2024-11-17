@@ -50,9 +50,9 @@ function MenuItemPage() {
           }
         }),
         {
-          loading: "Saving...",
-          success: "Saved!",
-          error: "Failed to save!",
+          loading: "Speichern...",
+          success: "Gespeichert!",
+          error: "Speichern fehlgeschlagen!",
         }
       );
     } catch (error) {
@@ -67,9 +67,9 @@ function MenuItemPage() {
           method: "DELETE",
         }),
         {
-          loading: "Deleting menu item...",
-          success: "Menu item deleted successfully!",
-          error: "Error deleting menu item!",
+          loading: "Menüpunkt wird gelöscht...",
+          success: "Menüpunkt erfolgreich gelöscht!",
+          error: "Fehler beim Löschen des Menüpunkts!",
         }
       );
 
@@ -98,7 +98,9 @@ function MenuItemPage() {
           className="button w-full flex justify-center gap-2"
         >
           <Left />
-          <span>Show all menu items</span>
+          <span>
+            <span>Alle Menüeinträge anzeigen</span>
+          </span>
         </Link>
       </div>
       {menuItem ? (
@@ -107,12 +109,12 @@ function MenuItemPage() {
           menuItem={menuItem}
         />
       ) : (
-        <p>No menu item found</p>
+        <p>Kein Menüeintrag gefunden</p>
       )}
-      <div className="md:max-w-2xl mx-auto mt-4 p-4">
-        <div className="md:max-w-lg ml-auto">
+      <div className="md:max-w-2xl mx-auto px-4">
+        <div className="md:max-w-[31rem] ml-auto">
           <DeleteButton
-            label="Delete"
+            label="Löschen"
             onDelete={() => handleDelete(menuItem._id)}
           />
         </div>

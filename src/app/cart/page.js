@@ -57,7 +57,7 @@ export default function CartPage() {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("credit");
   const [loading, setLoading] = useState(true);
-  const {session} = useSession();
+  const { session } = useSession();
 
   let deliveryTime = "ASAP";
   let totalPrice = 0;
@@ -78,7 +78,7 @@ export default function CartPage() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (window.location.href.includes("canceled=1")) {
-        toast.error("Payment failed!");
+        toast.error("Zahlung fehlgeschlagen!");
       }
     }
   }, []);
@@ -145,7 +145,9 @@ export default function CartPage() {
   async function proceedToCheckout(ev) {
     ev.preventDefault();
     if (!isComplete) {
-      toast.error("Please complete all address fields before proceeding.");
+      toast.error(
+        "Bitte vervollständige alle Adressfelder, bevor du fortfährst."
+      );
       return;
     }
     const promise = new Promise((resolve, reject) => {
@@ -171,14 +173,13 @@ export default function CartPage() {
     });
 
     await toast.promise(promise, {
-      loading: "Creating order...",
-      success: "Redirecting to payment...",
-      error: "Something went wrong! Please try again.",
+      loading: "Bestellung wird erstellt...",
+      success: "Weiterleitung zur Zahlung...",
+      error: "Etwas ist schiefgelaufen! Bitte versuche es erneut.",
     });
   }
 
   const handlePayPalSuccess = async (details) => {
-    console.log(details, "sas sas");
     const promise = new Promise((resolve, reject) => {
       fetch("/api/paypal_checkout", {
         method: "POST",
@@ -201,9 +202,9 @@ export default function CartPage() {
       });
     });
     await toast.promise(promise, {
-      loading: "Creating order...",
-      success: "Order created successfully",
-      error: "Something went wrong! Please try again.",
+      loading: "Bestellung wird erstellt...",
+      success: "Bestellung erfolgreich erstellt",
+      error: "Etwas ist schiefgelaufen! Bitte versuche es erneut.",
     });
   };
   const handlePayOnDelivery = async () => {
@@ -229,9 +230,9 @@ export default function CartPage() {
       });
     });
     await toast.promise(promise, {
-      loading: "Creating order...",
-      success: "Order created successfully",
-      error: "Something went wrong! Please try again.",
+      loading: "Bestellung wird erstellt...",
+      success: "Bestellung erfolgreich erstellt",
+      error: "Etwas ist schiefgelaufen! Bitte versuche es erneut.",
     });
   };
 
@@ -247,10 +248,10 @@ export default function CartPage() {
     return (
       <section className="mt-24 text-center">
         <div className="text-center">
-          <h2 className="text-gray-950 font-bold text-4xl">Checkout</h2>
+          <h2 className="text-gray-950 font-bold text-4xl">Kasse</h2>
         </div>
         <div className="flex flex-col items-center gap-8">
-          <p className="mt-4">No products in your Basket!</p>
+          <p className="mt-4">Keine Produkte in deinem Warenkorb!</p>
           <Cart className="w-16 h-16" />
         </div>
       </section>
@@ -259,7 +260,7 @@ export default function CartPage() {
   return (
     <section className="mt-24 max-w-4xl mx-auto">
       <div className="text-center">
-        <h2 className="text-gray-950 font-bold text-4xl">Checkout</h2>
+        <h2 className="text-gray-950 font-bold text-4xl">Kasse</h2>
       </div>
       <div className="grid md:grid-cols-1 gap-4 mt-8">
         <div className="bg-gray-100 p-4 rounded-lg">
@@ -284,7 +285,7 @@ export default function CartPage() {
                   {selectedPaymentMethod === "credit" && <Credit />}
                   <div>
                     <h3 className="text-sm sm:text-xl text-left text-gray-900 font-semibold">
-                      Complete payment with
+                      Zahlung abschließen mit
                     </h3>
                     <div className="text-left">{selectedPaymentMethod}</div>
                   </div>
@@ -294,7 +295,7 @@ export default function CartPage() {
               {showPopup && (
                 <>
                   <Dialog setShowPopup={setShowPopup}>
-                    <h3>Payment methods</h3>
+                    <h3>Zahlungsmethoden</h3>
                     <button
                       type="button"
                       className="button flex justify-between items-center my-4 !py-5"
@@ -304,7 +305,7 @@ export default function CartPage() {
                         <Cash />
                         <div>
                           <h3 className="text-xl text-left text-gray-900 font-semibold">
-                            Cash
+                            Barzahlung
                           </h3>
                           <div className="text-left"></div>
                         </div>
@@ -321,7 +322,7 @@ export default function CartPage() {
                         <Credit />
                         <div>
                           <h3 className="text-xl text-left text-gray-900 font-semibold">
-                            Credit card
+                            Kreditkarte
                           </h3>
                           <div className="text-left"></div>
                         </div>
@@ -363,13 +364,13 @@ export default function CartPage() {
                       type="button"
                       className="button Dialog_button"
                     >
-                      Order & Pay ${finalTotalPrice}
+                      Bestellen & Bezahlen €{finalTotalPrice}
                     </button>
                     <div className="absolute top-0 right-0 left-0 bottom-0 opacity-0">
                       <PayPalScriptProvider
                         options={{
                           "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
-                          currency: "USD",
+                          currency: "EUR",
                         }}
                       >
                         <PayPalButtons
@@ -396,11 +397,13 @@ export default function CartPage() {
                               .then(handlePayPalSuccess)
                               .catch(() =>
                                 toast.error(
-                                  "Payment capture failed. Please try again."
+                                  "Zahlungserfassung fehlgeschlagen. Bitte versuche es erneut."
                                 )
                               );
                           }}
-                          onError={() => toast.error("PayPal payment failed")}
+                          onError={() =>
+                            toast.error("PayPal-Zahlung fehlgeschlagen")
+                          }
                         />
                       </PayPalScriptProvider>
                     </div>
@@ -415,7 +418,7 @@ export default function CartPage() {
                   type="button"
                   className="button Dialog_button"
                 >
-                  Order & Pay ${finalTotalPrice}
+                  Bestellen & Bezahlen €{finalTotalPrice}
                 </button>
               </div>
             )}
@@ -433,11 +436,11 @@ export default function CartPage() {
             ))}
           <div className="py-0 px-2 flex justify-end items-center">
             <div className="text-gray-500">
-              Subtotal : <br /> Delivery : <br /> Total:
+              Zwischensumme : <br /> Lieferung : <br /> Gesamt:
             </div>
             <div className="font-semibold">
-              ${totalPrice} <br />${deliveryPrices[address.city] || 0} <br />$
-              {totalPrice + (deliveryPrices[address.city] || 0)}
+              {totalPrice}€ <br />{deliveryPrices[address.city] || 0}€ <br />
+              {totalPrice + (deliveryPrices[address.city] || 0)}€
             </div>
           </div>
         </div>

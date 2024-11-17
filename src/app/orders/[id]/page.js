@@ -69,11 +69,11 @@ function OrderPage() {
       <div className="text-center p-4">
         <SectionHeader subtitle="Your order" />
         <div className="mt-4 mb-8">
-          <p>Thanks for your order.</p>
-          <p>We will call you when your order is on the way.</p>
+          <p>Danke für deine Bestellung.</p>
+          <p>Wir rufen dich an, wenn deine Bestellung auf dem Weg ist.</p>
           <p>
-            You can register or login to see all your past orders from your
-            profile.
+            Du kannst dich registrieren oder einloggen, um alle deine bisherigen
+            Bestellungen in deinem Profil zu sehen.
           </p>
         </div>
       </div>
@@ -87,7 +87,7 @@ function OrderPage() {
         <SectionHeader subtitle="Order Not Found" />
         <div className="mt-4 mb-8">
           <p>{error}</p>
-          <p>Please check the order ID and try again.</p>
+          <p>Bitte überprüfe die Bestell-ID und versuche es erneut.</p>
         </div>
       </div>
     );
@@ -97,8 +97,8 @@ function OrderPage() {
   if (loadingOrder) {
     return (
       <div className="w-full h-[90vh] flex items-center justify-center overflow-hidden">
-          <Spinner />
-        </div>
+        <Spinner />
+      </div>
     );
   }
 
@@ -106,35 +106,32 @@ function OrderPage() {
   return (
     <section className="max-w-2xl mx-auto mt-8 p-4">
       <div className="text-center">
-        <SectionHeader subtitle="Your order" />
+        <SectionHeader subtitle="Ihre Bestellung" />
         <div className="mt-4 mb-8">
-          <p>Thanks for your order.</p>
-          <p>We will call you when your order is on the way.</p>
+          <p>Danke für deine Bestellung.</p>
+          <p>Wir werden dich anrufen, wenn deine Bestellung auf dem Weg ist.</p>
         </div>
       </div>
       {order && (
         <div className="grid md:grid-cols-2 md:gap-16">
           <div>
             {order.cartProducts.map((product, index) => (
-              <CartProduct
-                key={`${product._id}-${index}`}
-                product={product}
-              />
+              <CartProduct key={`${product._id}-${index}`} product={product} />
             ))}
             <div className="text-right py-2 text-gray-500">
-              Subtotal:
+              Zwischensumme:
               <span className="text-black font-bold inline-block w-8">
-                ${order?.subtotal}
+                €{order?.subtotal}
               </span>
               <br />
-              Delivery:
+              Lieferung:
               <span className="text-black font-bold inline-block w-8">
-                ${order?.deliveryPrice || "-"}
+                €{order?.deliveryPrice || "-"}
               </span>
               <br />
-              Total:
+              Gesamt:
               <span className="text-black font-bold inline-block w-8">
-                ${order?.finalTotalPrice}
+                €{order?.finalTotalPrice}
               </span>
             </div>
           </div>
@@ -154,6 +151,3 @@ function OrderPage() {
 }
 
 export default OrderPage;
-
-
-

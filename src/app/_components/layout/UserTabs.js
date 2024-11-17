@@ -9,10 +9,10 @@ export default function UserTabs() {
     <div className="flex gap-2 tabs justify-center flex-wrap mx-auto mb-6">
       <>
         <Link className={path === "/profile" ? "active" : ""} href="/profile">
-          Profile
+          Profil
         </Link>
         <Link className={path === "/orders" ? "active" : ""} href="/orders">
-          Orders
+          Bestellungen
         </Link>
       </>
     </div>

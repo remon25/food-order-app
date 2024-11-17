@@ -55,12 +55,12 @@ function MenuItemPage() {
           className="button flex items-center justify-center gap-2"
           href="/menu-items/new"
         >
-          Add new
+          Neu hinzufügen
           <Right />
         </Link>
       </div>
       <div className="p-4">
-        <h2 className="text-sm text-gray-500 mt-8">Edit menu item:</h2>
+        <h2 className="text-sm text-gray-500 mt-8">Menüpunkt bearbeiten:</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 md:justify-center gap-6 mt-10 mb-12 px-5">
           {menuItems?.length > 0 &&
             menuItems.map((item, index) => (

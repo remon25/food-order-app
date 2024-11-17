@@ -18,18 +18,18 @@ export default function UserForm({ user, onSave, isAdmin = false }) {
     const fetchDeliveryPrices = async () => {
       try {
         const response = await fetch("/api/delivery-prices");
-        if (!response.ok) throw new Error("Failed to fetch");
+        if (!response.ok) throw new Error("Fehler beim Abrufen");
         const data = await response.json();
         const prices = {};
         data.forEach((price) => (prices[price.name] = price.price));
         setCitiesWithDeliveryPrices(prices);
-        setLoadingDeliveryPrices(false);
       } catch (error) {
-        console.error("Error fetching");
+        console.error("Fehler beim Abrufen der Lieferpreise");
       }
     };
     fetchDeliveryPrices();
   }, []);
+
   return (
     <div className="max-w-2xl mx-auto">
       <div className="flex flex-col gap-4 md:flex-row p-4">
@@ -60,7 +60,7 @@ export default function UserForm({ user, onSave, isAdmin = false }) {
                     className="block border border-gray-300 mt-2 cursor-pointer rounded-lg p-2 text-center"
                     onClick={() => open()}
                   >
-                    Upload an Image
+                    Bild hochladen
                   </button>
                 );
               }}
@@ -88,33 +88,33 @@ export default function UserForm({ user, onSave, isAdmin = false }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email">E-Mail</label>
           <input id="email" type="email" value={user?.email} disabled={true} />
-          <label htmlFor="phone">Phone</label>
+          <label htmlFor="phone">Telefonnummer</label>
           <input
             id="phone"
             type="tel"
-            placeholder="phone number"
+            placeholder="Telefonnummer"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
           />
-          <label htmlFor="streetAdress">Street Adress</label>
+          <label htmlFor="streetAdress">Straße</label>
           <input
             id="streetAdress"
             type="text"
-            placeholder="street address"
+            placeholder="Straße"
             value={streetAdress}
             onChange={(e) => setStreetAdress(e.target.value)}
           />
           <div className="grid grid-cols-2 gap-4 justify-between">
             <div>
-              <label htmlFor="city">City</label>
+              <label htmlFor="city">Stadt</label>
               <select
                 id="city"
                 value={city}
                 onChange={(ev) => setCity(ev.target.value)}
               >
-                <option value="">Select a city</option>
+                <option value="">Stadt auswählen</option>
                 {Object.keys(citiesWithDeliveryPrices).map((city) => (
                   <option key={city} value={city}>
                     {city}
@@ -123,12 +123,12 @@ export default function UserForm({ user, onSave, isAdmin = false }) {
               </select>
             </div>
             <div>
-              <label htmlFor="postalCode">Postal Code</label>
+              <label htmlFor="postalCode">Postleitzahl</label>
               <input
                 id="postalCode"
                 className="mt-0"
                 type="text"
-                placeholder="Postal Code"
+                placeholder="Postleitzahl"
                 value={postalCode}
                 onChange={(e) => setPostalCode(e.target.value)}
               />
@@ -165,7 +165,7 @@ export default function UserForm({ user, onSave, isAdmin = false }) {
                       checked={verified}
                       onChange={(e) => setVerified(e.target.checked)}
                     />
-                    <span>Verified</span>
+                    <span>Verifiziert</span>
                   </label>
                 </div>
               </>
@@ -173,7 +173,7 @@ export default function UserForm({ user, onSave, isAdmin = false }) {
           </div>
 
           <button type="submit" className="p-2 rounded">
-            Save
+            Speichern
           </button>
         </form>
       </div>

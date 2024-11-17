@@ -9,25 +9,25 @@ export default function AdminTabs() {
     <div className="flex gap-2 tabs justify-center flex-wrap mx-auto mb-6">
       <>
         <Link className={path === "/profile" ? "active" : ""} href="/profile">
-          Profile
+          Profil
         </Link>
         <Link
           className={path === "/categories" ? "active" : ""}
           href="/categories"
         >
-          Categories
+          Kategorien
         </Link>
         <Link
           className={path.includes("/menu-items") ? "active" : ""}
           href="/menu-items"
         >
-          Menu Items
+          Menüartikel
         </Link>
         <Link className={path.includes("/users") ? "active" : ""} href="/users">
-          Users
+          Benutzer
         </Link>
         <Link className={path === "/orders" ? "active" : ""} href="/orders">
-          Orders
+          Bestellungen
         </Link>
       </>
     </div>

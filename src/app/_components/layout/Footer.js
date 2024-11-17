@@ -5,15 +5,15 @@ import Whatsapp from "../icons/Whatsapp";
 
 export default function Footer() {
   return (
-    <footer id="footer" className="relative bg-[#747969] p-3 text-white mt-24 z-[3] overflow-hidden">
+    <footer
+      id="footer"
+      className="relative bg-[#747969] p-3 text-white mt-24 z-[3] overflow-hidden"
+    >
       <div className="flex flex-col-reverse sm:flex-row">
         <div className="flex flex-col gap-2 mt-2">
           <div>
             <h4 className="uppercase font-bold">Kontakt</h4>
-            <p>
-              Harsefeld <br />
-              21077
-            </p>
+            <p>Friedrich-Huth-Strasse 15 - 21698 Harsefeld</p>
           </div>
           <a className="text-nowrap" href="tel:+04164 909 55 22">
             04164 909 55 22
@@ -31,7 +31,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="w-full text-center mt-2">
+      <div className="w-full text-center mt-8">
         © Antalya Harsefeld. Alle Rechte vorbehalten.
       </div>
     </footer>

@@ -19,7 +19,7 @@ export default function RegisterForm() {
     e.preventDefault();
 
     if (password.length < 8) {
-      toast.error("Password must be at least 8 characters long");
+      toast.error("Das Passwort muss mindestens 8 Zeichen lang sein");
       return;
     }
 
@@ -38,7 +38,7 @@ export default function RegisterForm() {
 
           if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.message || "Registration failed");
+            throw new Error(errorData.message || "Registrierung fehlgeschlagen");
           }
 
           setUserCreated(true);
@@ -50,9 +50,9 @@ export default function RegisterForm() {
         }
       })(),
       {
-        loading: "Creating user...",
-        success: "User created! You can now log in.",
-        error: "Error. Please try again.",
+        loading: "Benutzer wird erstellt...",
+        success: "Benutzer erstellt! Du kannst dich jetzt einloggen.",
+        error: "Fehler. Bitte versuche es erneut.",
       }
     );
   }
@@ -61,14 +61,14 @@ export default function RegisterForm() {
     <>
       {error && (
         <div className="my-4 text-center">
-          Error. <br /> Please try again.
+          Fehler. <br /> Bitte versuche es erneut.
         </div>
       )}
       {userCreated ? (
         <div className="my-4 text-center">
-          User created. <br /> You can now log in.{" "}
+          Benutzer erstellt. <br /> Du kannst dich jetzt einloggen.{" "}
           <Link className="underline" href="/login">
-            Login &raquo;
+            Einloggen &raquo;
           </Link>
         </div>
       ) : (
@@ -94,7 +94,7 @@ export default function RegisterForm() {
           <input
             name="phone"
             type="tel"
-            placeholder="Phone Number"
+            placeholder="Telefonnummer"
             value={phone}
             required
             disabled={creatingUser}
@@ -103,7 +103,7 @@ export default function RegisterForm() {
           <input
             name="streetAdress"
             type="text"
-            placeholder="Street Address"
+            placeholder="Straßenadresse"
             value={streetAdress}
             required
             disabled={creatingUser}
@@ -112,7 +112,7 @@ export default function RegisterForm() {
           <input
             name="password"
             type="password"
-            placeholder="Password"
+            placeholder="Passwort"
             value={password}
             required
             disabled={creatingUser}
@@ -124,10 +124,10 @@ export default function RegisterForm() {
             disabled={creatingUser}
             className="bg-primary text-white px-6 py-2 rounded"
           >
-            Register
+            Registrieren
           </button>
           <div className="text-center my-4 text-gray-500">
-            Or sign up with a provider
+            Oder melde dich mit einem Anbieter an
           </div>
           <button
             type="button"
@@ -136,16 +136,16 @@ export default function RegisterForm() {
           >
             <Image
               src="/google-logo.png"
-              alt="Sign in with Google"
+              alt="Mit Google anmelden"
               width={32}
               height={32}
             />
-            Sign in with Google
+            Mit Google anmelden
           </button>
           <div className="text-center text-gray-700 my-4">
-            Already have an account?{" "}
+            Hast du bereits ein Konto?{" "}
             <Link className="underline" href="/login">
-              Login
+              Einloggen
             </Link>
           </div>
         </form>

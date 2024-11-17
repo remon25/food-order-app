@@ -3,6 +3,7 @@ import DeleteIcon from "../icons/DeleteIcon";
 import Plus from "../icons/Plus";
 import ChevronDown from "../icons/ChevronDown";
 import ChevronUp from "../icons/ChevronUp";
+
 export default function MenuItemPriceProps({
   props,
   setProps,
@@ -10,6 +11,7 @@ export default function MenuItemPriceProps({
   addLabel,
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  
   function addProp() {
     setProps((old) => [...old, { name: "", price: 0 }]);
   }
@@ -26,6 +28,7 @@ export default function MenuItemPriceProps({
   function removeProp(indexToRemove) {
     setProps((prev) => prev.filter((_, index) => index !== indexToRemove));
   }
+
   return (
     <div className="bg-gray-200 p-2 rounded-md mb-4">
       <div className="flex gap-1 justify-center">
@@ -44,20 +47,20 @@ export default function MenuItemPriceProps({
           props.map((size, index) => (
             <div key={size._id} className="flex items-center gap-2">
               <div>
-                <label>Name</label>
+                <label>Größe Name</label>
                 <input
                   type="text"
-                  placeholder="Size name"
+                  placeholder="Größe Name"
                   value={size.name}
                   onChange={(e) => editProp(e, index, "name")}
                 />
               </div>
 
               <div>
-                <label>Extra price</label>
+                <label>Zusatzpreis</label>
                 <input
-                  type="number" // change type to "number"
-                  placeholder="Extra price"
+                  type="number"
+                  placeholder="Zusatzpreis"
                   value={size.price}
                   onChange={(e) => editProp(e, index, "price")}
                 />

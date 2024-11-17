@@ -69,7 +69,7 @@ export default function Sidebar() {
       } flex flex-col bg-white transition-all`}
     >
       <div className="text-center">
-        <SectionHeader subtitle={"Basket"} />
+        <SectionHeader subtitle={"Warenkorb"} />
       </div>
 
       {cartProducts?.length !== 0 ? (
@@ -85,23 +85,23 @@ export default function Sidebar() {
                 />
               ))}
             <div className="py-0 flex justify-end items-center">
-              <div className="text-gray-500">Subtotal :</div>
-              <div className="font-semibold">${totalPrice}</div>
+              <div className="text-gray-500">Zwischensumme :</div>
+              <div className="font-semibold">{totalPrice}€</div>
             </div>
           </div>
           <Link href={"/cart"}>
             <button type="button" className="mt-6 sidebar_button button">
-              Proceed to Checkout
+              Zur Kasse gehen
             </button>
           </Link>
         </div>
       ) : (
         <div className="text-center grow flex flex-col items-center justify-center">
           <Cart className="text-gray-900 w-10 h-10" />
-          <h3 className="text-3xl text-gray-800 font-semibold">
-            Fill your Basket
+          <h3 className="text-2xl text-gray-800 font-semibold">
+            Fülle deinen Warenkorb
           </h3>
-          <p className="text-gray-700 text-lg"> Your Basket is empty</p>
+          <p className="text-gray-700 text-lg"> Dein Warenkorb ist leer</p>
         </div>
       )}
     </aside>

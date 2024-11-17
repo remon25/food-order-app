@@ -67,7 +67,7 @@ function UsersPage() {
                   href={`/users/${user._id}`}
                   className="button px-4 py-2 rounded"
                 >
-                  Edit
+                  Bearbeiten
                 </Link>
               </div>
             </div>

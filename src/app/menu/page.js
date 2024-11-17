@@ -27,7 +27,7 @@ export default async function page() {
     <section className="home-menu pr-[330px] mr-4">
       <Sidebar />
       <h1 className="text-[#222] text-center font-bold text-3xl mb-10 p-2">
-        🍕 Antalya Menu 🍕
+        🍕  Antalya Speisekarte 🍕
       </h1>
       {reorderedCategories.length > 0 &&
         reorderedCategories.map((c) => {

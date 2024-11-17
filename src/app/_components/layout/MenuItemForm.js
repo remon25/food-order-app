@@ -35,7 +35,6 @@ export default function MenuItemForm({ handleFormSubmit, menuItem }) {
       });
   }, [category]);
 
-
   return (
     <form
       className="mt-8 p-4"
@@ -73,33 +72,33 @@ export default function MenuItemForm({ handleFormSubmit, menuItem }) {
               {({ open }) => (
                 <button
                   type="button"
-                  className="block border border-gray-300 mt-2 cursor-pointer rounded-lg p-2 text-center"
+                  className="block border border-gray-300 mt-2 cursor-pointer rounded-lg p-2 text-[0.7rem] text-center"
                   onClick={() => open()}
                 >
-                  Upload an Image
+                  Lade ein Bild hoch
                 </button>
               )}
             </CldUploadWidget>
           </div>
         </div>
         <div className="grow pb-4 w-full md:w-auto">
-          <label htmlFor="menuItemName">Item name</label>
+          <label htmlFor="menuItemName">Artikelname</label>
           <input
             id="menuItemName"
             type="text"
-            placeholder="Menu item name"
+            placeholder="Name des Menüartikels"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-          <label htmlFor="description">Item description</label>
+          <label htmlFor="description">Artikelbeschreibung</label>
           <input
             id="description"
             type="text"
-            placeholder="Description"
+            placeholder="Beschreibung"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
-          <label htmlFor="category">Category</label>
+          <label htmlFor="category">Kategorie</label>
           <select
             id="category"
             value={category}
@@ -112,30 +111,30 @@ export default function MenuItemForm({ handleFormSubmit, menuItem }) {
                 </option>
               ))}
           </select>
-          <label htmlFor="price">Base price</label>
+          <label htmlFor="price">Grundpreis</label>
           <input
             id="price"
             type="number"
-            placeholder="Price"
+            placeholder="Preis"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
           />
 
           <MenuItemPriceProps
-            addLabel={"Add item size"}
-            name={"Sizes"}
+            addLabel={"Größe des Artikels hinzufügen"}
+            name={"Größen"}
             props={sizes}
             setProps={setSizes}
           />
           <MenuItemPriceProps
-            addLabel={"Add extra ingredient"}
-            name={"Extra ingredient"}
+            addLabel={"Zusätzliche Zutat hinzufügen"}
+            name={"Zusätzliche Zutat"}
             props={extraIngredientPrice}
             setProps={setExtraIngredientPrice}
           />
 
           <button className="rounded-xl p-2" type="submit">
-            Save
+            Speichern
           </button>
         </div>
       </div>

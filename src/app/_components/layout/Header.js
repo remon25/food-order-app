@@ -5,7 +5,6 @@ import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import Bars2 from "../icons/Bars2";
-import ShoppingCart from "../icons/Cart";
 
 function AuthLinks({ status, userName, image, mobile = false }) {
   if (status === "authenticated") {
@@ -28,7 +27,7 @@ function AuthLinks({ status, userName, image, mobile = false }) {
           onClick={() => signOut()}
           className="bg-primary rounded-full text-white px-8 py-2"
         >
-          Logout
+          Abmelden
         </button>
       </>
     );
@@ -36,12 +35,12 @@ function AuthLinks({ status, userName, image, mobile = false }) {
   if (status === "unauthenticated") {
     return (
       <>
-        <Link href={"/login"}>Login</Link>
+        <Link href={"/login"}>Anmelden</Link>
         <Link
           href={"/register"}
           className="bg-primary rounded-full text-white px-8 py-2"
         >
-          Register
+          Registrieren
         </Link>
       </>
     );
@@ -70,18 +69,10 @@ export default function Header() {
             src="/antalya.png"
             width={75}
             height={75}
-            alt="Antalya restaurant logo"
+            alt="Antalya Restaurant-Logo"
           />
         </Link>
         <div className="flex gap-8 items-center">
-          {/* <Link href={"/cart"} className="relative">
-            <ShoppingCart />
-            {cartProducts?.length > 0 && (
-              <span className="absolute -top-2 -right-4 bg-primary text-white text-xs py-1 px-1 rounded-full leading-3">
-                {cartProducts.length}
-              </span>
-            )}
-          </Link> */}
           <Link href={"/profile"}>
             <Image
               src={userData?.image || "/avatar.png"}
@@ -105,10 +96,10 @@ export default function Header() {
           onClick={() => setMobileNavOpen(false)}
           className="md:hidden top-0 p-4 bg-gray-950 text-white rounded-lg mt-2 flex flex-col gap-2 text-center"
         >
-          <Link href={"/"}>Home</Link>
-          <Link href={"/menu"}>Menu</Link>
-          <Link href={"/#about"}>About</Link>
-          <Link href={"/#contact"}>Contact</Link>
+          <Link href={"/"}>Startseite</Link>
+          <Link href={"/menu"}>Speisekarte</Link>
+          <Link href={"/#about"}>Über uns</Link>
+          <Link href={"/#contact"}>Kontakt</Link>
           <AuthLinks status={status} userName={userName} mobile={true} />
         </div>
       )}
@@ -119,13 +110,13 @@ export default function Header() {
               src="/antalya.png"
               width={80}
               height={80}
-              alt="Antalya restaurant logo"
+              alt="Antalya Restaurant-Logo"
             />
           </Link>
-          <Link href={"/"}>Home</Link>
-          <Link href={"/menu"}>Menu</Link>
-          <Link href={"/#about"}>About</Link>
-          <Link href={"/#contact"}>Contact</Link>
+          <Link href={"/"}>Startseite</Link>
+          <Link href={"/menu"}>Speisekarte</Link>
+          <Link href={"/#about"}>Über uns</Link>
+          <Link href={"/#contact"}>Kontakt</Link>
         </nav>
         <nav className="flex items-center gap-4 text-white font-semibold">
           <AuthLinks
@@ -133,14 +124,6 @@ export default function Header() {
             userName={userName}
             image={userData?.image}
           />
-          {/* <Link href={"/cart"} className="relative">
-            <ShoppingCart />
-            {cartProducts?.length > 0 && (
-              <span className="absolute -top-2 -right-4 bg-primary text-white text-xs py-1 px-1 rounded-full leading-3">
-                {cartProducts.length}
-              </span>
-            )}
-          </Link> */}
         </nav>
       </div>
     </header>
