@@ -34,8 +34,11 @@ function UsersPage() {
       <div className="mt-8 p-4">
         {users.length > 0 &&
           users.map((user) => (
-            <div key={user._id} className="user_row">
-              <div>
+            <div
+              key={user._id}
+              className="user_row flex items-center gap-4 p-2 border-b"
+            >
+              <div className="relative">
                 <Image
                   src={user?.image || "/avatar.png"}
                   alt={user?.name || "Anonymous"}
@@ -43,18 +46,26 @@ function UsersPage() {
                   height={40}
                   className="rounded-full"
                 />
+                {user?.verified && (
+                  <Image
+                    className="absolute top-[67%] right-0"
+                    src="/verification-badge.svg"
+                    alt="verified"
+                    width={20}
+                    height={20}
+                  />
+                )}
               </div>
-              <div>
-                <span>{user.name || "Anonymous"}</span>
+              <div className="flex-1">
+                <span className="font-medium">{user.name || "Anonymous"}</span>
               </div>
-              <div className="mb-2 md:mb-0">
+              <div className="flex-1">
                 <span>{user?.email}</span>
               </div>
               <div>
                 <Link
                   href={`/users/${user._id}`}
-                  className="button"
-                  type="button"
+                  className="button px-4 py-2 rounded"
                 >
                   Edit
                 </Link>

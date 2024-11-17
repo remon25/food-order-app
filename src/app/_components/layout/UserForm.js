@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
 
@@ -11,41 +11,25 @@ export default function UserForm({ user, onSave, isAdmin = false }) {
   const [postalCode, setPostalCode] = useState(user?.postalCode || "");
   const [city, setCity] = useState(user?.city || "");
   const [admin, setAdmin] = useState(user?.admin || false);
-  const citiesWithDeliveryPrices = [
-    { name: "Harsefeld", price: 10 },
-    { name: "Ahlerstedt", price: 20 },
-    { name: "Bargstdet", price: 20 },
-    { name: "Griemshorst", price: 20 },
-    { name: "Issendorf", price: 20 },
-    { name: "Hollenbeck", price: 20 },
-    { name: "Kakerbeck", price: 20 },
-    { name: "Ohrensen", price: 20 },
-    { name: "Ahrensmoor", price: 30 },
-    { name: "Ahrenswohlde", price: 30 },
-    { name: "Apensen", price: 30 },
-    { name: "Aspe", price: 30 },
-    { name: "Beckdorf Bokel", price: 30 },
-    { name: "Brest", price: 30 },
-    { name: "Bliedersdorf", price: 30 },
-    { name: "Deinste", price: 30 },
-    { name: "Frankenmoor", price: 30 },
-    { name: "Grundoldendorf", price: 30 },
-    { name: "Hedendorf", price: 30 },
-    { name: "Helmste", price: 30 },
-    { name: "Horneburg", price: 30 },
-    { name: "Kammerbusch", price: 30 },
-    { name: "Kutenholz", price: 30 },
-    { name: "Nottensdorf", price: 30 },
-    { name: "Oersdorf", price: 30 },
-    { name: "Ottendorf", price: 30 },
-    { name: "Revenahe", price: 30 },
-    { name: "Ruschwedet", price: 30 },
-    { name: "Sauensiek", price: 30 },
-    { name: "Wangersen", price: 30 },
-    { name: "Wiegersen", price: 30 },
-    { name: "Wohlerst", price: 30 },
-  ];
+  const [verified, setVerified] = useState(user?.verified || false);
+  const [citiesWithDeliveryPrices, setCitiesWithDeliveryPrices] = useState([]);
 
+  useEffect(() => {
+    const fetchDeliveryPrices = async () => {
+      try {
+        const response = await fetch("/api/delivery-prices");
+        if (!response.ok) throw new Error("Failed to fetch");
+        const data = await response.json();
+        const prices = {};
+        data.forEach((price) => (prices[price.name] = price.price));
+        setCitiesWithDeliveryPrices(prices);
+        setLoadingDeliveryPrices(false);
+      } catch (error) {
+        console.error("Error fetching");
+      }
+    };
+    fetchDeliveryPrices();
+  }, []);
   return (
     <div className="max-w-2xl mx-auto">
       <div className="flex flex-col gap-4 md:flex-row p-4">
@@ -93,7 +77,7 @@ export default function UserForm({ user, onSave, isAdmin = false }) {
               streetAdress,
               postalCode,
               city,
-              admin,
+              ...(isAdmin ? { admin, verified } : {}),
             })
           }
         >
@@ -131,9 +115,9 @@ export default function UserForm({ user, onSave, isAdmin = false }) {
                 onChange={(ev) => setCity(ev.target.value)}
               >
                 <option value="">Select a city</option>
-                {citiesWithDeliveryPrices.map((city) => (
-                  <option key={city.name} value={city.name}>
-                    {city.name}
+                {Object.keys(citiesWithDeliveryPrices).map((city) => (
+                  <option key={city} value={city}>
+                    {city}
                   </option>
                 ))}
               </select>
@@ -151,23 +135,42 @@ export default function UserForm({ user, onSave, isAdmin = false }) {
             </div>
           </div>
 
-          {isAdmin && (
-            <div>
-              <label
-                htmlFor="admin"
-                className="inline-flex items-center gap-2 p-2 mb-2"
-              >
-                <input
-                  id="admin"
-                  type="checkbox"
-                  value={"1"}
-                  checked={admin}
-                  onChange={(e) => setAdmin(e.target.checked)}
-                />
-                <span>Admin</span>
-              </label>
-            </div>
-          )}
+          <div className="flex gap-8">
+            {isAdmin && (
+              <>
+                <div>
+                  <label
+                    htmlFor="admin"
+                    className="inline-flex items-center gap-2 p-2 mb-2"
+                  >
+                    <input
+                      id="admin"
+                      type="checkbox"
+                      value={"1"}
+                      checked={admin}
+                      onChange={(e) => setAdmin(e.target.checked)}
+                    />
+                    <span>Admin</span>
+                  </label>
+                </div>
+                <div>
+                  <label
+                    htmlFor="verified"
+                    className="inline-flex items-center gap-2 p-2 mb-2"
+                  >
+                    <input
+                      id="verified"
+                      type="checkbox"
+                      value={"1"}
+                      checked={verified}
+                      onChange={(e) => setVerified(e.target.checked)}
+                    />
+                    <span>Verified</span>
+                  </label>
+                </div>
+              </>
+            )}
+          </div>
 
           <button type="submit" className="p-2 rounded">
             Save

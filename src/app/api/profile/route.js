@@ -31,12 +31,20 @@ export async function PUT(req) {
     }
 
     const data = await req.json();
-    const { _id } = data;
+    const { _id, isAdmin, verified } = data;
 
     if (_id) {
-      await checkAdmin(req); 
-      await User.updateOne({ _id }, data);
+      // Check admin permissions
+      const adminSession = await checkAdmin(req);
+
+      // Only admins can update `isAdmin` or `verified`
+      if (isAdmin !== undefined || verified !== undefined) {
+        await User.updateOne({ _id }, { $set: { isAdmin, verified } });
+      } else {
+        await User.updateOne({ _id }, { $set: data });
+      }
     } else {
+      // If no `_id`, user is updating their own profile
       const email = session.user.email;
       const user = await User.findOne({ email });
 
@@ -44,7 +52,12 @@ export async function PUT(req) {
         return new Response("User not found", { status: 404 });
       }
 
-      await User.updateOne({ email }, data);
+      // Prevent non-admin users from modifying sensitive fields
+      if (isAdmin !== undefined || verified !== undefined) {
+        return new Response("Forbidden", { status: 403 });
+      }
+
+      await User.updateOne({ email }, { $set: data });
     }
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
@@ -53,6 +66,7 @@ export async function PUT(req) {
     return new Response(JSON.stringify({ error: error.message }), { status });
   }
 }
+
 
 export async function GET(req) {
   try {

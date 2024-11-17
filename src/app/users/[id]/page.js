@@ -79,7 +79,7 @@ function EditUserPage() {
     );
   }
 
-  if (isAdmin === null || user === null) return null; // Ensure user and admin data are available
+  if (isAdmin === null || user === null) return null; 
   return (
     <section className="mt-24 max-w-2xl mx-auto">
       <AdminTabs />
