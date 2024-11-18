@@ -1,4 +1,5 @@
-import mongoose, { model, models, Schema } from "mongoose";
+import mongoose from "mongoose";
+const { model, models, Schema } = mongoose;
 
 const ExtraPriceSchema = new Schema({
   name: String,

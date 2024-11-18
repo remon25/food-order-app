@@ -96,7 +96,7 @@ function CategoriesPage() {
   if (isAdmin === null) return null; // Return nothing if isAdmin is not set yet
 
   return (
-    <section className="mt-24 max-w-lg mx-auto">
+    <section className="mt-24 max-w-2xl mx-auto">
       <AdminTabs/>
       <form className="mt-8" onSubmit={handleCategorySubmit}>
         <div className="flex flex-col md:flex-row gap-2 items-center">

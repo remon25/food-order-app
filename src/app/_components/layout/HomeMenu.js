@@ -42,7 +42,7 @@ export default async function HomeMenu() {
 
   return (
     <section className="home-menu pr-[330px] mr-4">
-      <h1 className="text-[#222] text-center font-bold text-3xl mb-10 p-2">
+      <h1 className="text-[#222] text-center font-bold text-2xl md:text-3xl mb-10 p-2">
         🍕 Antalya Speisekarte 🍕
       </h1>
       {reorderedCategories.length > 0 &&
@@ -59,7 +59,7 @@ export default async function HomeMenu() {
                   isOffersCategory ? "custom-offers-header" : ""
                 }`}
               >
-                <h2 className="text-gray-800 font-bold text-3xl mt-14 mb-4">
+                <h2 className="text-gray-800 font-bold text-[1.3rem] md:text-3xl mt-14 mb-4">
                   {c.name}
                 </h2>
               </div>

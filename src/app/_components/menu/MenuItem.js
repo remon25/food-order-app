@@ -75,7 +75,7 @@ export default function MenuItem({ menuItemInfo, isOffersCategory }) {
           >
             <Image
               alt={image}
-              src={image}
+              src={image || "/default-menu.png"}
               width={200}
               height={200}
               quality={50}
@@ -155,7 +155,7 @@ export default function MenuItem({ menuItemInfo, isOffersCategory }) {
         <div className="menu-item-image flex-[1] relative w-full h-full flex justify-center items-center bg-accent rounded-bl-[100px] rounded-br-none rounded-3xl">
           <div className="image-holder relative w-[120px] h-[120px] hover:scale-110 transition-all">
             <Image
-              src={image}
+              src={image || "/default-menu.png"}
               alt={name}
               quality={50}
               layout="fill"
