@@ -87,7 +87,7 @@ export default function MenuItem({ menuItemInfo, isOffersCategory }) {
             {sizes?.length > 0 && (
               <div className="p-2 w-full">
                 <h3 className="mb-2 text-center text-gray-800">
-                  Pick your size
+                  Wählen Sie Ihre Größe
                 </h3>
                 {sizes.map((size) => (
                   <label
@@ -109,7 +109,7 @@ export default function MenuItem({ menuItemInfo, isOffersCategory }) {
             {extraIngredientPrice?.length > 0 && (
               <div className="p-2 w-full">
                 <h3 className="mb-2 text-center text-gray-800">
-                  Optional Extras
+                  Optionale Extras
                 </h3>
                 {extraIngredientPrice.map((extraIngredient) => (
                   <label
@@ -134,7 +134,7 @@ export default function MenuItem({ menuItemInfo, isOffersCategory }) {
               onClick={handleAddToCartButtonClick}
               className="w-full flex justify-center font-semibold bg-primary text-white text-sm rounded-xl px-6 py-2"
             >
-              Add to cart {selectedPrice}&euro;
+              In den Warenkorb legen {selectedPrice}&euro;
             </button>
 
             <button
@@ -142,7 +142,7 @@ export default function MenuItem({ menuItemInfo, isOffersCategory }) {
               type="button"
               className="button mt-2"
             >
-              Cancel
+              Abbrechen
             </button>
           </div>
         </div>
@@ -152,7 +152,7 @@ export default function MenuItem({ menuItemInfo, isOffersCategory }) {
         onClick={handleAddToCartButtonClick}
         className={`menu-item-container w-full h-full cursor-pointer bg-[#ffff] border flex flex-row-reverse justify-center items-center rounded-3xl rounded-br-none hover:bg-[#f5f5f5] transition-all`}
       >
-        <div className="menu-item-image flex-[1] relative w-full h-full flex justify-center items-center bg-accent rounded-bl-[100px] rounded-br-none rounded-3xl">
+        <div className="menu-item-image flex-[1] relative w-full h-full flex justify-center items-center bg-accent rounded-bl-[100px] rounded-br-none rounded-3xl overflow-hidden">
           <div className="image-holder relative w-[120px] h-[120px] hover:scale-110 transition-all">
             <Image
               src={image || "/default-menu.png"}
@@ -165,17 +165,17 @@ export default function MenuItem({ menuItemInfo, isOffersCategory }) {
           </div>
         </div>
         <div className="w-full flex-[2] m-4 px-6">
-          <h2 className="text-[20px] text-slate-900 font-bold ">{name}</h2>
-          <span className="block text-[#242e30] text-[16px] pt-3">
+          <h2 className="text-[16px] md:text-[18px] text-slate-900 font-bold ">
+            {name}
+          </h2>
+          <span className="block text-[#242e30] text-[13px] md:text-[16px] pt-3">
             {description}
           </span>
           <div className="flex justify-between items-center mt-3">
-            <span className="text-[20px] text-slate-900 font-bold">
-              {price}&euro;
+            <span className="text-[16px] text-slate-900 font-bold">
+              {price} &euro;
             </span>
-            <button
-              className="btn-primary bg-primary w-10 h-10 rounded-full !p-0 grid place-content-center"
-            >
+            <button className="btn-primary bg-primary w-10 h-10 rounded-full !p-0 grid place-content-center">
               <Cart className="w-[38px] h-[30px] fill-white p-1 rounded-full" />
             </button>
           </div>

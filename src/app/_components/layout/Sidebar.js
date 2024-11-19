@@ -85,8 +85,8 @@ export default function Sidebar() {
                 />
               ))}
             <div className="py-0 flex justify-end items-center">
-              <div className="text-gray-500">Zwischensumme :</div>
-              <div className="font-semibold">{totalPrice}€</div>
+              <div className="text-gray-500">Zwischensumme :{" "}</div>
+              <div className="font-semibold"> {totalPrice} €</div>
             </div>
           </div>
           <Link href={"/cart"}>

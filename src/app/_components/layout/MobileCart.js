@@ -59,7 +59,7 @@ export default function Sidebar() {
                 </span>
               )}
             </Link>
-            <span className="text-lg">Check out ({totalPrice}&euro;)</span>
+            <span className="text-lg">Check out ({totalPrice} &euro;)</span>
           </button>
         </div>
       )}

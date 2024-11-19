@@ -60,7 +60,7 @@ export default function Header() {
   return (
     <header
       id="header"
-      className="fixed md:absolute top-0 left-0 bg-gray-950 right-0 px-8 py-2 w-full z-20"
+      className="absolute top-0 left-0 bg-gray-950 right-0 px-8 py-2 w-full z-20"
     >
       <div className="flex items-center md:hidden justify-between">
         <Link className="text-primary font-semibold text-2xl" href={"/"}>

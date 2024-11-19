@@ -8,7 +8,6 @@
   box-sizing: border-box;
 }
 
-
 section.hero {
   @apply grid;
   grid-template-columns: 0.4fr 0.6fr;
@@ -86,6 +85,30 @@ div.tabs .active {
   height: 120px !important;
 }
 
+.category-nav button {
+  scroll-snap-align: start;
+}
+.category-nav {
+  scroll-snap-type: x mandatory;
+}
+/* Hide the scrollbar thumb */
+.category-nav::-webkit-scrollbar {
+  height: 8px; /* Adjust this value based on your design */
+}
+
+.category-nav::-webkit-scrollbar-thumb {
+  display: none;
+}
+
+.category-nav {
+  overflow-x: auto;
+  white-space: nowrap;
+  scroll-behavior: smooth;
+}
+.category-nav button {
+  margin: 0; /* Remove any extra margins */
+  padding: 0.5rem 1rem; /* Adjust padding for consistency */
+}
 /* Responsive design */
 @media (max-width: 992px) {
   aside {
@@ -103,13 +126,13 @@ div.tabs .active {
   }
 }
 @media (max-width: 767px) {
-.nav-logo{
-  width: 60px !important;
-  height: 60px !important;
-}
-.hero-section{
-  top: -54px !important;
-}
+  .nav-logo {
+    width: 60px !important;
+    height: 60px !important;
+  }
+  .hero-section {
+    top: -54px !important;
+  }
 }
 
 @media (max-width: 600px) {

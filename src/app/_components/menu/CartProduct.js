@@ -14,7 +14,7 @@ export default function CartProduct({ product, onRemove, index }) {
         />
       </div>
       <div className="grow">
-        <h3 className="font-semibold">{product.name}</h3>
+        <h3 className="font-semibold text-[11px]">{product.name}</h3>
         {product.size && (
           <div className="text-sm">
             Size: <span>{product.size.name}</span>
@@ -24,14 +24,14 @@ export default function CartProduct({ product, onRemove, index }) {
           <div className="text-sm text-gray-500">
             {product.extras.map((extra) => (
               <div key={extra.name}>
-                {extra.name} {extra.price}&euro;
+                {extra.name} {extra.price} &euro;
               </div>
             ))}
           </div>
         )}
       </div>
-      <div className="text-lg font-semibold">
-        {cartProductPrice(product)}&euro;
+      <div className="text-[13px] font-bold text-nowrap">
+        {cartProductPrice(product)} &euro;
       </div>
       {!!onRemove && (
         <div className="ml-2">

@@ -43,7 +43,7 @@ export default async function page() {
                   isOffersCategory ? "custom-offers-header" : ""
                 }`}
               >
-                <h2 className="text-gray-800 font-bold text-[1.3rem] md:text-3xl mt-14 mb-4">
+                <h2 className="text-gray-800 font-bold text-[1rem] md:text-2xl mt-14 mb-4">
                   {c.name}
                 </h2>
               </div>
