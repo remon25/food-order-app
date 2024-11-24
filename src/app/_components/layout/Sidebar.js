@@ -45,6 +45,7 @@ export default function Sidebar() {
     }
   }, [cartProducts]);
 
+  console.log(cartProducts);
   if (loading) {
     return (
       <aside
@@ -85,7 +86,7 @@ export default function Sidebar() {
                 />
               ))}
             <div className="py-0 flex justify-end items-center">
-              <div className="text-gray-500">Zwischensumme :{" "}</div>
+              <div className="text-gray-500">Zwischensumme : </div>
               <div className="font-semibold"> {totalPrice} €</div>
             </div>
           </div>

@@ -77,13 +77,6 @@ div.tabs .active {
 .user_row {
   @apply grid grid-cols-1 gap-2 place-items-center md:grid-cols-2 lg:flex lg:justify-between bg-gray-100 rounded-lg mb-2 p-4 mt-4;
 }
-.custom-offers-grid {
-  grid-template-columns: repeat(1, 1fr) !important;
-}
-.custom-offers-grid .image-holder {
-  width: 120px !important;
-  height: 120px !important;
-}
 
 .category-nav button {
   scroll-snap-align: start;
@@ -109,6 +102,8 @@ div.tabs .active {
   margin: 0; /* Remove any extra margins */
   padding: 0.5rem 1rem; /* Adjust padding for consistency */
 }
+
+
 /* Responsive design */
 @media (max-width: 992px) {
   aside {
@@ -140,4 +135,27 @@ div.tabs .active {
     width: 70px !important;
     height: 70px !important;
   }
+}
+
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.swiper-pagination-bullets {
+  display: none !important;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }

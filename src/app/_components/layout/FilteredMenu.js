@@ -3,6 +3,12 @@ import { useState, useRef, useEffect } from "react";
 import MenuItem from "../menu/MenuItem";
 import SearchBar from "./SearchBar";
 import ChevronRight from "../icons/ChevronRight";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/free-mode";
+import "swiper/css/pagination";
+
+import { FreeMode, Pagination } from "swiper/modules";
 
 export default function FilteredMenu({ menu, categories }) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -12,17 +18,77 @@ export default function FilteredMenu({ menu, categories }) {
   const categoryRefs = useRef({});
   const categoryNavRef = useRef(null);
 
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
+
   const filteredMenu = menu.filter((item) =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const reorderedCategories = categories?.length
     ? categories.sort((a, b) => {
-        if (a.name.toLowerCase() === "offers") return -1;
-        if (b.name.toLowerCase() === "offers") return 1;
+        if (a.name.toLowerCase() === "angebote") return -1;
+        if (b.name.toLowerCase() === "angebote") return 1;
         return 0;
       })
     : [];
+
+  const handleMouseDown = (e) => {
+    isDragging.current = true;
+    startX.current = e.pageX - categoryNavRef.current.offsetLeft;
+    scrollLeft.current = categoryNavRef.current.scrollLeft;
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging.current) return;
+    const x = e.pageX - categoryNavRef.current.offsetLeft;
+    const walk = (x - startX.current) * 1.5; // Adjust scroll sensitivity
+    categoryNavRef.current.scrollLeft = scrollLeft.current - walk;
+  };
+
+  const handleMouseUp = () => {
+    isDragging.current = false;
+  };
+
+  const handleTouchStart = (e) => {
+    isDragging.current = true;
+    startX.current = e.touches[0].pageX - categoryNavRef.current.offsetLeft;
+    scrollLeft.current = categoryNavRef.current.scrollLeft;
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isDragging.current) return;
+    const x = e.touches[0].pageX - categoryNavRef.current.offsetLeft;
+    const walk = (x - startX.current) * 1.5; // Adjust scroll sensitivity
+    categoryNavRef.current.scrollLeft = scrollLeft.current - walk;
+  };
+
+  const handleTouchEnd = () => {
+    isDragging.current = false;
+  };
+
+  useEffect(() => {
+    const nav = categoryNavRef.current;
+
+    nav.addEventListener("mousedown", handleMouseDown);
+    nav.addEventListener("mousemove", handleMouseMove);
+    nav.addEventListener("mouseup", handleMouseUp);
+    nav.addEventListener("mouseleave", handleMouseUp);
+    nav.addEventListener("touchstart", handleTouchStart);
+    nav.addEventListener("touchmove", handleTouchMove);
+    nav.addEventListener("touchend", handleTouchEnd);
+
+    return () => {
+      nav.removeEventListener("mousedown", handleMouseDown);
+      nav.removeEventListener("mousemove", handleMouseMove);
+      nav.removeEventListener("mouseup", handleMouseUp);
+      nav.removeEventListener("mouseleave", handleMouseUp);
+      nav.removeEventListener("touchstart", handleTouchStart);
+      nav.removeEventListener("touchmove", handleTouchMove);
+      nav.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, []);
 
   const scrollToCategory = (categoryId) => {
     const categoryElement = categoryRefs.current[categoryId];
@@ -142,7 +208,7 @@ export default function FilteredMenu({ menu, categories }) {
       {/* Render categories */}
       {reorderedCategories.length > 0 &&
         reorderedCategories.map((c) => {
-          const isOffersCategory = c.name.toLowerCase() === "offers";
+          const isOffersCategory = c.name.toLowerCase() === "angebote";
 
           const categoryItems = filteredMenu.filter(
             (item) => item.category === c._id
@@ -156,14 +222,16 @@ export default function FilteredMenu({ menu, categories }) {
             <div
               key={c._id}
               ref={(el) => (categoryRefs.current[c._id] = el)}
-              className={`${isOffersCategory ? "offers-category" : ""} overflow-hidden`}
+              className={`${
+                isOffersCategory ? "offers-category" : ""
+              } overflow-hidden`}
             >
               <div
                 className={`pl-7 ${
                   isOffersCategory ? "custom-offers-header" : ""
                 }`}
               >
-                <h2 className="text-gray-800 font-bold text-[1rem] md:text-2xl mt-14 mb-4">
+                <h2 className="text-primary font-bold text-[1rem] md:text-2xl mt-14 mb-4">
                   {c.name}
                 </h2>
               </div>
@@ -172,13 +240,39 @@ export default function FilteredMenu({ menu, categories }) {
                   isOffersCategory ? "custom-offers-grid" : ""
                 }`}
               >
-                {categoryItems.map((item) => (
-                  <MenuItem
-                    key={item._id}
-                    menuItemInfo={item}
-                    isOffersCategory={isOffersCategory}
-                  />
-                ))}
+                {!isOffersCategory &&
+                  categoryItems.map((item) => (
+                    <MenuItem
+                      key={item._id}
+                      menuItemInfo={item}
+                      isOffersCategory={isOffersCategory}
+                    />
+                  ))}
+                {isOffersCategory && (
+                  <Swiper
+                    slidesPerView={3}
+                    spaceBetween={30}
+                    freeMode={true}
+                    loop={true}
+                    pagination={{
+                      clickable: true,
+                    }}
+                    modules={[FreeMode, Pagination]}
+                    className="mySwiper"
+                  >
+                    {categoryItems.map((item) => (
+                      <>
+                        <SwiperSlide>
+                          <MenuItem
+                            key={item._id}
+                            menuItemInfo={item}
+                            isOffersCategory={isOffersCategory}
+                          />
+                        </SwiperSlide>
+                      </>
+                    ))}
+                  </Swiper>
+                )}
               </div>
             </div>
           );

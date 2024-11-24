@@ -4,7 +4,6 @@ import { cartContext } from "../_components/AppContext";
 import { cartProductPrice } from "../_components/AppContext";
 import { useProfile } from "../_components/useProfile";
 import AddressInputs from "../_components/layout/AdressInputs";
-import SectionHeader from "../_components/layout/SectionHeader";
 import toast from "react-hot-toast";
 import ChevronRight from "../_components/icons/ChevronRight";
 import Dialog from "../_components/Dialog";
