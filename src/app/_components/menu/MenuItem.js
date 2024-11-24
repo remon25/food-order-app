@@ -193,8 +193,8 @@ export default function MenuItem({ menuItemInfo, isOffersCategory }) {
               src={image || "/default-menu.png"}
               alt={name}
               quality={50}
-              width={400}
-              height={220}
+              width={500}
+              height={260}
               className="rounded-[10px]"
               priority
             />

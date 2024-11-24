@@ -250,8 +250,15 @@ export default function FilteredMenu({ menu, categories }) {
                   ))}
                 {isOffersCategory && (
                   <Swiper
-                    slidesPerView={3}
-                    spaceBetween={30}
+                  breakpoints={{
+                    767: {
+                      slidesPerView: 3, // 3 slides for screens 767px and larger
+                    },
+                    0: {
+                      slidesPerView: 1.5, // 2 slides for screens smaller than 767px
+                    },
+                  }}
+                    spaceBetween={10}
                     freeMode={true}
                     loop={true}
                     pagination={{
