@@ -44,7 +44,7 @@ export default function PDFMenuPage(props) {
     <div className="absolute top-0 left-0 bottom-0 right-0 w-screen h-screen z-40 bg-[#fcfcfc] !overflow-hidden flex justify-center items-center">
       <div className="h-screen w-full container mx-auto flex justify-center items-center !overflow-hidden">
         {smallScreen ? (
-          <HTMLFlipBook width={280.2} height={600}>
+          <HTMLFlipBook flippingTime={100} width={280.2} height={600}>
             <div className="demoPage">
               <Image src={imageOne} className="w-full h-full" alt="" />
             </div>
