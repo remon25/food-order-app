@@ -97,7 +97,7 @@ export default function Header() {
           className="md:hidden top-0 p-4 bg-gray-950 text-white rounded-lg mt-2 flex flex-col gap-2 text-center"
         >
           <Link href={"/"}>Startseite</Link>
-          <Link href={"/menu"}>Speisekarte</Link>
+          <Link href={"/menu/pdf"}>Speisekarte</Link>
           <Link href={"/#about"}>Über uns</Link>
           <Link href={"/#contact"}>Kontakt</Link>
           <AuthLinks status={status} userName={userName} mobile={true} />
@@ -114,7 +114,7 @@ export default function Header() {
             />
           </Link>
           <Link href={"/"}>Startseite</Link>
-          <Link href={"/menu"}>Speisekarte</Link>
+          <Link href={"/menu/pdf"}>Speisekarte</Link>
           <Link href={"/#about"}>Über uns</Link>
           <Link href={"/#contact"}>Kontakt</Link>
         </nav>

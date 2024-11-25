@@ -10,11 +10,10 @@ const DeliveryPriceSchema = new Schema(
       type: Number,
       required: true,
     },
-    
+    isFreeDelivery: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
 
-
-
-export const DeliveryPrice = models?.DeliveryPrice || model("DeliveryPrice", DeliveryPriceSchema);
+export const DeliveryPrice =
+  models?.DeliveryPrice || model("DeliveryPrice", DeliveryPriceSchema);

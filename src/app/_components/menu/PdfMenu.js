@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import HTMLFlipBook from "react-pageflip";
-import imageOne from "/public/pdf/1.jpg";
-import imageTwo from "/public/pdf/2.jpg";
-import imageThree from "/public/pdf/3.jpg";
-import imageFour from "/public/pdf/4.jpg";
-import imageFive from "/public/pdf/5.jpg";
-import imageSix from "/public/pdf/6.jpg";
+import imageOne from "/public/pdf/1.jpeg";
+import imageTwo from "/public/pdf/2.jpeg";
+import imageThree from "/public/pdf/3.jpeg";
+import imageFour from "/public/pdf/4.jpeg";
+import imageFive from "/public/pdf/5.jpeg";
+import imageSix from "/public/pdf/6.jpeg";
 import Image from "next/image";
 
 export default function PDFMenuPage(props) {
@@ -41,10 +41,10 @@ export default function PDFMenuPage(props) {
   }, []);
 
   return (
-    <div className="absolute top-0 left-0 bottom-0 right-0 w-screen h-screen z-40 bg-gray-950 !overflow-hidden flex justify-center items-center">
-      <div className="h-screen w-full container mx-auto -mt-[88px] flex justify-center items-center !overflow-hidden">
+    <div className="absolute top-0 left-0 bottom-0 right-0 w-screen h-screen z-40 bg-[#fcfcfc] !overflow-hidden flex justify-center items-center">
+      <div className="h-screen w-full container mx-auto flex justify-center items-center !overflow-hidden">
         {smallScreen ? (
-          <HTMLFlipBook width={300} height={400}>
+          <HTMLFlipBook width={300} height={642.39}>
             <div className="demoPage">
               <Image src={imageOne} className="w-full h-full" alt="" />
             </div>
@@ -65,7 +65,7 @@ export default function PDFMenuPage(props) {
             </div>
           </HTMLFlipBook>
         ) : (
-          <HTMLFlipBook width={500} height={600} showCover={true}>
+          <HTMLFlipBook width={373} height={800} showCover={true}>
             <div className="demoPage">
               <Image src={imageOne} className="w-full h-full" alt="menu page" />
             </div>

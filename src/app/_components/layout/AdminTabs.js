@@ -29,6 +29,9 @@ export default function AdminTabs() {
         <Link className={path === "/orders" ? "active" : ""} href="/orders">
           Bestellungen
         </Link>
+        <Link className={path === "/delivery" ? "active" : ""} href="/delivery">
+          Lieferung
+        </Link>
       </>
     </div>
   );

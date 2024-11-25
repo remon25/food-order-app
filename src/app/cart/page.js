@@ -438,8 +438,12 @@ export default function CartPage() {
               Zwischensumme : <br /> Lieferung : <br /> Gesamt:
             </div>
             <div className="font-semibold">
-              {totalPrice}€ <br />{deliveryPrices[address.city] || 0}€ <br />
-              {totalPrice + (deliveryPrices[address.city] || 0)}€
+              {totalPrice} € <br />
+              {deliveryPrices[address.city] === 0
+                ? "kostenlos"
+                : deliveryPrices[address.city] + " €"}
+              <br />
+              {totalPrice + (deliveryPrices[address.city] || 0)} €
             </div>
           </div>
         </div>
