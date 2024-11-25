@@ -67,9 +67,10 @@ export default function PDFMenuPage(props) {
           ref={flipBookRef}
           width={smallScreen ? 280.2 : 373}
           height={smallScreen ? 600 : 800}
+          flippingTime={100}
           showCover={!smallScreen}
           onFlip={onFlip}
-          onInit={onInit} // Ensures totalPages is set correctly
+          onInit={onInit}
         >
           {pages.map((image, index) => (
             <div key={index} className="demoPage">
