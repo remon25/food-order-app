@@ -16,7 +16,14 @@ export default function PDFMenuPage(props) {
   const [totalPages, setTotalPages] = useState(0);
   const flipBookRef = useRef(null);
 
-  const pages = [imageOne, imageTwo, imageThree, imageFour, imageFive, imageSix];
+  const pages = [
+    imageOne,
+    imageTwo,
+    imageThree,
+    imageFour,
+    imageFive,
+    imageSix,
+  ];
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -66,27 +73,34 @@ export default function PDFMenuPage(props) {
         >
           {pages.map((image, index) => (
             <div key={index} className="demoPage">
-              <Image src={image} className="w-full h-full" alt={`Page ${index + 1}`} />
+              <Image
+                src={image}
+                className="w-full h-full"
+                alt={`Page ${index + 1}`}
+              />
             </div>
           ))}
         </HTMLFlipBook>
 
-        <div className="flex items-center gap-4 absolute bottom-[0]">
-          {currentPage > 0 && (
-            <button
-              onClick={goToPrevPage}
-              className="transform rotate-180 bg-gray-500 text-white p-2 rounded-full"
-            >
-              <ChevronRight />
-            </button>
-          )}
+        <div className="flex items-center gap-4 absolute bottom-[20px]">
+          <button
+            onClick={goToPrevPage}
+            className={`transform rotate-180 bg-gray-500 text-white p-2 rounded-full ${
+              currentPage === 0 ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+          >
+            <ChevronRight />
+          </button>
+
           <div className="text-lg font-bold text-gray-700">
             {currentPage + 1} / {totalPages}
           </div>
           <button
             onClick={goToNextPage}
             className={`bg-gray-500 text-white p-2 rounded-full ${
-              currentPage === totalPages - 1 ? "opacity-50 cursor-not-allowed" : ""
+              currentPage === totalPages - 1
+                ? "opacity-50 cursor-not-allowed"
+                : ""
             }`}
             disabled={currentPage === totalPages - 1}
           >
