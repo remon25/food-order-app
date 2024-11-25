@@ -67,7 +67,7 @@ export default function PDFMenuPage(props) {
           ref={flipBookRef}
           width={smallScreen ? 280.2 : 373}
           height={smallScreen ? 600 : 800}
-          flippingTime={100}
+          flippingTime={500}
           showCover={!smallScreen}
           onFlip={onFlip}
           onInit={onInit}
