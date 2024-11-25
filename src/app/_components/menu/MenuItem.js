@@ -153,7 +153,7 @@ export default function MenuItem({ menuItemInfo, isOffersCategory }) {
           onClick={handleAddToCartButtonClick}
           className={`menu-item-container w-full h-full cursor-pointer bg-[#ffff] border flex flex-row-reverse justify-center items-center rounded-3xl rounded-br-none hover:bg-[#f5f5f5] transition-all`}
         >
-          <div className="menu-item-image flex-[1] relative w-full h-full flex justify-center items-center bg-accent rounded-bl-[100px] rounded-br-none rounded-3xl overflow-hidden">
+          <div className="menu-item-image flex-[1] relative w-full h-full flex justify-center items-center bg-accent rounded-bl-[50px] md:rounded-bl-[100px] rounded-br-none rounded-3xl overflow-hidden">
             <div className="image-holder relative w-[120px] h-[120px] hover:scale-110 transition-all">
               <Image
                 src={image || "/default-menu.png"}
