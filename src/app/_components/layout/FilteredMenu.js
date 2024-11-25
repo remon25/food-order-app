@@ -95,7 +95,7 @@ export default function FilteredMenu({ menu, categories }) {
 
     if (categoryElement) {
       window.scrollTo({
-        top: categoryElement.offsetTop - 100, // Adjust for sticky header height
+        top: categoryElement.offsetTop - 85, // Adjust for sticky header height
         behavior: "smooth",
       });
 
@@ -142,9 +142,9 @@ export default function FilteredMenu({ menu, categories }) {
 
       const nav = categoryNavRef.current;
       if (nav) {
-        setCanScrollLeft(nav.scrollLeft > 0); // Only true if scrollLeft > 0
+        setCanScrollLeft(nav.scrollLeft > 0); 
         setCanScrollRight(
-          nav.scrollLeft + nav.clientWidth < nav.scrollWidth // Only true if there's content to scroll to on the right
+          nav.scrollLeft + nav.clientWidth < nav.scrollWidth 
         );
       }
     };
@@ -252,10 +252,10 @@ export default function FilteredMenu({ menu, categories }) {
                   <Swiper
                   breakpoints={{
                     767: {
-                      slidesPerView: 3, // 3 slides for screens 767px and larger
+                      slidesPerView: 3, 
                     },
                     0: {
-                      slidesPerView: 1.5, // 2 slides for screens smaller than 767px
+                      slidesPerView: 1.5,
                     },
                   }}
                     spaceBetween={10}

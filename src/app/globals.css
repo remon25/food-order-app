@@ -104,21 +104,7 @@ div.tabs .active {
 }
 
 .delivery-promo {
-  background-image: linear-gradient(
-    to right,
-    #ffa18a,
-    #ff9b8e,
-    #ff9592,
-    #ff9098,
-    #ff8b9e,
-    #ff91a5,
-    #ff98ac,
-    #ff9eb3,
-    #ffb0bd,
-    #ffc2c8,
-    #ffd4d6,
-    #fee5e5
-  );
+  background-color: #ffa184;
 }
 /* Responsive design */
 @media (max-width: 992px) {
