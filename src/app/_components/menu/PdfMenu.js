@@ -82,7 +82,7 @@ export default function PDFMenuPage(props) {
           ))}
         </HTMLFlipBook>
 
-        <div className="flex items-center gap-4 absolute bottom-[5px]">
+        <div className="flex items-center gap-4 absolute bottom-[5px] mt-5">
           <button
             onClick={goToPrevPage}
             className={`transform rotate-180 bg-gray-500 text-white p-2 rounded-full ${
