@@ -104,7 +104,7 @@ function DeliveryPage() {
     <section className="mt-24 max-w-2xl mx-auto">
       <AdminTabs />
       <h1 className="text-2xl font-bold my-4">Lieferpreise</h1>
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-4 p-4">
         <button
           onClick={() => toggleFreeDelivery(true)} // Make all free
           className="button bg-green-500 !text-white"
@@ -119,7 +119,7 @@ function DeliveryPage() {
         </button>
       </div>
 
-      <ul className="space-y-4">
+      <ul className="space-y-4 p-4">
         {deliveryPrices.map((price) => (
           <li
             key={price._id}

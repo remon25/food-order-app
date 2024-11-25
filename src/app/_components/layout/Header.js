@@ -1,6 +1,6 @@
 "use client";
+import { useState, useEffect, useContext } from "react";
 import { cartContext } from "../AppContext";
-import { useContext, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
@@ -54,15 +54,40 @@ export default function Header() {
   let userName = userData?.name || userData?.email;
   const { cartProducts } = useContext(cartContext);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [allDeliveryFree, setAllDeliveryFree] = useState(false);
+
   if (userName && userName.includes(" ")) {
     userName = userName.split(" ")[0];
   }
+
+  useEffect(() => {
+    // Fetch delivery prices
+    async function fetchDeliveryPrices() {
+      try {
+        const response = await fetch("/api/delivery-prices"); // Update the endpoint if necessary
+        if (!response.ok) throw new Error("Failed to fetch delivery prices");
+        const prices = await response.json();
+        const allFree = prices.every((price) => price.price === 0);
+        setAllDeliveryFree(allFree);
+      } catch (error) {
+        console.error("Error fetching delivery prices:", error);
+      }
+    }
+
+    fetchDeliveryPrices();
+  }, []);
+
   return (
     <header
       id="header"
-      className="absolute top-0 left-0 bg-gray-950 right-0 px-8 py-2 w-full z-20"
+      className="absolute top-0 left-0 bg-gray-950 right-0 w-full z-20"
     >
-      <div className="flex items-center md:hidden justify-between">
+      {allDeliveryFree && (
+        <div className="flex justify-center text-center items-center w-full h-[50px] text-gray-950 p-2 delivery-promo">
+          Nur heute! Genießen Sie kostenlosen Versand auf alle Bestellungen! 🎉
+        </div>
+      )}
+      <div className="flex items-center md:hidden justify-between px-8 py-2">
         <Link className="text-primary font-semibold text-2xl" href={"/"}>
           <Image
             className="nav-logo"
@@ -103,7 +128,7 @@ export default function Header() {
           <AuthLinks status={status} userName={userName} mobile={true} />
         </div>
       )}
-      <div className="hidden md:flex items-center justify-between">
+      <div className="hidden md:flex items-center justify-between px-8 py-2">
         <nav className="flex items-center gap-8 text-white font-semibold">
           <Link className="text-primary font-semibold text-2xl" href={"/"}>
             <Image

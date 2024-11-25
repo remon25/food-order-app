@@ -66,7 +66,7 @@ export default function Sidebar() {
       className={`sidebar ${
         showSidebar ? "translate-x-0" : "translate-x-full"
       } fixed top-0 bottom-0 right-0 h-screen w-[330px] z-10 px-6 ${
-        isScrolled ? "pt-1" : "pt-20"
+        isScrolled ? "pt-1" : "pt-[11rem]"
       } flex flex-col bg-white transition-all`}
     >
       <div className="text-center">
@@ -85,7 +85,7 @@ export default function Sidebar() {
                   index={index}
                 />
               ))}
-            <div className="py-0 flex justify-end items-center">
+            <div className="py-1 flex justify-end items-center">
               <div className="text-gray-500">Zwischensumme : </div>
               <div className="font-semibold"> {totalPrice} €</div>
             </div>

@@ -87,7 +87,7 @@ export default function Sidebar() {
                       index={index}
                     />
                   ))}
-                <div className="py-0 flex justify-end items-center">
+                <div className="py-1 flex justify-end items-center">
                   <div className="text-gray-500">Subtotal :</div>
                   <div className="font-semibold">${totalPrice}</div>
                 </div>
