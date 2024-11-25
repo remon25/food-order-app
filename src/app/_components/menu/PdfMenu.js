@@ -85,11 +85,11 @@ export default function PDFMenuPage(props) {
         <div className="flex items-center gap-4 absolute bottom-[0px]">
           <button
             onClick={goToPrevPage}
-            className={`transform rotate-180 bg-gray-500 text-white p-2 rounded-full ${
+            className={`transform rotate-180 bg-gray-500 text-white p-1 rounded-full ${
               currentPage === 0 ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
-            <ChevronRight />
+            <ChevronRight className="w-4 h-4" />
           </button>
 
           <div className="text-lg font-bold text-gray-700">
@@ -97,14 +97,14 @@ export default function PDFMenuPage(props) {
           </div>
           <button
             onClick={goToNextPage}
-            className={`bg-gray-500 text-white p-2 rounded-full ${
+            className={`bg-gray-500 text-white p-1 rounded-full ${
               currentPage === totalPages - 1
                 ? "opacity-50 cursor-not-allowed"
                 : ""
             }`}
             disabled={currentPage === totalPages - 1}
           >
-            <ChevronRight />
+            <ChevronRight className="w-4 h-4" />
           </button>
         </div>
       </div>
