@@ -66,7 +66,7 @@ export default function MenuItem({ menuItemInfo, isOffersCategory }) {
       {showPopup && (
         <div
           onClick={() => setShowPopup(false)}
-          className="fixed z-30 top-0 left-0 w-full h-full bg-black/80 flex items-center justify-center"
+          className="fixed z-[999] top-0 left-0 w-full h-full bg-black/80 flex items-center justify-center"
         >
           <div
             onClick={(ev) => ev.stopPropagation()}
