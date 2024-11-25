@@ -103,7 +103,7 @@ function DeliveryPage() {
   return (
     <section className="mt-24 max-w-2xl mx-auto">
       <AdminTabs />
-      <h1 className="text-2xl font-bold my-4">Lieferpreise</h1>
+      <h1 className="text-2xl font-bold my-4 p-4">Lieferpreise</h1>
       <div className="flex gap-2 mb-4 p-4">
         <button
           onClick={() => toggleFreeDelivery(true)} // Make all free
