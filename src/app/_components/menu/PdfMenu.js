@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import HTMLFlipBook from "react-pageflip";
 import imageOne from "/public/pdf/1.jpeg";
 import imageTwo from "/public/pdf/2.jpeg";
@@ -10,41 +10,50 @@ import imageSix from "/public/pdf/6.jpeg";
 import Image from "next/image";
 
 export default function PDFMenuPage(props) {
-  const [flipBookSize, setFlipBookSize] = useState({ width: 500, height: 600 });
   const [smallScreen, setSmallScreen] = useState(false);
+  const flipBookRef = useRef(null);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
     document.getElementById("footer").style.display = "none";
     function handleResize() {
       if (window.innerWidth <= 640) {
-        // Small screens
-        setFlipBookSize({ width: 300, height: 400 });
         setSmallScreen(true);
       } else if (window.innerWidth <= 1024) {
-        // Medium screens
-        setFlipBookSize({ width: 400, height: 500 });
         setSmallScreen(false);
       } else {
-        // Large screens
-        setFlipBookSize({ width: 500, height: 600 });
         setSmallScreen(false);
       }
     }
 
-    // Set initial size
     handleResize();
-    // Add resize event listener
     window.addEventListener("resize", handleResize);
-    // Cleanup on unmount
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Functions to handle page flipping
+  const goToNextPage = () => {
+    if (flipBookRef.current) {
+      flipBookRef.current.pageFlip().flipNext();
+    }
+  };
+
+  const goToPrevPage = () => {
+    if (flipBookRef.current) {
+      flipBookRef.current.pageFlip().flipPrev();
+    }
+  };
+
   return (
     <div className="absolute top-0 left-0 bottom-0 right-0 w-screen h-screen z-40 bg-[#fcfcfc] !overflow-hidden flex justify-center items-center">
-      <div className="h-screen w-full container mx-auto flex justify-center items-center !overflow-hidden">
+      <div className="h-screen w-full container mx-auto flex justify-center items-center !overflow-hidden relative">
         {smallScreen ? (
-          <HTMLFlipBook flippingTime={100} width={280.2} height={600}>
+          <HTMLFlipBook
+            ref={flipBookRef}
+            flippingTime={100}
+            width={280.2}
+            height={600}
+          >
             <div className="demoPage">
               <Image src={imageOne} className="w-full h-full" alt="" />
             </div>
@@ -65,7 +74,7 @@ export default function PDFMenuPage(props) {
             </div>
           </HTMLFlipBook>
         ) : (
-          <HTMLFlipBook width={373} height={800} showCover={true}>
+          <HTMLFlipBook ref={flipBookRef} width={373} height={800} showCover={true}>
             <div className="demoPage">
               <Image src={imageOne} className="w-full h-full" alt="menu page" />
             </div>
@@ -86,10 +95,21 @@ export default function PDFMenuPage(props) {
             </div>
           </HTMLFlipBook>
         )}
+
+        {/* Left and Right Arrows for navigation */}
+        <button
+          onClick={goToPrevPage}
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-500 text-white p-2 rounded-full"
+        >
+          &#8592;
+        </button>
+        <button
+          onClick={goToNextPage}
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-500 text-white p-2 rounded-full"
+        >
+          &#8594;
+        </button>
       </div>
     </div>
   );
 }
-
-
-
