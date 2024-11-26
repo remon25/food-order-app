@@ -89,9 +89,9 @@ export default function MenuItem({ menuItemInfo, isOffersCategory }) {
                 <h3 className="mb-2 text-center text-gray-800">
                   Wählen Sie Ihre Größe
                 </h3>
-                {sizes.map((size) => (
+                {sizes.map((size,index) => (
                   <label
-                    key={size.name}
+                    key={`${size.name}-${index}`}
                     className="flex items-center gap-1 p-4 border rounded-md mb-1"
                   >
                     <input

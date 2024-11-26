@@ -10,6 +10,12 @@ const DeliveryPriceSchema = new Schema(
       type: Number,
       required: true,
     },
+    postalCode: {
+      type: String,
+    },
+    minimumOrder: {
+      type: Number,
+    },
     isFreeDelivery: { type: Boolean, default: false },
   },
   { timestamps: true }

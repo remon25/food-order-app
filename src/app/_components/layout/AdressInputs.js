@@ -14,6 +14,7 @@ export default function AddressInputs({
   timeOptions,
   disabled = false,
   orderPage = false,
+  cityInfo,
 }) {
   const {
     phone,
@@ -24,7 +25,7 @@ export default function AddressInputs({
     name,
     email,
     city,
-    paymentMethod
+    paymentMethod,
   } = addressProps;
 
   const cities = Object.keys(deliveryPrices || []);
@@ -108,7 +109,13 @@ export default function AddressInputs({
             <select
               disabled={disabled}
               value={city || ""}
-              onChange={(ev) => setAddressProp("city", ev.target.value)}
+              onChange={(ev) => {
+                setAddressProp("city", ev.target.value);
+                setAddressProp(
+                  "postalCode",
+                  cityInfo.find((c) => c.name === ev.target.value)?.postalCode
+                );
+              }}
             >
               <option value={""}>Wählen Sie eine Stadt</option>
               {cities.map((city) => (
@@ -151,9 +158,7 @@ export default function AddressInputs({
               <select
                 id="deliveryTime"
                 value={deliveryTime}
-                onChange={(e) =>
-                  setAddressProp("deliveryTime", e.target.value)
-                }
+                onChange={(e) => setAddressProp("deliveryTime", e.target.value)}
                 className="block w-full mt-2 p-2 border"
               >
                 {timeOptions.map((time, index) => (
@@ -198,13 +203,11 @@ export default function AddressInputs({
                 <div>
                   <p className="text-xs">Ausgewählte Zahlungsmethode</p>
                   <h3 className="text-xl text-left text-gray-900 font-semibold">
-                    {paymentMethod === "cash" ? (
-                      "Bargeld"
-                    ) : paymentMethod === "paypal" ? (
-                      "PayPal"
-                    ) : (
-                      "Kreditkarte"
-                    )}
+                    {paymentMethod === "cash"
+                      ? "Bargeld"
+                      : paymentMethod === "paypal"
+                      ? "PayPal"
+                      : "Kreditkarte"}
                   </h3>
                 </div>
               </div>

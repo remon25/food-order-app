@@ -69,7 +69,7 @@ function LoginPage() {
         </button>
         <div className="text-center text-gray-700 my-4">
           Noch nicht registriert?{" "}
-          <Link className="underline" href="/login">
+          <Link className="underline" href="/register">
             Registrieren
           </Link>
         </div>

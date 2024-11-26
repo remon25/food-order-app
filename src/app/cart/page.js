@@ -56,6 +56,7 @@ export default function CartPage() {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("credit");
   const [loading, setLoading] = useState(true);
+  const [cityInfo, setCityInfo] = useState([]);
   const { session } = useSession();
 
   let deliveryTime = "ASAP";
@@ -90,6 +91,7 @@ export default function CartPage() {
         const data = await response.json();
         const prices = {};
         data.forEach((price) => (prices[price.name] = price.price));
+        setCityInfo(data);
         setDeliveryPrices(prices);
         setLoadingDeliveryPrices(false);
       } catch (error) {
@@ -100,10 +102,15 @@ export default function CartPage() {
   }, []);
 
   useEffect(() => {
-    if (deliveryPrices[address.city]) {
+    const calculateFinalPrice = () => {
       const deliveryPrice = deliveryPrices[address.city] || 0;
-      setFinalTotalPrice(totalPrice + deliveryPrice);
-    }
+      if (deliveryPrices[address.city] !== undefined) {
+        setFinalTotalPrice(totalPrice + deliveryPrice);
+      } else {
+        setFinalTotalPrice("");
+      }
+    };
+    calculateFinalPrice();
   }, [totalPrice, address.city, deliveryPrices]);
 
   useEffect(() => {
@@ -271,6 +278,7 @@ export default function CartPage() {
               deliveryTime={deliveryTime}
               timeOptions={timeOptions}
               selectedPaymentMethod={selectedPaymentMethod}
+              cityInfo={cityInfo}
             />
             <div className="w-full">
               <button
@@ -352,7 +360,7 @@ export default function CartPage() {
 
             {selectedPaymentMethod === "credit" ? (
               <button disabled={!isComplete} className="button" type="submit">
-                Order & Pay ${finalTotalPrice}
+                Bestellen & Bezahlen {finalTotalPrice && finalTotalPrice + " €"}
               </button>
             ) : selectedPaymentMethod === "paypal" ? (
               <div className="relatie z-1 mt-4">
@@ -363,48 +371,54 @@ export default function CartPage() {
                       type="button"
                       className="button Dialog_button"
                     >
-                      Bestellen & Bezahlen €{finalTotalPrice}
+                      Bestellen & Bezahlen{" "}
+                      {finalTotalPrice && finalTotalPrice + " €"}
                     </button>
                     <div className="absolute top-0 right-0 left-0 bottom-0 opacity-0">
-                      <PayPalScriptProvider
-                        options={{
-                          "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
-                          currency: "EUR",
-                        }}
-                      >
-                        <PayPalButtons
-                          forceReRender={[finalTotalPrice, address]}
-                          disabled={
-                            !isComplete ||
-                            loadingDeliveryPrices ||
-                            !finalTotalPrice
-                          }
-                          fundingSource={FUNDING.PAYPAL}
-                          style={{ layout: "vertical", color: "blue" }}
-                          createOrder={(data, actions) => {
-                            return actions.order.create({
-                              purchase_units: [
-                                {
-                                  amount: { value: finalTotalPrice.toFixed(2) },
-                                },
-                              ],
-                            });
+                      {isComplete && (
+                        <PayPalScriptProvider
+                          options={{
+                            "client-id":
+                              process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+                            currency: "EUR",
                           }}
-                          onApprove={(data, actions) => {
-                            return actions.order
-                              .capture()
-                              .then(handlePayPalSuccess)
-                              .catch(() =>
-                                toast.error(
-                                  "Zahlungserfassung fehlgeschlagen. Bitte versuche es erneut."
-                                )
-                              );
-                          }}
-                          onError={() =>
-                            toast.error("PayPal-Zahlung fehlgeschlagen")
-                          }
-                        />
-                      </PayPalScriptProvider>
+                        >
+                          <PayPalButtons
+                            forceReRender={[finalTotalPrice, address]}
+                            disabled={
+                              !isComplete ||
+                              loadingDeliveryPrices ||
+                              !finalTotalPrice
+                            }
+                            fundingSource={FUNDING.PAYPAL}
+                            style={{ layout: "vertical", color: "blue" }}
+                            createOrder={(data, actions) => {
+                              return actions.order.create({
+                                purchase_units: [
+                                  {
+                                    amount: {
+                                      value: finalTotalPrice.toFixed(2),
+                                    },
+                                  },
+                                ],
+                              });
+                            }}
+                            onApprove={(data, actions) => {
+                              return actions.order
+                                .capture()
+                                .then(handlePayPalSuccess)
+                                .catch(() =>
+                                  toast.error(
+                                    "Zahlungserfassung fehlgeschlagen. Bitte versuche es erneut."
+                                  )
+                                );
+                            }}
+                            onError={() =>
+                              toast.error("PayPal-Zahlung fehlgeschlagen")
+                            }
+                          />
+                        </PayPalScriptProvider>
+                      )}
                     </div>
                   </div>
                 )}
@@ -417,7 +431,8 @@ export default function CartPage() {
                   type="button"
                   className="button Dialog_button"
                 >
-                  Bestellen & Bezahlen €{finalTotalPrice}
+                  Bestellen & Bezahlen{" "}
+                  {finalTotalPrice && finalTotalPrice + " €"}
                 </button>
               </div>
             )}
@@ -433,15 +448,19 @@ export default function CartPage() {
                 index={index}
               />
             ))}
-          <div className="py-0 px-2 flex justify-end items-center">
+          <div className="py-1 px-2 flex justify-end items-center">
             <div className="text-gray-500">
-              Zwischensumme : <br /> Lieferung : <br /> Gesamt:
+              Zwischensumme : &nbsp; <br /> Lieferung : <br /> Gesamt : &nbsp;
             </div>
             <div className="font-semibold">
               {totalPrice} € <br />
-              {deliveryPrices[address.city] === 0
-                ? "kostenlos"
-                : deliveryPrices[address.city] + " €"}
+              {deliveryPrices[address.city] === 0 ? (
+                "kostenlos"
+              ) : deliveryPrices[address.city] == undefined ? (
+                <span className="text-gray-500 text-xs">Stadt auswählen</span>
+              ) : (
+                deliveryPrices[address.city] + " €"
+              )}
               <br />
               {totalPrice + (deliveryPrices[address.city] || 0)} €
             </div>

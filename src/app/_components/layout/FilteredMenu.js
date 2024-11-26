@@ -142,10 +142,8 @@ export default function FilteredMenu({ menu, categories }) {
 
       const nav = categoryNavRef.current;
       if (nav) {
-        setCanScrollLeft(nav.scrollLeft > 0); 
-        setCanScrollRight(
-          nav.scrollLeft + nav.clientWidth < nav.scrollWidth 
-        );
+        setCanScrollLeft(nav.scrollLeft > 0);
+        setCanScrollRight(nav.scrollLeft + nav.clientWidth < nav.scrollWidth);
       }
     };
 
@@ -187,9 +185,9 @@ export default function FilteredMenu({ menu, categories }) {
             ref={categoryNavRef}
             className="category-nav overflow-x-auto whitespace-nowrap py-3 px-4"
           >
-            {reorderedCategories.map((c) => (
+            {reorderedCategories.map((c,index) => (
               <button
-                key={c._id}
+                key={`${c._id}-${index}`}
                 data-id={c._id}
                 className={`px-4 py-2 mr-2 text-[0.7rem] md:text-xs font-bold ${
                   activeCategory === c._id
@@ -207,7 +205,7 @@ export default function FilteredMenu({ menu, categories }) {
 
       {/* Render categories */}
       {reorderedCategories.length > 0 &&
-        reorderedCategories.map((c) => {
+        reorderedCategories.map((c,index) => {
           const isOffersCategory = c.name.toLowerCase() === "angebote";
 
           const categoryItems = filteredMenu.filter(
@@ -220,7 +218,7 @@ export default function FilteredMenu({ menu, categories }) {
 
           return (
             <div
-              key={c._id}
+              key={`${c._id}-${index}`}
               ref={(el) => (categoryRefs.current[c._id] = el)}
               className={`${
                 isOffersCategory ? "offers-category" : ""
@@ -241,23 +239,23 @@ export default function FilteredMenu({ menu, categories }) {
                 }`}
               >
                 {!isOffersCategory &&
-                  categoryItems.map((item) => (
+                  categoryItems.map((item, index) => (
                     <MenuItem
-                      key={item._id}
+                      key={`${item._id}-${index}`}
                       menuItemInfo={item}
                       isOffersCategory={isOffersCategory}
                     />
                   ))}
                 {isOffersCategory && (
                   <Swiper
-                  breakpoints={{
-                    767: {
-                      slidesPerView: 3, 
-                    },
-                    0: {
-                      slidesPerView: 1.5,
-                    },
-                  }}
+                    breakpoints={{
+                      767: {
+                        slidesPerView: 3,
+                      },
+                      0: {
+                        slidesPerView: 1.5,
+                      },
+                    }}
                     spaceBetween={10}
                     freeMode={true}
                     loop={true}
@@ -267,11 +265,10 @@ export default function FilteredMenu({ menu, categories }) {
                     modules={[FreeMode, Pagination]}
                     className="mySwiper"
                   >
-                    {categoryItems.map((item) => (
+                    {categoryItems.map((item, index) => (
                       <>
-                        <SwiperSlide>
+                        <SwiperSlide  key={`${item._id}-${index}-${Math.random()}`}>
                           <MenuItem
-                            key={item._id}
                             menuItemInfo={item}
                             isOffersCategory={isOffersCategory}
                           />

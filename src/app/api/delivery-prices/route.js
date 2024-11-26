@@ -43,9 +43,9 @@ export async function GET() {
 
 export async function PUT(req) {
   try {
-    await checkAdmin(req); // Restrict to admin
+    await checkAdmin(req);
 
-    const { _id, price } = await req.json();
+    const { _id, price, postalCode, minimumOrder } = await req.json();
 
     if (!_id || typeof price !== "number") {
       return new Response(JSON.stringify({ error: "Invalid data" }), {
@@ -55,7 +55,7 @@ export async function PUT(req) {
 
     const updatedPrice = await DeliveryPrice.findByIdAndUpdate(
       _id,
-      { price },
+      { price, postalCode, minimumOrder },
       { new: true }
     );
 

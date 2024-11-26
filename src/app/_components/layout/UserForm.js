@@ -10,6 +10,7 @@ export default function UserForm({ user, onSave, isAdmin = false }) {
   const [streetAdress, setStreetAdress] = useState(user?.streetAdress || "");
   const [postalCode, setPostalCode] = useState(user?.postalCode || "");
   const [city, setCity] = useState(user?.city || "");
+  const [cityInfo, setCityInfo] = useState([]);
   const [admin, setAdmin] = useState(user?.admin || false);
   const [verified, setVerified] = useState(user?.verified || false);
   const [citiesWithDeliveryPrices, setCitiesWithDeliveryPrices] = useState([]);
@@ -20,6 +21,7 @@ export default function UserForm({ user, onSave, isAdmin = false }) {
         const response = await fetch("/api/delivery-prices");
         if (!response.ok) throw new Error("Fehler beim Abrufen");
         const data = await response.json();
+        setCityInfo(data);
         const prices = {};
         data.forEach((price) => (prices[price.name] = price.price));
         setCitiesWithDeliveryPrices(prices);
@@ -112,7 +114,12 @@ export default function UserForm({ user, onSave, isAdmin = false }) {
               <select
                 id="city"
                 value={city}
-                onChange={(ev) => setCity(ev.target.value)}
+                onChange={(ev) => {
+                  setCity(ev.target.value);
+                  setPostalCode(
+                    cityInfo.find((c) => c.name === ev.target.value)?.postalCode
+                  );
+                }}
               >
                 <option value="">Stadt auswählen</option>
                 {Object.keys(citiesWithDeliveryPrices).map((city) => (

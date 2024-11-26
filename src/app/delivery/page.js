@@ -10,14 +10,17 @@ function DeliveryPage() {
   const { loading, status, isAdmin } = useProfile();
   const [deliveryPrices, setDeliveryPrices] = useState([]);
   const [loadingPrices, setLoadingPrices] = useState(true);
-  const [editingPrice, setEditingPrice] = useState(null); // Track the currently editing item
+  const [editingPrice, setEditingPrice] = useState(null);
   const [updatedPrice, setUpdatedPrice] = useState("");
+  const [updatedPostalCode, setUpdatedPostalCode] = useState("");
+  const [updatedMinimumOrder, setUpdatedMinimumOrder] = useState("");
 
   useEffect(() => {
     async function fetchDeliveryPrices() {
       try {
         const response = await fetch("/api/delivery-prices");
-        if (!response.ok) throw new Error("Fehler beim Abrufen der Lieferpreise");
+        if (!response.ok)
+          throw new Error("Fehler beim Abrufen der Lieferpreise");
         const data = await response.json();
         setDeliveryPrices(data);
       } catch (error) {
@@ -36,18 +39,26 @@ function DeliveryPage() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ _id: id, price: Number(updatedPrice) }),
+      body: JSON.stringify({
+        _id: id,
+        price: Number(updatedPrice),
+        postalCode: updatedPostalCode,
+        minimumOrder: Number(updatedMinimumOrder),
+      }),
     })
       .then(async (response) => {
-        if (!response.ok) throw new Error("Fehler beim Aktualisieren des Preises");
+        if (!response.ok)
+          throw new Error("Fehler beim Aktualisieren der Lieferpreise");
         return response.json();
       })
       .then((updatedItem) => {
         setDeliveryPrices((prevPrices) =>
           prevPrices.map((item) => (item._id === id ? updatedItem : item))
         );
-        setEditingPrice(null); // Exit edit mode
+        setEditingPrice(null);
         setUpdatedPrice("");
+        setUpdatedPostalCode("");
+        setUpdatedMinimumOrder("");
       });
 
     toast.promise(savePromise, {
@@ -66,19 +77,18 @@ function DeliveryPage() {
       body: JSON.stringify({ isFreeDelivery }),
     })
       .then((response) => {
-        if (!response.ok) throw new Error("Fehler beim Umschalten der Lieferpreise");
+        if (!response.ok)
+          throw new Error("Fehler beim Umschalten der Lieferpreise");
         return response.json();
       })
       .then(() => {
-        setDeliveryPrices((prevPrices) =>
-          prevPrices.map((item) => ({
-            ...item,
-            isFreeDelivery,
-            price: isFreeDelivery ? 0 : item.price, // Adjust UI display only
-          }))
-        );
-      });
+        // Re-fetch delivery prices to ensure the state is up-to-date
+        fetchDeliveryPrices();
 
+      }).then(() => {
+        window.location.reload();
+      });
+  
     toast.promise(togglePromise, {
       loading: isFreeDelivery
         ? "Alle auf kostenlose Lieferung setzen..."
@@ -89,7 +99,19 @@ function DeliveryPage() {
       error: "Fehler beim Umschalten der Lieferpreise.",
     });
   }
-
+  
+  // Add fetchDeliveryPrices function to re-fetch data
+  async function fetchDeliveryPrices() {
+    try {
+      const response = await fetch("/api/delivery-prices");
+      if (!response.ok) throw new Error("Fehler beim Abrufen der Lieferpreise");
+      const data = await response.json();
+      setDeliveryPrices(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  
   if (loading || status === "loading" || loadingPrices) {
     return (
       <div className="w-full h-screen flex items-center justify-center overflow-hidden">
@@ -106,19 +128,18 @@ function DeliveryPage() {
       <h1 className="text-2xl font-bold my-4 p-4">Lieferpreise</h1>
       <div className="flex gap-2 mb-4 p-4">
         <button
-          onClick={() => toggleFreeDelivery(true)} // Make all free
+          onClick={() => toggleFreeDelivery(true)}
           className="button bg-green-500 !text-white"
         >
           Alle kostenlos machen
         </button>
         <button
-          onClick={() => toggleFreeDelivery(false)} // Revert to original prices
+          onClick={() => toggleFreeDelivery(false)}
           className="button bg-red-500 !text-white"
         >
           Preise zurücksetzen
         </button>
       </div>
-
       <ul className="space-y-4 p-4">
         {deliveryPrices.map((price) => (
           <li
@@ -126,31 +147,59 @@ function DeliveryPage() {
             className="p-4 border rounded-md shadow-md flex justify-between items-center"
           >
             {editingPrice === price._id ? (
-              <div className="flex items-center">
-                <input
-                  type="number"
-                  value={updatedPrice}
-                  onChange={(e) => setUpdatedPrice(e.target.value)}
-                  className="input"
-                />
-                <button
-                  onClick={() => handleSavePrice(price._id)}
-                  className="button bg-green-500 ml-2"
-                >
-                  Speichern
-                </button>
-                <button
-                  onClick={() => setEditingPrice(null)}
-                  className="button ml-2"
-                >
-                  Abbrechen
-                </button>
+              <div className="flex flex-col items-center mr-1">
+                <div>
+                  <label>Preis:</label>
+                  <input
+                    type="number"
+                    value={updatedPrice}
+                    onChange={(e) => setUpdatedPrice(e.target.value)}
+                    className="input"
+                  />
+                  <label>Postleitzahl:</label>
+                  <input
+                    type="text"
+                    value={updatedPostalCode}
+                    onChange={(e) => setUpdatedPostalCode(e.target.value)}
+                    className="input"
+                    placeholder="Postleitzahl"
+                  />
+                  <label>Mindestbestellung:</label>
+                  <input
+                    type="number"
+                    value={updatedMinimumOrder}
+                    onChange={(e) => setUpdatedMinimumOrder(e.target.value)}
+                    className="input"
+                    placeholder="Mindestbestellung"
+                  />
+                </div>
+
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => handleSavePrice(price._id)}
+                    className="button bg-green-500 ml-2"
+                  >
+                    Speichern
+                  </button>
+                  <button
+                    onClick={() => setEditingPrice(null)}
+                    className="button ml-2"
+                  >
+                    Abbrechen
+                  </button>
+                </div>
               </div>
             ) : (
               <div className="flex flex-col">
-                <h2 className="text-lg font-medium">{price.name}</h2>
+                <h2 className="text-lg font-bold">{price.name}</h2>
                 <p className="text-gray-800 font-semibold">
                   Preis: {price.price === 0 ? "Kostenlos" : price.price + "€"}
+                </p>
+                <p className="text-gray-800 font-semibold">
+                  Postleitzahl: {price.postalCode}
+                </p>
+                <p className="text-gray-800 font-semibold">
+                  Mindestbestellung: {price.minimumOrder}€
                 </p>
               </div>
             )}
@@ -158,6 +207,8 @@ function DeliveryPage() {
               onClick={() => {
                 setEditingPrice(price._id);
                 setUpdatedPrice(price.price);
+                setUpdatedPostalCode(price.postalCode);
+                setUpdatedMinimumOrder(price.minimumOrder);
               }}
               className="button !w-auto"
             >

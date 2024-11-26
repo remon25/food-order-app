@@ -10,12 +10,10 @@ export const metadata = {
 export default async function RegisterPage() {
   const session = await getServerSession(authOptions);
   
-  // Redirect authenticated users to the profile page
   if (session) {
     redirect("/profile");
   }
 
-  // Render the registration page for unauthenticated users
   return (
     <section className="mt-16 p-4">
       <h1 className="text-center text-primary text-4xl font-bold mb-6">

@@ -7,14 +7,24 @@ import Cart from "../icons/Cart";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Spinner from "./Spinner";
+import { useProfile } from "../useProfile";
 
 export default function Sidebar() {
   const { cartProducts, removeCartProduct } = useContext(cartContext);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [deliveryPrices, setDeliveryPrices] = useState([]);
+  const [myDeliveryPrice, setMyDeliveryPrice] = useState(undefined);
+  const [loadingDeliveryPrices, setLoadingDeliveryPrices] = useState(true);
+  const [freeDelivery, setFreeDelivery] = useState(false);
   let totalPrice = 0;
   const pathname = usePathname();
+  const {
+    data: profileData = null,
+    loading: profileLoading,
+    error: profileError,
+  } = useProfile();
 
   for (const p of cartProducts) {
     totalPrice += cartProductPrice(p);
@@ -45,8 +55,41 @@ export default function Sidebar() {
     }
   }, [cartProducts]);
 
-  console.log(cartProducts);
-  if (loading) {
+  useEffect(() => {
+    const fetchDeliveryPrices = async () => {
+      try {
+        const response = await fetch("/api/delivery-prices");
+        if (!response.ok) throw new Error("Failed to fetch");
+        const data = await response.json();
+  
+        const prices = {};
+        data.forEach((price) => (prices[price.name] = price.price));
+        setDeliveryPrices(data);
+  
+        if (profileData?.city) {
+          const deliveryPrice = prices[profileData.city];
+          const isFree = data.find((price) => price.name === profileData.city)
+            ?.isFreeDelivery;
+          setMyDeliveryPrice(deliveryPrice);
+          setFreeDelivery(isFree || false);
+        }
+      } catch (error) {
+        console.error("Error fetching delivery prices", error);
+      } finally {
+        setLoadingDeliveryPrices(false);
+      }
+    };
+  
+    if (profileData?.city) {
+      fetchDeliveryPrices();
+    } else {
+      setLoadingDeliveryPrices(false); // Stop loading if no user is logged in
+    }
+  }, [profileData?.city]);
+  
+   
+
+  if (loading || loadingDeliveryPrices) {
     return (
       <aside
         id="sidebar"
@@ -85,9 +128,27 @@ export default function Sidebar() {
                   index={index}
                 />
               ))}
-            <div className="py-1 flex justify-end items-center">
-              <div className="text-gray-500">Zwischensumme : </div>
-              <div className="font-semibold"> {totalPrice} €</div>
+            <div className="flex flex-col items-start">
+              <div className="py-1 flex justify-end items-center">
+                <div className="text-gray-500">Zwischensumme : &nbsp; </div>
+                <div className="font-semibold"> {totalPrice} €</div>
+              </div>
+              {myDeliveryPrice !== undefined && (
+                <>
+                  <div className="py-1 flex justify-end items-center">
+                    <div className="text-gray-500">Lieferung : &nbsp; </div>
+                    <div className="font-semibold">
+                      {freeDelivery ? "Kostenlos" : myDeliveryPrice + " €"}
+                    </div>
+                  </div>
+                  <div className="py-1 flex justify-end items-center">
+                    <div className="text-gray-500">Gesamt : &nbsp; </div>
+                    <div className="font-semibold">
+                      {totalPrice + (freeDelivery ? 0 : myDeliveryPrice)} €
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
           <Link href={"/cart"}>
