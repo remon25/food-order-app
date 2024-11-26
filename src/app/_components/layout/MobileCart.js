@@ -18,13 +18,13 @@ export default function Sidebar() {
   const [myDeliveryPrice, setMyDeliveryPrice] = useState(undefined);
   const [freeDelivery, setFreeDelivery] = useState(false);
   const [loadingDeliveryPrices, setLoadingDeliveryPrices] = useState(true);
+  const [reachMinimumOreder, setReachMinimumOreder] = useState(false);
 
   let totalPrice = 0;
+  let minimumOrder;
+
   const pathname = usePathname();
-  const {
-    data: profileData,
-    loading: profileLoading,
-  } = useProfile();
+  const { data: profileData, loading: profileLoading } = useProfile();
 
   for (const p of cartProducts) {
     totalPrice += cartProductPrice(p);
@@ -68,8 +68,9 @@ export default function Sidebar() {
 
         if (profileData?.city) {
           const deliveryPrice = prices[profileData.city];
-          const isFree = data.find((price) => price.name === profileData.city)
-            ?.isFreeDelivery;
+          const isFree = data.find(
+            (price) => price.name === profileData.city
+          )?.isFreeDelivery;
 
           setMyDeliveryPrice(deliveryPrice);
           setFreeDelivery(isFree || false);
@@ -86,7 +87,20 @@ export default function Sidebar() {
     }
   }, [profileData?.city]);
 
-  
+  minimumOrder = deliveryPrices.find(
+    (c) => c.name === profileData?.city
+  )?.minimumOrder;
+
+  useEffect(() => {
+    if (
+      totalPrice >=
+      deliveryPrices.find((c) => c.name === profileData?.city)?.minimumOrder
+    ) {
+      setReachMinimumOreder(true);
+    } else {
+      setReachMinimumOreder(false);
+    }
+  }, [profileData?.city, deliveryPrices, totalPrice]);
 
   return (
     <div className="mobile-sidebar hidden">
@@ -154,14 +168,31 @@ export default function Sidebar() {
                   </>
                 )}
               </div>
-              <Link href={"/cart"}>
-                <button
-                  type="button"
-                  className="button sidebar_button flex justify-center gap-2 !p-3"
-                >
-                  Zur Kasse gehen
-                </button>
-              </Link>
+              {reachMinimumOreder && (
+                <Link href={"/cart"}>
+                  <button
+                    type="button"
+                    className="button sidebar_button flex justify-center gap-2 !p-3"
+                  >
+                    Zur Kasse gehen
+                  </button>
+                </Link>
+              )}
+              {!reachMinimumOreder && (
+                <>
+                  <button
+                    type="button"
+                    className="button sidebar_button flex justify-center gap-2 !p-3 cursor-not-allowed"
+                    disabled
+                  >
+                    Zur Kasse gehen
+                  </button>
+                  <p className="text-center text-sm text-gray-800 bg-orange-100 rounded-[5px] p-2 mt-4">
+                    Mindestbestellwert für Ihre Stadt beträgt <br />
+                    <span className="font-semibold">{minimumOrder} €</span>
+                  </p>
+                </>
+              )}
             </div>
           ) : (
             <div className="text-center grow flex flex-col items-center justify-center mt-[30%]">
