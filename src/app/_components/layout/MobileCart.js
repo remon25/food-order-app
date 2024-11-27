@@ -27,7 +27,7 @@ export default function Sidebar() {
   const pathname = usePathname();
   const { data: profileData, loading: profileLoading } = useProfile();
   const session = useSession();
-
+console.log(session.data);
   for (const p of cartProducts) {
     totalPrice += cartProductPrice(p);
   }
@@ -170,7 +170,7 @@ export default function Sidebar() {
                   </>
                 )}
               </div>
-              {(reachMinimumOreder || session.data === null) && (
+              {(reachMinimumOreder || !session?.data) && (
                 <Link href={"/cart"}>
                   <button
                     type="button"
@@ -180,7 +180,7 @@ export default function Sidebar() {
                   </button>
                 </Link>
               )}
-              {!reachMinimumOreder && session.data !== null (
+              {!reachMinimumOreder && session?.data &&  (
                 <>
                   <button
                     type="button"
