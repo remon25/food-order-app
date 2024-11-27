@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import Xmark from "../icons/Xmark";
 import ShoppingCart from "../icons/Cart";
 import { useProfile } from "../useProfile";
+import { useSession } from "next-auth/react";
 
 export default function Sidebar() {
   const { cartProducts, removeCartProduct } = useContext(cartContext);
@@ -25,6 +26,7 @@ export default function Sidebar() {
 
   const pathname = usePathname();
   const { data: profileData, loading: profileLoading } = useProfile();
+  const session = useSession();
 
   for (const p of cartProducts) {
     totalPrice += cartProductPrice(p);
@@ -168,7 +170,7 @@ export default function Sidebar() {
                   </>
                 )}
               </div>
-              {reachMinimumOreder && (
+              {(reachMinimumOreder || session.data === null) && (
                 <Link href={"/cart"}>
                   <button
                     type="button"
@@ -178,7 +180,7 @@ export default function Sidebar() {
                   </button>
                 </Link>
               )}
-              {!reachMinimumOreder && (
+              {!reachMinimumOreder && session.data !== null (
                 <>
                   <button
                     type="button"
