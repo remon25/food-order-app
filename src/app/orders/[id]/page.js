@@ -20,6 +20,8 @@ function OrderPage() {
   const clearCartParam = searchParams.get("clear-cart");
   const { data: session, status } = useSession(); // Destructure session and status
 
+  console.log(order);
+
   useEffect(() => {
     if (id && session) {
       setLoadingOrder(true);
@@ -104,12 +106,12 @@ function OrderPage() {
 
   // Render order details if order is found
   return (
-    <section className="max-w-2xl mx-auto mt-8 p-4">
+    <section className="max-w-4xl mx-auto mt-8 p-4">
       <div className="text-center">
         <SectionHeader subtitle="Ihre Bestellung" />
         <div className="mt-4 mb-8">
           <p>Danke für deine Bestellung.</p>
-          <p>Wir werden dich anrufen, wenn deine Bestellung auf dem Weg ist.</p>
+          <p className="italic font-semibold">Your order id is {order?._id}</p>
         </div>
       </div>
       {order && (
@@ -118,7 +120,7 @@ function OrderPage() {
             {order.cartProducts.map((product, index) => (
               <CartProduct key={`${product._id}-${index}`} product={product} />
             ))}
-            <div className="text-right py-2 text-gray-500">
+            <div className="text-left py-2 text-gray-500">
               Zwischensumme:
               <span className="text-black font-bold inline-block w-8">
                 €{order?.subtotal}
@@ -126,7 +128,9 @@ function OrderPage() {
               <br />
               Lieferung:
               <span className="text-black font-bold inline-block w-8">
-                €{order?.deliveryPrice || "-"}
+                {order?.deliveryPrice === 0 && "Kostenlos"}
+                {order?.deliveryPrice !== 0 && order?.deliveryPrice + "€"}
+                {order?.deliveryPrice == null && rder?.deliveryPrice == undefined && "_"}
               </span>
               <br />
               Gesamt:

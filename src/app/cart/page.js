@@ -20,6 +20,7 @@ import Check from "../_components/icons/Check";
 import Cart from "../_components/icons/Cart";
 import Spinner from "../_components/layout/Spinner";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 function generateTimeSlots() {
   const timeSlots = [];
@@ -55,9 +56,11 @@ export default function CartPage() {
   const [timeOptions, setTimeOptions] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("credit");
+  const [reachMinimumOreder, setReachMinimumOreder] = useState(false);
   const [loading, setLoading] = useState(true);
   const [cityInfo, setCityInfo] = useState([]);
   const { session } = useSession();
+  const [minimumOrder, setMinimumOrder] = useState(undefined);
 
   let deliveryTime = "ASAP";
   let totalPrice = 0;
@@ -242,6 +245,19 @@ export default function CartPage() {
     });
   };
 
+  useEffect(() => {
+    const cityData = cityInfo.find((c) => c.name === address?.city);
+    setMinimumOrder(cityData?.minimumOrder);
+  }, [cityInfo, address?.city]);
+
+  useEffect(() => {
+    if (totalPrice >= minimumOrder) {
+      setReachMinimumOreder(true);
+    } else {
+      setReachMinimumOreder(false);
+    }
+  }, [minimumOrder, totalPrice]);
+  console.log(minimumOrder, address?.city);
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -358,84 +374,115 @@ export default function CartPage() {
               )}
             </div>
 
-            {selectedPaymentMethod === "credit" ? (
-              <button disabled={!isComplete} className="button" type="submit">
-                Bestellen & Bezahlen {finalTotalPrice && finalTotalPrice + " €"}
-              </button>
-            ) : selectedPaymentMethod === "paypal" ? (
-              <div className="relatie z-1 mt-4">
-                {!loadingDeliveryPrices && (
-                  <div className="relative">
+            <div>
+              {reachMinimumOreder ? (
+                selectedPaymentMethod === "credit" ? (
+                  <button
+                    disabled={!isComplete}
+                    className="button"
+                    type="submit"
+                  >
+                    Bestellen & Bezahlen{" "}
+                    {finalTotalPrice && finalTotalPrice + " €"}
+                  </button>
+                ) : selectedPaymentMethod === "paypal" ? (
+                  <div className="relatie z-1 mt-4">
+                    {!loadingDeliveryPrices && (
+                      <div className="relative">
+                        <button
+                          disabled={!isComplete}
+                          type="button"
+                          className="button Dialog_button"
+                        >
+                          Bestellen & Bezahlen{" "}
+                          {finalTotalPrice && finalTotalPrice + " €"}
+                        </button>
+                        <div className="absolute top-0 right-0 left-0 bottom-0 opacity-0">
+                          {isComplete && (
+                            <PayPalScriptProvider
+                              options={{
+                                "client-id":
+                                  process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+                                currency: "EUR",
+                              }}
+                            >
+                              <PayPalButtons
+                                forceReRender={[finalTotalPrice, address]}
+                                disabled={
+                                  !isComplete ||
+                                  loadingDeliveryPrices ||
+                                  !finalTotalPrice
+                                }
+                                fundingSource={FUNDING.PAYPAL}
+                                style={{ layout: "vertical", color: "blue" }}
+                                createOrder={(data, actions) => {
+                                  return actions.order.create({
+                                    purchase_units: [
+                                      {
+                                        amount: {
+                                          value: finalTotalPrice.toFixed(2),
+                                        },
+                                      },
+                                    ],
+                                  });
+                                }}
+                                onApprove={(data, actions) => {
+                                  return actions.order
+                                    .capture()
+                                    .then(handlePayPalSuccess)
+                                    .catch(() =>
+                                      toast.error(
+                                        "Zahlungserfassung fehlgeschlagen. Bitte versuche es erneut."
+                                      )
+                                    );
+                                }}
+                                onError={() =>
+                                  toast.error("PayPal-Zahlung fehlgeschlagen")
+                                }
+                              />
+                            </PayPalScriptProvider>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="mt-4">
                     <button
                       disabled={!isComplete}
+                      onClick={handlePayOnDelivery}
                       type="button"
                       className="button Dialog_button"
                     >
                       Bestellen & Bezahlen{" "}
                       {finalTotalPrice && finalTotalPrice + " €"}
                     </button>
-                    <div className="absolute top-0 right-0 left-0 bottom-0 opacity-0">
-                      {isComplete && (
-                        <PayPalScriptProvider
-                          options={{
-                            "client-id":
-                              process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
-                            currency: "EUR",
-                          }}
-                        >
-                          <PayPalButtons
-                            forceReRender={[finalTotalPrice, address]}
-                            disabled={
-                              !isComplete ||
-                              loadingDeliveryPrices ||
-                              !finalTotalPrice
-                            }
-                            fundingSource={FUNDING.PAYPAL}
-                            style={{ layout: "vertical", color: "blue" }}
-                            createOrder={(data, actions) => {
-                              return actions.order.create({
-                                purchase_units: [
-                                  {
-                                    amount: {
-                                      value: finalTotalPrice.toFixed(2),
-                                    },
-                                  },
-                                ],
-                              });
-                            }}
-                            onApprove={(data, actions) => {
-                              return actions.order
-                                .capture()
-                                .then(handlePayPalSuccess)
-                                .catch(() =>
-                                  toast.error(
-                                    "Zahlungserfassung fehlgeschlagen. Bitte versuche es erneut."
-                                  )
-                                );
-                            }}
-                            onError={() =>
-                              toast.error("PayPal-Zahlung fehlgeschlagen")
-                            }
-                          />
-                        </PayPalScriptProvider>
-                      )}
-                    </div>
                   </div>
-                )}
-              </div>
-            ) : (
-              <div className="mt-4">
-                <button
-                  disabled={!isComplete}
-                  onClick={handlePayOnDelivery}
-                  type="button"
-                  className="button Dialog_button"
-                >
-                  Bestellen & Bezahlen{" "}
-                  {finalTotalPrice && finalTotalPrice + " €"}
-                </button>
-              </div>
-            )}
+                )
+              ) : (
+                <p className="text-center text-sm text-gray-800 bg-orange-100 rounded-[5px] p-2 mt-4">
+                  {!minimumOrder && !address.city && (
+                    <span>Stadt auswählen</span>
+                  )}
+                  {minimumOrder && address.city && (
+                    <span>
+                      Mindestbestellwert für Ihre Stadt beträgt <br />
+                      <span className="font-semibold">
+                        {minimumOrder} €
+                      </span>{" "}
+                      <br />
+                      <Link
+                        href="/"
+                        className="text-primary font-semibold flex justify-center items-center transition-all gap-2 hover:gap-3"
+                      >
+                        <ChevronRight className="w-4 h-4 rotate-180" />
+                        Zurück zum Menü
+                      </Link>
+                    </span>
+                  )}
+                </p>
+              )}
+            </div>
           </form>
         </div>
         <div className="p-3">
