@@ -8,7 +8,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Spinner from "./Spinner";
 import { useProfile } from "../useProfile";
-import { useSession } from "next-auth/react";
 
 export default function Sidebar() {
   const { cartProducts, removeCartProduct } = useContext(cartContext);
@@ -29,7 +28,6 @@ export default function Sidebar() {
     loading: profileLoading,
     error: profileError,
   } = useProfile();
-  const session = useSession();
 
   for (const p of cartProducts) {
     totalPrice += cartProductPrice(p);
@@ -170,14 +168,14 @@ export default function Sidebar() {
             </div>
           </div>
 
-          {(reachMinimumOreder || session.data === null) && (
+          {(reachMinimumOreder || !profileData?.city) && (
             <Link href={"/cart"}>
               <button type="button" className="mt-6 sidebar_button button">
                 Zur Kasse gehen
               </button>
             </Link>
           )}
-          {!reachMinimumOreder && session.data !== null && (
+          {!reachMinimumOreder && profileData?.city && (
             <>
               <button
                 type="button"

@@ -9,9 +9,8 @@ import { usePathname } from "next/navigation";
 import Xmark from "../icons/Xmark";
 import ShoppingCart from "../icons/Cart";
 import { useProfile } from "../useProfile";
-import { useSession } from "next-auth/react";
 
-export default function Sidebar() {
+export default function MobileSidebar() {
   const { cartProducts, removeCartProduct } = useContext(cartContext);
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const [showCartButton, setShowCartButton] = useState(true);
@@ -20,14 +19,13 @@ export default function Sidebar() {
   const [freeDelivery, setFreeDelivery] = useState(false);
   const [loadingDeliveryPrices, setLoadingDeliveryPrices] = useState(true);
   const [reachMinimumOreder, setReachMinimumOreder] = useState(false);
+  const [minimumOrder, setMinimumOrder] = useState(undefined);
+
 
   let totalPrice = 0;
-  let minimumOrder;
 
   const pathname = usePathname();
   const { data: profileData, loading: profileLoading } = useProfile();
-  const session = useSession();
-console.log(session.data);
   for (const p of cartProducts) {
     totalPrice += cartProductPrice(p);
   }
@@ -89,20 +87,18 @@ console.log(session.data);
     }
   }, [profileData?.city]);
 
-  minimumOrder = deliveryPrices.find(
-    (c) => c.name === profileData?.city
-  )?.minimumOrder;
-
   useEffect(() => {
-    if (
-      totalPrice >=
-      deliveryPrices.find((c) => c.name === profileData?.city)?.minimumOrder
-    ) {
+    const cityData = deliveryPrices.find((c) => c.name === profileData?.city);
+    setMinimumOrder(cityData?.minimumOrder);
+  }, [deliveryPrices, profileData?.city]);
+  
+  useEffect(() => {
+    if (totalPrice >= minimumOrder) {
       setReachMinimumOreder(true);
     } else {
       setReachMinimumOreder(false);
     }
-  }, [profileData?.city, deliveryPrices, totalPrice]);
+  }, [minimumOrder, totalPrice]);
 
   return (
     <div className="mobile-sidebar hidden">
@@ -170,7 +166,7 @@ console.log(session.data);
                   </>
                 )}
               </div>
-              {(reachMinimumOreder || !session?.data) && (
+              {(reachMinimumOreder || !profileData?.city) && (
                 <Link href={"/cart"}>
                   <button
                     type="button"
@@ -180,7 +176,7 @@ console.log(session.data);
                   </button>
                 </Link>
               )}
-              {!reachMinimumOreder && session?.data &&  (
+              {!reachMinimumOreder && profileData?.city && (
                 <>
                   <button
                     type="button"

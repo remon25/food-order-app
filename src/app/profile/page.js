@@ -1,7 +1,8 @@
 "use client";
+
 import { useSession } from "next-auth/react";
 import UserTabs from "../_components/layout/UserTabs";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import UserForm from "../_components/layout/UserForm";
@@ -16,26 +17,26 @@ function ProfilePage() {
   const [admin, setAdmin] = useState(false);
   const [profileFetched, setProfileFetched] = useState(false);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      if (status === "authenticated") {
-        try {
-          const res = await fetch("/api/profile");
-          const data = await res.json();
-          setUser(data);
-          setAdmin(data?.admin); // Update admin state here
-          setProfileFetched(true);
-        } catch (error) {
-          console.error("Failed to fetch profile:", error);
-          // Optionally redirect or show an error
-        }
-      } else if (status === "unauthenticated") {
-        router.push("/login");
+  const fetchProfile = useCallback(async () => {
+    if (status === "authenticated") {
+      try {
+        const res = await fetch("/api/profile");
+        const data = await res.json();
+        setUser(data);
+        setAdmin(data?.admin); // Update admin state here
+        setProfileFetched(true);
+      } catch (error) {
+        console.error("Failed to fetch profile:", error);
+        // Optionally redirect or show an error
       }
-    };
-
-    fetchProfile();
+    } else if (status === "unauthenticated") {
+      router.push("/login");
+    }
   }, [status, router]);
+
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
 
   async function handleNameChange(e, data) {
     e.preventDefault();
@@ -49,6 +50,8 @@ function ProfilePage() {
       });
       if (response.ok) {
         resolve();
+        await fetchProfile();
+        window.location.reload();
       } else {
         reject();
       }
