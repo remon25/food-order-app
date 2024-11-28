@@ -14,7 +14,7 @@ function AuthLinks({ status, userName, image, mobile = false }) {
           <div className="flex flex-col gap-1 items-center justify-center">
             {!mobile && (
               <Image
-                src={image || "/avatar.png"}
+                src={image || "/avatar.svg"}
                 alt={userName}
                 className="rounded-full"
                 width={40}
@@ -100,7 +100,7 @@ export default function Header() {
         <div className="flex gap-8 items-center">
           <Link href={"/profile"}>
             <Image
-              src={userData?.image || "/avatar.png"}
+              src={userData?.image || "/avatar.svg"}
               alt={userName}
               className="rounded-full"
               width={40}
