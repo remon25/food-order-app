@@ -21,10 +21,11 @@ export function cartProductPrice(cartProduct) {
 
 export default function AppProvider({ children }) {
   const [cartProducts, setCartProducts] = useState([]);
-  const [isClient, setIsClient] = useState(false); // Track if we are on the client
+  const [isClient, setIsClient] = useState(false);
+  const [orderType, setOrderType] = useState("delivery");
 
   useEffect(() => {
-    setIsClient(true); // Set to true on client mount
+    setIsClient(true);
   }, []);
 
   useEffect(() => {
@@ -74,6 +75,8 @@ export default function AppProvider({ children }) {
           addToCart,
           removeCartProduct,
           clearCart,
+          orderType,
+          setOrderType,
         }}
       >
         {children}

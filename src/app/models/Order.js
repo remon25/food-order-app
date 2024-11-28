@@ -21,8 +21,12 @@ const OrderSchema = new Schema(
       enum: ["paypal", "credit card", "cash"],
       required: true,
     },
+    orderType: {
+      type: String,
+      enum: ["delivery", "pickup"],
+      required: true,
+    },
   },
-
   { timestamps: true }
 );
 

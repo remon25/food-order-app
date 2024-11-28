@@ -8,9 +8,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Spinner from "./Spinner";
 import { useProfile } from "../useProfile";
+import Delivery from "../icons/Delivery";
+import Pickin from "../icons/Pickin";
 
 export default function Sidebar() {
-  const { cartProducts, removeCartProduct } = useContext(cartContext);
+  const { cartProducts, removeCartProduct, orderType, setOrderType } =
+    useContext(cartContext);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -132,6 +135,50 @@ export default function Sidebar() {
         <SectionHeader subtitle={"Warenkorb"} />
       </div>
 
+      <div className="relative flex justify-between mt-4 bg-neutral-200 rounded-full py-2 px-4 shadow-lg">
+        <div
+          className={`absolute top-0 w-1/2 h-full bg-white rounded-full z-[1] transition-all duration-300 ease-in-out ${
+            orderType == "delivery"
+              ? "left-0"
+              : "left-[100%] translate-x-[-100%]"
+          } shadow-lg`}
+        ></div>
+
+        <div
+          onClick={() => setOrderType("delivery")}
+          className="flex items-center gap-1 cursor-pointer z-[2]"
+        >
+          <Delivery
+            className={`${
+              orderType == "delivery"
+                ? "w-6 h-6 stroke-primary"
+                : "w-6 h-6 stroke-black"
+            } transition-all duration-300 ease-in-out`}
+          />
+          <div className="tex-center flex flex-col items-center">
+            <div className={`font-semibold`}>Lieferung</div>
+            <div className="text-gray-500 text-xs">25-50 min</div>
+          </div>
+        </div>
+
+        <div
+          onClick={() => setOrderType("pickin")}
+          className="flex items-center gap-1 cursor-pointer z-[2]"
+        >
+          <Pickin
+            className={`${
+              orderType == "pickin"
+                ? "w-6 h-6 fill-primary"
+                : "w-6 h-6 fill-black"
+            } transition-all duration-300 ease-in-out`}
+          />
+          <div className="tex-center flex flex-col items-center">
+            <div className={`font-semibold`}>Abholung</div>
+            <div className="text-gray-500 text-xs">15 min</div>
+          </div>
+        </div>
+      </div>
+
       {cartProducts?.length !== 0 ? (
         <div className="relative grid md:grid-cols-1 gap-4 mt-8 overflow-auto">
           <div>
@@ -151,45 +198,58 @@ export default function Sidebar() {
               </div>
               {myDeliveryPrice !== undefined && (
                 <>
-                  <div className="py-1 flex justify-end items-center">
-                    <div className="text-gray-500">Lieferung : &nbsp; </div>
-                    <div className="font-semibold">
-                      {freeDelivery ? "Kostenlos" : myDeliveryPrice + " €"}
+                  {orderType == "delivery" && (
+                    <div className="py-1 flex justify-end items-center">
+                      <>
+                        <div className="text-gray-500">Lieferung : &nbsp; </div>
+                        <div className="font-semibold">
+                          {freeDelivery ? "Kostenlos" : myDeliveryPrice + " €"}
+                        </div>
+                      </>
                     </div>
-                  </div>
+                  )}
                   <div className="py-1 flex justify-end items-center">
                     <div className="text-gray-500">Gesamt : &nbsp; </div>
-                    <div className="font-semibold">
-                      {totalPrice + (freeDelivery ? 0 : myDeliveryPrice)} €
-                    </div>
+                    {orderType == "delivery" && (
+                      <div className="font-semibold">
+                        {totalPrice + (freeDelivery ? 0 : myDeliveryPrice)} €
+                      </div>
+                    )}
+                    {orderType == "pickin" && (
+                      <div className="font-semibold">{totalPrice} €</div>
+                    )}
                   </div>
                 </>
               )}
             </div>
           </div>
 
-          {(reachMinimumOreder || !profileData?.city) && (
+          {(reachMinimumOreder ||
+            !profileData?.city ||
+            orderType == "pickin") && (
             <Link href={"/cart"}>
               <button type="button" className="mt-6 sidebar_button button">
                 Zur Kasse gehen
               </button>
             </Link>
           )}
-          {!reachMinimumOreder && profileData?.city && (
-            <>
-              <button
-                type="button"
-                className="mt-6 sidebar_button button opacity-50 cursor-not-allowed"
-                disabled
-              >
-                Zur Kasse gehen
-              </button>
-              <p className="text-center text-sm text-gray-800 bg-orange-100 rounded-[5px] p-2 mt-4">
-                Mindestbestellwert für Ihre Stadt beträgt <br />
-                <span className="font-semibold">{minimumOrder} €</span>
-              </p>
-            </>
-          )}
+          {!reachMinimumOreder &&
+            profileData?.city &&
+            orderType != "pickin" && (
+              <>
+                <button
+                  type="button"
+                  className="mt-6 sidebar_button button opacity-50 cursor-not-allowed"
+                  disabled
+                >
+                  Zur Kasse gehen
+                </button>
+                <p className="text-center text-sm text-gray-800 bg-orange-100 rounded-[5px] p-2 mt-4">
+                  Mindestbestellwert für Ihre Stadt beträgt <br />
+                  <span className="font-semibold">{minimumOrder} €</span>
+                </p>
+              </>
+            )}
         </div>
       ) : (
         <div className="text-center grow flex flex-col items-center justify-center">
