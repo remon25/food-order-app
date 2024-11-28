@@ -61,10 +61,10 @@ function TimesPage() {
   return (
     <section className="mt-24 max-w-2xl mx-auto">
     <AdminTabs />
-    <h1 className="font-bold">Zeiten verwalten</h1>
+    <h1 className="font-bold p-4">Zeiten verwalten</h1>
     {error && <p style={{ color: "red" }}>{error}</p>}
   
-    <div className="mt-4">
+    <div className="mt-4 p-4">
       <label>
         Startzeit:
         <input
@@ -77,7 +77,7 @@ function TimesPage() {
       </label>
     </div>
   
-    <div>
+    <div className="p-4">
       <label>
         Endzeit:
         <input
@@ -89,14 +89,16 @@ function TimesPage() {
         />
       </label>
     </div>
-  
-    <button
+  <div className="p-4">
+  <button
       className="button bg-green-500"
       onClick={handleSave}
       disabled={loading}
     >
       {loading ? "Speichern läuft..." : "Speichern"}
     </button>
+  </div>
+   
   </section>
   
   );
