@@ -289,13 +289,15 @@ export default function CartPage() {
     );
   }
   return (
-    <section className="mt-20 max-w-4xl mx-auto">
+    <section className="mt-10 max-w-4xl mx-auto">
       <div className="text-center">
         <h2 className="text-gray-950 font-bold text-4xl">Kasse</h2>
       </div>
       {orderType === "pickup" && (
         <div className="flex justify-center text-center gap-1 mt-4">
-          <p className="font-semibold">Filiale: Friedrich-Huth-Strasse 15 - 21698 Harsefeld</p>
+          <p className="font-semibold">
+            Filiale: Friedrich-Huth-Strasse 15 - 21698 Harsefeld
+          </p>
         </div>
       )}
 
@@ -622,12 +624,20 @@ export default function CartPage() {
             </>
           ) : (
             <>
-              <div className="py-1 px-2 grid grid-cols-2 w-fit">
-                <div> Zwischensumme : &nbsp;</div>
-                <span className="font-semibold text-black">{totalPrice} €</span>
-                <div>Gesamt :</div>
-                <span className="font-semibold text-black">{totalPrice} €</span>
-                &nbsp;
+              <div className="py-1 px-2 w-fit">
+                <div>
+                  {" "}
+                  Zwischensumme : &nbsp;{" "}
+                  <span className="font-semibold text-black">
+                    {totalPrice} €
+                  </span>
+                </div>
+                <div>
+                  Gesamt : &nbsp;{" "}
+                  <span className="font-semibold text-black">
+                    {totalPrice} €
+                  </span>
+                </div>
               </div>
             </>
           )}

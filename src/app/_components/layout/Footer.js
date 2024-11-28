@@ -37,7 +37,7 @@ export default function Footer() {
       <div className="w-full text-center mt-8">
         © Antalya Harsefeld. Alle Rechte vorbehalten.
       </div>
-      <div className="w-full italic text-center mt-1 pb-2">
+      <div className="w-full text-[15px] italic text-center mt-1 pb-2">
         Entworfen und entwickelt von{" "}
         <Link
           className="font-semibold"
