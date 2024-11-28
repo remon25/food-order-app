@@ -624,16 +624,15 @@ export default function CartPage() {
             </>
           ) : (
             <>
-              <div className="py-1 px-2 w-fit">
+              <div className="py-1 px-2">
                 <div>
-                  {" "}
-                  Zwischensumme : &nbsp;{" "}
+                  Zwischensumme:{" "}
                   <span className="font-semibold text-black">
                     {totalPrice} €
                   </span>
                 </div>
                 <div>
-                  Gesamt : &nbsp;{" "}
+                  Gesamt :{" "}
                   <span className="font-semibold text-black">
                     {totalPrice} €
                   </span>
