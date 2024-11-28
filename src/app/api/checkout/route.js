@@ -7,10 +7,25 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 export async function POST(req) {
   mongoose.connect(process.env.MONGO_URL);
 
-  const { cartProducts, address, deliveryPrice, subtotal, paymentMethod } =
-    await req.json(); // Get deliveryPrice from request
+  const {
+    cartProducts,
+    address,
+    deliveryPrice,
+    subtotal,
+    paymentMethod,
+    orderType,
+  } = await req.json();
 
-  const finalTotalPrice = subtotal + deliveryPrice;
+  let finalTotalPrice;
+  let computedDeliveryPrice;
+  if (orderType === "delivery") {
+    finalTotalPrice = subtotal + deliveryPrice;
+    computedDeliveryPrice = deliveryPrice;
+  } else if (orderType === "pickup") {
+    finalTotalPrice = subtotal;
+    computedDeliveryPrice = 0;
+  }
+
   const orderDoc = await Order.create({
     name: address.name,
     email: address.email,
@@ -24,9 +39,10 @@ export async function POST(req) {
     paid: false,
     payOnDelivery: false,
     subtotal,
-    deliveryPrice,
+    deliveryPrice: computedDeliveryPrice,
     finalTotalPrice,
     paymentMethod: "credit card",
+    orderType,
   });
 
   const stripeLineItems = [];
@@ -57,7 +73,7 @@ export async function POST(req) {
     stripeLineItems.push({
       quantity: 1,
       price_data: {
-        currency: "USD",
+        currency: "EUR",
         product_data: {
           name: productName,
         },
@@ -67,11 +83,11 @@ export async function POST(req) {
   }
 
   // Add delivery price as a line item
-  if (deliveryPrice > 0) {
+  if (deliveryPrice > 0 && orderType === "delivery") {
     stripeLineItems.push({
       quantity: 1,
       price_data: {
-        currency: "USD",
+        currency: "EUR",
         product_data: {
           name: "Delivery Fee",
         },

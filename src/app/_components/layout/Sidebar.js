@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 import Spinner from "./Spinner";
 import { useProfile } from "../useProfile";
 import Delivery from "../icons/Delivery";
-import Pickin from "../icons/Pickin";
+import Pickup from "../icons/Pickup";
 
 export default function Sidebar() {
   const { cartProducts, removeCartProduct, orderType, setOrderType } =
@@ -162,12 +162,12 @@ export default function Sidebar() {
         </div>
 
         <div
-          onClick={() => setOrderType("pickin")}
+          onClick={() => setOrderType("pickup")}
           className="flex items-center gap-1 cursor-pointer z-[2]"
         >
-          <Pickin
+          <Pickup
             className={`${
-              orderType == "pickin"
+              orderType == "pickup"
                 ? "w-6 h-6 fill-primary"
                 : "w-6 h-6 fill-black"
             } transition-all duration-300 ease-in-out`}
@@ -215,7 +215,7 @@ export default function Sidebar() {
                         {totalPrice + (freeDelivery ? 0 : myDeliveryPrice)} €
                       </div>
                     )}
-                    {orderType == "pickin" && (
+                    {orderType == "pickup" && (
                       <div className="font-semibold">{totalPrice} €</div>
                     )}
                   </div>
@@ -226,7 +226,7 @@ export default function Sidebar() {
 
           {(reachMinimumOreder ||
             !profileData?.city ||
-            orderType == "pickin") && (
+            orderType == "pickup") && (
             <Link href={"/cart"}>
               <button type="button" className="mt-6 sidebar_button button">
                 Zur Kasse gehen
@@ -235,7 +235,7 @@ export default function Sidebar() {
           )}
           {!reachMinimumOreder &&
             profileData?.city &&
-            orderType != "pickin" && (
+            orderType != "pickup" && (
               <>
                 <button
                   type="button"

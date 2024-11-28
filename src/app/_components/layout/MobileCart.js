@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 import Xmark from "../icons/Xmark";
 import ShoppingCart from "../icons/Cart";
 import { useProfile } from "../useProfile";
-import Pickin from "../icons/Pickin";
+import Pickup from "../icons/Pickup";
 import Delivery from "../icons/Delivery";
 
 export default function MobileSidebar() {
@@ -162,12 +162,12 @@ export default function MobileSidebar() {
             </div>
 
             <div
-              onClick={() => setOrderType("pickin")}
+              onClick={() => setOrderType("pickup")}
               className="w-full flex items-center justify-center gap-1 cursor-pointer z-[2]"
             >
-              <Pickin
+              <Pickup
                 className={`${
-                  orderType == "pickin"
+                  orderType == "pickup"
                     ? "w-6 h-6 fill-primary"
                     : "w-6 h-6 fill-black"
                 } transition-all duration-300 ease-in-out`}
@@ -218,7 +218,7 @@ export default function MobileSidebar() {
                           {totalPrice + (freeDelivery ? 0 : myDeliveryPrice)} €
                         </div>
                       )}
-                      {orderType == "pickin" && (
+                      {orderType == "pickup" && (
                         <div className="font-semibold">{totalPrice} €</div>
                       )}
                     </div>
@@ -227,7 +227,7 @@ export default function MobileSidebar() {
               </div>
               {(reachMinimumOreder ||
                 !profileData?.city ||
-                orderType == "pickin") && (
+                orderType == "pickup") && (
                 <Link href={"/cart"}>
                   <button type="button" className="mt-6 sidebar_button button">
                     Zur Kasse gehen
@@ -236,7 +236,7 @@ export default function MobileSidebar() {
               )}
               {!reachMinimumOreder &&
                 profileData?.city &&
-                orderType != "pickin" && (
+                orderType != "pickup" && (
                   <>
                     <button
                       type="button"

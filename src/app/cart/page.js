@@ -43,7 +43,8 @@ function generateTimeSlots() {
 }
 
 export default function CartPage() {
-  const { cartProducts, removeCartProduct } = useContext(cartContext);
+  const { cartProducts, removeCartProduct, orderType } =
+    useContext(cartContext);
   const [address, setAddress] = useState({});
   const {
     data: profileData,
@@ -149,7 +150,13 @@ export default function CartPage() {
     "city",
     "buildNumber",
   ];
-  const isComplete = requiredFields.every((field) => address[field]);
+
+  const pickupRequiredFields = ["name", "email", "phone"];
+
+  const isComplete =
+    orderType === "delivery"
+      ? requiredFields.every((field) => address[field])
+      : pickupRequiredFields.every((field) => address[field]);
 
   async function proceedToCheckout(ev) {
     ev.preventDefault();
@@ -170,6 +177,7 @@ export default function CartPage() {
           address,
           subtotal: totalPrice,
           deliveryPrice: deliveryPrices[address.city],
+          orderType,
         }),
       }).then(async (response) => {
         if (response.ok) {
@@ -200,11 +208,12 @@ export default function CartPage() {
           address,
           subtotal: totalPrice,
           deliveryPrice: deliveryPrices[address.city],
+          orderType,
         }),
       }).then(async (response) => {
         if (response.ok) {
           resolve();
-          // window.location = await response.json();
+          window.location = await response.json();
         } else {
           reject();
         }
@@ -228,6 +237,7 @@ export default function CartPage() {
           address,
           subtotal: totalPrice,
           deliveryPrice: deliveryPrices[address.city],
+          orderType,
         }),
       }).then(async (response) => {
         if (response.ok) {
@@ -257,7 +267,6 @@ export default function CartPage() {
       setReachMinimumOreder(false);
     }
   }, [minimumOrder, totalPrice]);
-  console.log(minimumOrder, address?.city);
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -295,6 +304,7 @@ export default function CartPage() {
               timeOptions={timeOptions}
               selectedPaymentMethod={selectedPaymentMethod}
               cityInfo={cityInfo}
+              orderType={orderType}
             />
             <div className="w-full">
               <button
@@ -373,17 +383,126 @@ export default function CartPage() {
                 </>
               )}
             </div>
-
-            <div>
-              {reachMinimumOreder ? (
-                selectedPaymentMethod === "credit" ? (
+            {orderType === "delivery" && (
+              <div>
+                {reachMinimumOreder ? (
+                  selectedPaymentMethod === "credit" ? (
+                    <button
+                      disabled={!isComplete}
+                      className="button"
+                      type="submit"
+                    >
+                      Bestellen & Bezahlen{" "}
+                      {finalTotalPrice && finalTotalPrice + " €"}
+                    </button>
+                  ) : selectedPaymentMethod === "paypal" ? (
+                    <div className="relatie z-1 mt-4">
+                      {!loadingDeliveryPrices && (
+                        <div className="relative">
+                          <button
+                            disabled={!isComplete}
+                            type="button"
+                            className="button Dialog_button"
+                          >
+                            Bestellen & Bezahlen{" "}
+                            {finalTotalPrice && finalTotalPrice + " €"}
+                          </button>
+                          <div className="absolute top-0 right-0 left-0 bottom-0 opacity-0">
+                            {isComplete && (
+                              <PayPalScriptProvider
+                                options={{
+                                  "client-id":
+                                    process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+                                  currency: "EUR",
+                                }}
+                              >
+                                <PayPalButtons
+                                  forceReRender={[finalTotalPrice, address]}
+                                  disabled={
+                                    !isComplete ||
+                                    loadingDeliveryPrices ||
+                                    !finalTotalPrice
+                                  }
+                                  fundingSource={FUNDING.PAYPAL}
+                                  style={{ layout: "vertical", color: "blue" }}
+                                  createOrder={(data, actions) => {
+                                    return actions.order.create({
+                                      purchase_units: [
+                                        {
+                                          amount: {
+                                            value: finalTotalPrice.toFixed(2),
+                                          },
+                                        },
+                                      ],
+                                    });
+                                  }}
+                                  onApprove={(data, actions) => {
+                                    return actions.order
+                                      .capture()
+                                      .then(handlePayPalSuccess)
+                                      .catch(() =>
+                                        toast.error(
+                                          "Zahlungserfassung fehlgeschlagen. Bitte versuche es erneut."
+                                        )
+                                      );
+                                  }}
+                                  onError={() =>
+                                    toast.error("PayPal-Zahlung fehlgeschlagen")
+                                  }
+                                />
+                              </PayPalScriptProvider>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="mt-4">
+                      <button
+                        disabled={!isComplete}
+                        onClick={handlePayOnDelivery}
+                        type="button"
+                        className="button Dialog_button"
+                      >
+                        Bestellen & Bezahlen{" "}
+                        {finalTotalPrice && finalTotalPrice + " €"}
+                      </button>
+                    </div>
+                  )
+                ) : (
+                  <p className="text-center text-sm text-gray-800 bg-orange-100 rounded-[5px] p-2 mt-4">
+                    {!minimumOrder && !address.city && (
+                      <span>Stadt auswählen</span>
+                    )}
+                    {minimumOrder && address.city && (
+                      <span>
+                        Mindestbestellwert für Ihre Stadt beträgt <br />
+                        <span className="font-semibold">
+                          {minimumOrder} €
+                        </span>{" "}
+                        <br />
+                        <Link
+                          href="/"
+                          className="text-primary font-semibold flex justify-center items-center transition-all gap-2 hover:gap-3"
+                        >
+                          <ChevronRight className="w-4 h-4 rotate-180" />
+                          Zurück zum Menü
+                        </Link>
+                      </span>
+                    )}
+                  </p>
+                )}
+              </div>
+            )}
+            {orderType === "pickup" && (
+              <div>
+                {selectedPaymentMethod === "credit" ? (
                   <button
                     disabled={!isComplete}
                     className="button"
                     type="submit"
                   >
-                    Bestellen & Bezahlen{" "}
-                    {finalTotalPrice && finalTotalPrice + " €"}
+                    Bestellen & Bezahlen {totalPrice + " €"}
                   </button>
                 ) : selectedPaymentMethod === "paypal" ? (
                   <div className="relatie z-1 mt-4">
@@ -394,8 +513,8 @@ export default function CartPage() {
                           type="button"
                           className="button Dialog_button"
                         >
-                          Bestellen & Bezahlen{" "}
-                          {finalTotalPrice && finalTotalPrice + " €"}
+                          Bestellen & Bezahlen {" "}
+                          {totalPrice + " €"}
                         </button>
                         <div className="absolute top-0 right-0 left-0 bottom-0 opacity-0">
                           {isComplete && (
@@ -407,11 +526,11 @@ export default function CartPage() {
                               }}
                             >
                               <PayPalButtons
-                                forceReRender={[finalTotalPrice, address]}
+                                forceReRender={[totalPrice, address]}
                                 disabled={
                                   !isComplete ||
                                   loadingDeliveryPrices ||
-                                  !finalTotalPrice
+                                  !totalPrice
                                 }
                                 fundingSource={FUNDING.PAYPAL}
                                 style={{ layout: "vertical", color: "blue" }}
@@ -420,7 +539,7 @@ export default function CartPage() {
                                     purchase_units: [
                                       {
                                         amount: {
-                                          value: finalTotalPrice.toFixed(2),
+                                          value: totalPrice.toFixed(2),
                                         },
                                       },
                                     ],
@@ -454,35 +573,12 @@ export default function CartPage() {
                       type="button"
                       className="button Dialog_button"
                     >
-                      Bestellen & Bezahlen{" "}
-                      {finalTotalPrice && finalTotalPrice + " €"}
+                      Bestellen & Bezahlen {totalPrice + " €"}
                     </button>
                   </div>
-                )
-              ) : (
-                <p className="text-center text-sm text-gray-800 bg-orange-100 rounded-[5px] p-2 mt-4">
-                  {!minimumOrder && !address.city && (
-                    <span>Stadt auswählen</span>
-                  )}
-                  {minimumOrder && address.city && (
-                    <span>
-                      Mindestbestellwert für Ihre Stadt beträgt <br />
-                      <span className="font-semibold">
-                        {minimumOrder} €
-                      </span>{" "}
-                      <br />
-                      <Link
-                        href="/"
-                        className="text-primary font-semibold flex justify-center items-center transition-all gap-2 hover:gap-3"
-                      >
-                        <ChevronRight className="w-4 h-4 rotate-180" />
-                        Zurück zum Menü
-                      </Link>
-                    </span>
-                  )}
-                </p>
-              )}
-            </div>
+                )}
+              </div>
+            )}
           </form>
         </div>
         <div className="p-3">
@@ -495,23 +591,41 @@ export default function CartPage() {
                 index={index}
               />
             ))}
-          <div className="py-1 px-2 flex justify-end items-center">
-            <div className="text-gray-500">
-              Zwischensumme : &nbsp; <br /> Lieferung : <br /> Gesamt : &nbsp;
-            </div>
-            <div className="font-semibold">
-              {totalPrice} € <br />
-              {deliveryPrices[address.city] === 0 ? (
-                "kostenlos"
-              ) : deliveryPrices[address.city] == undefined ? (
-                <span className="text-gray-500 text-xs">Stadt auswählen</span>
-              ) : (
-                deliveryPrices[address.city] + " €"
-              )}
-              <br />
-              {totalPrice + (deliveryPrices[address.city] || 0)} €
-            </div>
-          </div>
+
+          {orderType === "delivery" ? (
+            <>
+              <div className="py-1 px-2 flex justify-end items-center">
+                <div className="text-gray-500">
+                  Zwischensumme : &nbsp; <br /> Lieferung : <br /> Gesamt :
+                  &nbsp;
+                </div>
+                <div className="font-semibold">
+                  {totalPrice} € <br />
+                  {deliveryPrices[address.city] === 0 ? (
+                    "kostenlos"
+                  ) : deliveryPrices[address.city] == undefined ? (
+                    <span className="text-gray-500 text-xs">
+                      Stadt auswählen
+                    </span>
+                  ) : (
+                    deliveryPrices[address.city] + " €"
+                  )}
+                  <br />
+                  {totalPrice + (deliveryPrices[address.city] || 0)} €
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="py-1 px-2 grid grid-cols-2 w-fit">
+                <div> Zwischensumme : &nbsp;</div>
+                <span className="font-semibold text-black">{totalPrice} €</span>
+                <div>Gesamt :</div>
+                <span className="font-semibold text-black">{totalPrice} €</span>
+                &nbsp;
+              </div>
+            </>
+          )}
         </div>
       </div>
     </section>

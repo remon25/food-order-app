@@ -15,6 +15,7 @@ export default function AddressInputs({
   disabled = false,
   orderPage = false,
   cityInfo,
+  orderType,
 }) {
   const {
     phone,
@@ -30,7 +31,7 @@ export default function AddressInputs({
 
   const cities = Object.keys(deliveryPrices || []);
   const [showPopup, setShowPopup] = useState(false);
-
+  console.log(orderType);
   return (
     <>
       <div
@@ -69,65 +70,71 @@ export default function AddressInputs({
         value={phone || ""}
         onChange={(ev) => setAddressProp("phone", ev.target.value)}
       />
-      <label>Straßenadresse</label>
-      <input
-        disabled={disabled}
-        type="text"
-        placeholder="Straßenadresse"
-        value={streetAdress || ""}
-        onChange={(ev) => setAddressProp("streetAdress", ev.target.value)}
-      />
-      <label>Hausnummer</label>
-      <input
-        disabled={disabled}
-        type="text"
-        placeholder="Hausnummer"
-        value={buildNumber || ""}
-        onChange={(ev) => setAddressProp("buildNumber", ev.target.value)}
-      />
-      <div className="grid grid-cols-2 gap-2">
-        <div>
-          <label>Postleitzahl</label>
+      {orderType === "delivery" && (
+        <>
+          <label>Straßenadresse</label>
           <input
             disabled={disabled}
             type="text"
-            placeholder="Postleitzahl"
-            value={postalCode || ""}
-            onChange={(ev) => setAddressProp("postalCode", ev.target.value)}
+            placeholder="Straßenadresse"
+            value={streetAdress || ""}
+            onChange={(ev) => setAddressProp("streetAdress", ev.target.value)}
           />
-        </div>
-        <div>
-          <label>Stadt</label>
-          {orderPage ? (
-            <input
-              disabled={disabled}
-              type="text"
-              placeholder="Stadt"
-              value={city || ""}
-            />
-          ) : (
-            <select
-              disabled={disabled}
-              value={city || ""}
-              onChange={(ev) => {
-                setAddressProp("city", ev.target.value);
-                setAddressProp(
-                  "postalCode",
-                  cityInfo.find((c) => c.name === ev.target.value)?.postalCode
-                );
-              }}
-            >
-              <option value={""}>Wählen Sie eine Stadt</option>
-              {cities.map((city) => (
-                <option key={city} value={city}>
-                  {city}
-                </option>
-              ))}
-            </select>
-          )}
-        </div>
-      </div>
-      <div className="-mt-4 w-full">
+          <label>Hausnummer</label>
+          <input
+            disabled={disabled}
+            type="text"
+            placeholder="Hausnummer"
+            value={buildNumber || ""}
+            onChange={(ev) => setAddressProp("buildNumber", ev.target.value)}
+          />
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label>Postleitzahl</label>
+              <input
+                disabled={disabled}
+                type="text"
+                placeholder="Postleitzahl"
+                value={postalCode || ""}
+                onChange={(ev) => setAddressProp("postalCode", ev.target.value)}
+              />
+            </div>
+            <div>
+              <label>Stadt</label>
+              {orderPage ? (
+                <input
+                  disabled={disabled}
+                  type="text"
+                  placeholder="Stadt"
+                  value={city || ""}
+                />
+              ) : (
+                <select
+                  disabled={disabled}
+                  value={city || ""}
+                  onChange={(ev) => {
+                    setAddressProp("city", ev.target.value);
+                    setAddressProp(
+                      "postalCode",
+                      cityInfo.find((c) => c.name === ev.target.value)
+                        ?.postalCode
+                    );
+                  }}
+                >
+                  <option value={""}>Wählen Sie eine Stadt</option>
+                  {cities.map((city) => (
+                    <option key={city} value={city}>
+                      {city}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
+          </div>
+        </>
+      )}
+
+      <div className={`${orderType === "delivery" ? "-mt-4" : "mt-0"} w-full`}>
         {!orderPage && (
           <button
             type="button"
@@ -138,7 +145,7 @@ export default function AddressInputs({
               <Time />
               <div>
                 <h3 className="text-sm sm:text-xl text-left text-gray-900 font-semibold">
-                  Lieferzeit
+                  {orderType === "delivery" ? "Lieferzeit" : "Abholzeit"}
                 </h3>
                 <div className="text-left"> {deliveryTime}</div>
               </div>
@@ -181,7 +188,7 @@ export default function AddressInputs({
                 <Time />
                 <div>
                   <h3 className="text-xl text-left text-gray-900 font-semibold">
-                    Lieferzeit
+                  {orderType === "delivery" ? "Lieferzeit" : "Abholzeit"}
                   </h3>
                   <div className="text-left"> {deliveryTime}</div>
                 </div>

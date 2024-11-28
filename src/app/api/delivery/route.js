@@ -4,10 +4,25 @@ import { Order } from "@/app/models/Order";
 export async function POST(req) {
   mongoose.connect(process.env.MONGO_URL);
 
-  const { cartProducts, address, subtotal, deliveryPrice, paymentMethod } =
-    await req.json();
+  const {
+    cartProducts,
+    address,
+    subtotal,
+    deliveryPrice,
+    paymentMethod,
+    orderType,
+  } = await req.json();
 
-  const finalTotalPrice = subtotal + deliveryPrice;
+  let finalTotalPrice;
+  let computedDeliveryPrice;
+  if (orderType === "delivery") {
+    finalTotalPrice = subtotal + deliveryPrice;
+    computedDeliveryPrice = deliveryPrice;
+  } else if (orderType === "pickup") {
+    finalTotalPrice = subtotal;
+    computedDeliveryPrice = 0;
+  }
+
   const orderDoc = await Order.create({
     name: address.name,
     email: address.email,
@@ -21,9 +36,10 @@ export async function POST(req) {
     paid: false,
     payOnDelivery: true,
     subtotal,
-    deliveryPrice,
+    deliveryPrice: computedDeliveryPrice,
     finalTotalPrice,
     paymentMethod: "cash",
+    orderType,
   });
 
   const success_url =

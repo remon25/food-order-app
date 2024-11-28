@@ -1,6 +1,8 @@
 "use client";
 
 import { cartContext } from "@/app/_components/AppContext";
+import Delivery from "@/app/_components/icons/Delivery";
+import Pickup from "@/app/_components/icons/Pickup";
 import AddressInputs from "@/app/_components/layout/AdressInputs";
 import SectionHeader from "@/app/_components/layout/SectionHeader";
 import Spinner from "@/app/_components/layout/Spinner";
@@ -19,8 +21,6 @@ function OrderPage() {
   const searchParams = useSearchParams();
   const clearCartParam = searchParams.get("clear-cart");
   const { data: session, status } = useSession(); // Destructure session and status
-
-  console.log(order);
 
   useEffect(() => {
     if (id && session) {
@@ -121,30 +121,62 @@ function OrderPage() {
               <CartProduct key={`${product._id}-${index}`} product={product} />
             ))}
             <div className="text-left py-2 text-gray-500">
-              Zwischensumme:
+              Zwischensumme:{" "}
               <span className="text-black font-bold inline-block w-8">
-                €{order?.subtotal}
+                {order?.subtotal}€
               </span>
               <br />
-              Lieferung:
+              {order?.orderType === "delivery" ? "Lieferung: " : ""}
+              {order?.orderType === "delivery" && (
+                <>
+                  <span className="text-black font-bold inline-block w-8">
+                    {order?.deliveryPrice === 0 &&
+                      order?.orderType === "delivery" &&
+                      "Kostenlos"}
+                    {order?.deliveryPrice !== 0 && order?.deliveryPrice + "€"}
+                    {order?.deliveryPrice == null &&
+                      rder?.deliveryPrice == undefined &&
+                      "_"}
+                  </span>
+                  <br />
+                </>
+              )}
+              Gesamt:{" "}
               <span className="text-black font-bold inline-block w-8">
-                {order?.deliveryPrice === 0 && "Kostenlos"}
-                {order?.deliveryPrice !== 0 && order?.deliveryPrice + "€"}
-                {order?.deliveryPrice == null && rder?.deliveryPrice == undefined && "_"}
-              </span>
-              <br />
-              Gesamt:
-              <span className="text-black font-bold inline-block w-8">
-                €{order?.finalTotalPrice}
+                {order?.finalTotalPrice}€
               </span>
             </div>
           </div>
           <div>
             <div className="bg-gray-100 p-4 rounded-lg">
+              {order.orderType === "delivery" ? (
+                <div className="flex justify-center items-center gap-2 bg-white rounded-full py-2 px-4 shadow-lg mb-2">
+                  <Delivery
+                    className={`${
+                      order?.orderType == "delivery"
+                        ? "w-6 h-6 stroke-primary"
+                        : "w-6 h-6 stroke-black"
+                    } transition-all duration-300 ease-in-out`}
+                  />
+                  <div className={`font-semibold`}>Lieferung</div>
+                </div>
+              ) : (
+                <div className="flex justify-center items-center gap-2 bg-white rounded-full py-2 px-4 shadow-lg mb-2">
+                  <Pickup
+                    className={`${
+                      order?.orderType == "pickup"
+                        ? "w-6 h-6 fill-primary"
+                        : "w-6 h-6 fill-black"
+                    } transition-all duration-300 ease-in-out`}
+                  />
+                  <div className={`font-semibold`}>Abholung</div>
+                </div>
+              )}
               <AddressInputs
                 disabled={true}
                 addressProps={order}
                 orderPage={true}
+                orderType={order?.orderType}
               />
             </div>
           </div>
