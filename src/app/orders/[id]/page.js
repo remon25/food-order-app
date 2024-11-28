@@ -106,7 +106,7 @@ function OrderPage() {
 
   // Render order details if order is found
   return (
-    <section className="max-w-4xl mx-auto mt-8 p-4">
+    <section className="max-w-4xl mx-auto mt-4 p-4">
       <div className="text-center">
         <SectionHeader subtitle="Ihre Bestellung" />
         <div className="mt-4 mb-8">
