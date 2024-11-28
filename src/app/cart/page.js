@@ -293,6 +293,13 @@ export default function CartPage() {
       <div className="text-center">
         <h2 className="text-gray-950 font-bold text-4xl">Kasse</h2>
       </div>
+      {orderType === "pickup" && (
+        <div className="flex justify-center gap-1 mt-4">
+          <h3>Filiale: </h3>
+          <p className="font-semibold">Friedrich-Huth-Strasse 15 - 21698 Harsefeld</p>
+        </div>
+      )}
+
       <div className="grid md:grid-cols-1 gap-4 mt-8">
         <div className="bg-gray-100 p-4 rounded-lg">
           <form onSubmit={proceedToCheckout}>
@@ -513,8 +520,7 @@ export default function CartPage() {
                           type="button"
                           className="button Dialog_button"
                         >
-                          Bestellen & Bezahlen {" "}
-                          {totalPrice + " €"}
+                          Bestellen & Bezahlen {totalPrice + " €"}
                         </button>
                         <div className="absolute top-0 right-0 left-0 bottom-0 opacity-0">
                           {isComplete && (

@@ -2,6 +2,8 @@ import Image from "next/image";
 import Facebook from "../icons/Facebook";
 import Instagram from "../icons/Instagram";
 import Whatsapp from "../icons/Whatsapp";
+import Link from "next/link";
+import OpenHours from "./OpenHours";
 
 export default function Footer() {
   return (
@@ -11,6 +13,7 @@ export default function Footer() {
     >
       <div className="flex flex-col-reverse sm:flex-row">
         <div className="flex flex-col gap-2 mt-2">
+          <OpenHours />
           <div>
             <h4 className="uppercase font-bold">Kontakt</h4>
             <p>Friedrich-Huth-Strasse 15 - 21698 Harsefeld</p>
@@ -33,6 +36,16 @@ export default function Footer() {
 
       <div className="w-full text-center mt-8">
         © Antalya Harsefeld. Alle Rechte vorbehalten.
+      </div>
+      <div className="w-full italic text-center mt-1 pb-1">
+        Entworfen und entwickelt von{" "}
+        <Link
+          className="font-semibold"
+          href="https://ooomedia.de/"
+          target="_blank"
+        >
+          ooomedia
+        </Link>
       </div>
     </footer>
   );

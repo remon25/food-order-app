@@ -34,8 +34,18 @@ export default function AppProvider({ children }) {
       if (storedCart) {
         setCartProducts(JSON.parse(storedCart));
       }
+      const storedOrderType = window.localStorage.getItem("orderType");
+      if (storedOrderType) {
+        setOrderType(storedOrderType);
+      }
     }
   }, [isClient]);
+
+  useEffect(() => {
+    if (isClient) {
+      window.localStorage.setItem("orderType", orderType);
+    }
+  }, [orderType, isClient]);
 
   function clearCart() {
     setCartProducts([]);
