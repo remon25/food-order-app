@@ -12,7 +12,7 @@ export default function Footer() {
       className="relative bg-[#747969] p-3 text-white mt-24 z-[3] overflow-hidden"
     >
       <div className="flex flex-col-reverse sm:flex-row">
-        <div className="flex flex-col gap-2 mt-2">
+        <div className="flex flex-col gap-2 mt-6">
           <OpenHours />
           <div>
             <h4 className="uppercase font-bold">Kontakt</h4>
@@ -26,9 +26,9 @@ export default function Footer() {
           <div className="flex flex-col items-center">
             <Image src="/antalya.png" alt="logo" width={70} height={70} />
             <div className="h-full flex items-center justify-between gap-4 mt-2">
-              <Facebook />
-              <Instagram />
-              <Whatsapp />
+              <Facebook className="w-4 h-4" />
+              <Instagram className="w-4 h-4" />
+              <Whatsapp className="w-4 h-4" />
             </div>
           </div>
         </div>
@@ -37,7 +37,7 @@ export default function Footer() {
       <div className="w-full text-center mt-8">
         © Antalya Harsefeld. Alle Rechte vorbehalten.
       </div>
-      <div className="w-full italic text-center mt-1 pb-1">
+      <div className="w-full italic text-center mt-1 pb-2">
         Entworfen und entwickelt von{" "}
         <Link
           className="font-semibold"
