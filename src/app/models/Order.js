@@ -26,8 +26,14 @@ const OrderSchema = new Schema(
       enum: ["delivery", "pickup"],
       required: true,
     },
+    paypalOrderId: { type: String, required: false },
   },
   { timestamps: true }
+);
+
+OrderSchema.index(
+  { paypalOrderId: 1, paymentMethod: 1 },
+  { unique: true, partialFilterExpression: { paymentMethod: "paypal" } }
 );
 
 export const Order = models?.Order || model("Order", OrderSchema);

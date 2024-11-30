@@ -2,9 +2,18 @@ import Image from "next/image";
 import DeleteIcon from "../icons/DeleteIcon";
 import { cartProductPrice } from "../AppContext";
 
-export default function CartProduct({ product, onRemove, index }) {
+export default function CartProduct({
+  product,
+  onRemove,
+  index,
+  disabled = false,
+}) {
   return (
-    <div className="grid grid-cols-2 place-items-center md:flex md:items-center gap-2 border-b py-4">
+    <div
+      className={`grid grid-cols-2 place-items-center md:flex md:items-center gap-2 border-b py-4 ${
+        disabled ? "cursor-not-allowed pointer-events-none" : ""
+      }`}
+    >
       <div className="w-16">
         <Image
           width={240}

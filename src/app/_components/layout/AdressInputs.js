@@ -31,7 +31,6 @@ export default function AddressInputs({
 
   const cities = Object.keys(deliveryPrices || []);
   const [showPopup, setShowPopup] = useState(false);
-  console.log(orderType);
   return (
     <>
       <div
@@ -137,8 +136,9 @@ export default function AddressInputs({
       <div className={`${orderType === "delivery" ? "-mt-4" : "mt-0"} w-full`}>
         {!orderPage && (
           <button
+            disabled={disabled}
             type="button"
-            className="button flex justify-between items-center my-4"
+            className={`button flex justify-between items-center my-4 ${disabled ? "cursor-not-allowed" : ""}`}
             onClick={() => setShowPopup(true)}
           >
             <div className="flex items-center gap-4">
@@ -188,7 +188,7 @@ export default function AddressInputs({
                 <Time />
                 <div>
                   <h3 className="text-xl text-left text-gray-900 font-semibold">
-                  {orderType === "delivery" ? "Lieferzeit" : "Abholzeit"}
+                    {orderType === "delivery" ? "Lieferzeit" : "Abholzeit"}
                   </h3>
                   <div className="text-left"> {deliveryTime}</div>
                 </div>

@@ -62,6 +62,7 @@ export default function CartPage() {
   const [cityInfo, setCityInfo] = useState([]);
   const { session } = useSession();
   const [minimumOrder, setMinimumOrder] = useState(undefined);
+  const [disabled, setDisabled] = useState(false);
 
   let deliveryTime = "ASAP";
   let totalPrice = 0;
@@ -167,6 +168,7 @@ export default function CartPage() {
       return;
     }
     const promise = new Promise((resolve, reject) => {
+      setDisabled(true);
       fetch("/api/checkout", {
         method: "POST",
         headers: {
@@ -185,6 +187,7 @@ export default function CartPage() {
           window.location = await response.json();
         } else {
           reject();
+          setDisabled(false);
         }
       });
     });
@@ -196,37 +199,9 @@ export default function CartPage() {
     });
   }
 
-  const handlePayPalSuccess = async (details) => {
-    const promise = new Promise((resolve, reject) => {
-      fetch("/api/paypal_checkout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          cartProducts,
-          address,
-          subtotal: totalPrice,
-          deliveryPrice: deliveryPrices[address.city],
-          orderType,
-        }),
-      }).then(async (response) => {
-        if (response.ok) {
-          resolve();
-          window.location = await response.json();
-        } else {
-          reject();
-        }
-      });
-    });
-    await toast.promise(promise, {
-      loading: "Bestellung wird erstellt...",
-      success: "Bestellung erfolgreich erstellt",
-      error: "Etwas ist schiefgelaufen! Bitte versuche es erneut.",
-    });
-  };
   const handlePayOnDelivery = async () => {
     const promise = new Promise((resolve, reject) => {
+      setDisabled(true);
       fetch("/api/delivery", {
         method: "POST",
         headers: {
@@ -245,6 +220,7 @@ export default function CartPage() {
           window.location = await response.json();
         } else {
           reject();
+          setDisabled(false);
         }
       });
     });
@@ -313,11 +289,15 @@ export default function CartPage() {
               selectedPaymentMethod={selectedPaymentMethod}
               cityInfo={cityInfo}
               orderType={orderType}
+              disabled={disabled}
             />
             <div className="w-full">
               <button
+                disabled={disabled}
                 type="button"
-                className="button flex justify-between items-center my-4"
+                className={`button flex justify-between items-center my-4 ${
+                  disabled ? "cursor-not-allowed" : ""
+                }`}
                 onClick={() => setShowPopup(true)}
               >
                 <div className="flex items-center gap-4">
@@ -396,7 +376,7 @@ export default function CartPage() {
                 {reachMinimumOreder ? (
                   selectedPaymentMethod === "credit" ? (
                     <button
-                      disabled={!isComplete}
+                      disabled={!isComplete || disabled}
                       className="button"
                       type="submit"
                     >
@@ -408,7 +388,7 @@ export default function CartPage() {
                       {!loadingDeliveryPrices && (
                         <div className="relative">
                           <button
-                            disabled={!isComplete}
+                            disabled={!isComplete || disabled}
                             type="button"
                             className="button Dialog_button"
                           >
@@ -429,31 +409,53 @@ export default function CartPage() {
                                   disabled={
                                     !isComplete ||
                                     loadingDeliveryPrices ||
-                                    !finalTotalPrice
+                                    !finalTotalPrice ||
+                                    disabled
                                   }
                                   fundingSource={FUNDING.PAYPAL}
                                   style={{ layout: "vertical", color: "blue" }}
-                                  createOrder={(data, actions) => {
-                                    return actions.order.create({
-                                      purchase_units: [
-                                        {
-                                          amount: {
-                                            value: finalTotalPrice.toFixed(2),
-                                          },
-                                        },
-                                      ],
+                                  createOrder={async () => {
+                                    const res = await fetch("api/paypal", {
+                                      method: "POST",
+                                      body: JSON.stringify({
+                                        cartProducts,
+                                        address,
+                                        subtotal: totalPrice,
+                                        deliveryPrice:
+                                          deliveryPrices[address.city],
+                                        orderType,
+                                      }),
                                     });
+                                    const order = await res.json();
+                                    return order.paypalOrderId;
                                   }}
-                                  onApprove={(data, actions) => {
-                                    return actions.order
-                                      .capture()
-                                      .then(handlePayPalSuccess)
-                                      .catch(() =>
-                                        toast.error(
-                                          "Zahlungserfassung fehlgeschlagen. Bitte versuche es erneut."
-                                        )
-                                      );
+                                  onApprove={async (data) => {
+                                    try {
+                                      const res = await fetch("/api/capture", {
+                                        method: "POST",
+                                        body: JSON.stringify({
+                                          paypalOrderId: data.orderID,
+                                        }),
+                                      });
+                                      const result = await res.json();
+
+                                      if (res.ok) {
+                                        // Redirect to success URL
+                                        toast.success("Zahlung erfolgreich");
+                                        window.location.href =
+                                          result.successUrl;
+                                      } else {
+                                        throw new Error(
+                                          result.message ||
+                                            "Error capturing order"
+                                        );
+                                      }
+                                    } catch (error) {
+                                      toast.error("Error capturing payment");
+                                      console.error(error);
+                                    }
                                   }}
+                                  onCancel={(data) => {}}
                                   onError={() =>
                                     toast.error("PayPal-Zahlung fehlgeschlagen")
                                   }
@@ -467,7 +469,7 @@ export default function CartPage() {
                   ) : (
                     <div className="mt-4">
                       <button
-                        disabled={!isComplete}
+                        disabled={!isComplete || disabled}
                         onClick={handlePayOnDelivery}
                         type="button"
                         className="button Dialog_button"
@@ -506,7 +508,7 @@ export default function CartPage() {
               <div>
                 {selectedPaymentMethod === "credit" ? (
                   <button
-                    disabled={!isComplete}
+                    disabled={!isComplete || disabled}
                     className="button"
                     type="submit"
                   >
@@ -517,7 +519,7 @@ export default function CartPage() {
                     {!loadingDeliveryPrices && (
                       <div className="relative">
                         <button
-                          disabled={!isComplete}
+                          disabled={!isComplete || disabled}
                           type="button"
                           className="button Dialog_button"
                         >
@@ -533,35 +535,55 @@ export default function CartPage() {
                               }}
                             >
                               <PayPalButtons
-                                forceReRender={[totalPrice, address]}
+                                forceReRender={[finalTotalPrice, address]}
                                 disabled={
                                   !isComplete ||
                                   loadingDeliveryPrices ||
-                                  !totalPrice
+                                  !finalTotalPrice ||
+                                  disabled
                                 }
                                 fundingSource={FUNDING.PAYPAL}
                                 style={{ layout: "vertical", color: "blue" }}
-                                createOrder={(data, actions) => {
-                                  return actions.order.create({
-                                    purchase_units: [
-                                      {
-                                        amount: {
-                                          value: totalPrice.toFixed(2),
-                                        },
-                                      },
-                                    ],
+                                createOrder={async () => {
+                                  const res = await fetch("api/paypal", {
+                                    method: "POST",
+                                    body: JSON.stringify({
+                                      cartProducts,
+                                      address,
+                                      subtotal: totalPrice,
+                                      deliveryPrice:
+                                        deliveryPrices[address.city],
+                                      orderType,
+                                    }),
                                   });
+                                  const order = await res.json();
+                                  return order.paypalOrderId;
                                 }}
-                                onApprove={(data, actions) => {
-                                  return actions.order
-                                    .capture()
-                                    .then(handlePayPalSuccess)
-                                    .catch(() =>
-                                      toast.error(
-                                        "Zahlungserfassung fehlgeschlagen. Bitte versuche es erneut."
-                                      )
-                                    );
+                                onApprove={async (data) => {
+                                  try {
+                                    const res = await fetch("/api/capture", {
+                                      method: "POST",
+                                      body: JSON.stringify({
+                                        paypalOrderId: data.orderID,
+                                      }),
+                                    });
+                                    const result = await res.json();
+
+                                    if (res.ok) {
+                                      toast.success("Zahlung erfolgreich");
+                                      window.location.href = result.successUrl;
+                                    } else {
+                                      throw new Error(
+                                        result.message ||
+                                          "Error capturing order"
+                                      );
+                                    }
+                                  } catch (error) {
+                                    toast.error("Error capturing payment");
+                                    console.error(error);
+                                  }
                                 }}
+                                onCancel={(data) => {}}
                                 onError={() =>
                                   toast.error("PayPal-Zahlung fehlgeschlagen")
                                 }
@@ -575,7 +597,7 @@ export default function CartPage() {
                 ) : (
                   <div className="mt-4">
                     <button
-                      disabled={!isComplete}
+                      disabled={!isComplete || disabled}
                       onClick={handlePayOnDelivery}
                       type="button"
                       className="button Dialog_button"
@@ -592,6 +614,7 @@ export default function CartPage() {
           {cartProducts?.length > 0 &&
             cartProducts.map((product, index) => (
               <CartProduct
+                disabled={disabled}
                 key={`${product._id}-${index}`}
                 product={product}
                 onRemove={removeCartProduct}
