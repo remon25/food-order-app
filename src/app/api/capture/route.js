@@ -42,6 +42,10 @@ export async function POST(req) {
     if (orderDoc.paid) {
       return new Response("Order already marked as paid", { status: 400 });
     }
+    // Step 3-b: Verify that the order has not already been marked as paid
+    if (orderDoc.paymentMethod !== "paypal") {
+      return new Response("not paypal order", { status: 400 });
+    }
 
     // Step 4: Mark the order as paid
     await Order.updateOne({ paypalOrderId }, { paid: true });

@@ -104,7 +104,6 @@ function OrderPage() {
     );
   }
 
-  console.log(order);
 
   // Render order details if order is found
   return (

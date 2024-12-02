@@ -136,7 +136,23 @@ export async function POST(req) {
     const finalTotalPrice =
       orderType === "delivery" ? subtotal + deliveryPrice : subtotal;
 
-    // Step 5: Create the order in the database
+    // Step 5: Create the PayPal order
+    const request = new paypal.orders.OrdersCreateRequest();
+    request.requestBody({
+      intent: "CAPTURE",
+      purchase_units: [
+        {
+          amount: {
+            currency_code: "EUR",
+            value: finalTotalPrice.toFixed(2),
+          },
+        },
+      ],
+    });
+
+    const paypalResponse = await client.execute(request);
+
+    // Step 6: Create the order in the database
     const orderDoc = await Order.create({
       name: sanitizedAddress.name,
       email: sanitizedAddress.email,
@@ -152,29 +168,14 @@ export async function POST(req) {
       finalTotalPrice,
       paymentMethod: "paypal",
       orderType,
+      paypalOrderId: paypalResponse.result.id,
       paid: false,
     });
 
-    // Step 6: Create the PayPal order
-    const request = new paypal.orders.OrdersCreateRequest();
-    request.requestBody({
-      intent: "CAPTURE",
-      purchase_units: [
-        {
-          amount: {
-            currency_code: "EUR",
-            value: finalTotalPrice.toFixed(2),
-          },
-          description: orderDoc._id,
-        },
-      ],
-    });
-
-    const paypalResponse = await client.execute(request);
-    await Order.updateOne(
-      { _id: orderDoc._id },
-      { paypalOrderId: paypalResponse.result.id }
-    );
+    // await Order.updateOne(
+    //   { _id: orderDoc._id },
+    //   { paypalOrderId: paypalResponse.result.id }
+    // );
 
     // Return PayPal order ID and order details
     return Response.json({

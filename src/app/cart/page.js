@@ -552,7 +552,7 @@ export default function CartPage() {
                                       address,
                                       subtotal: totalPrice,
                                       deliveryPrice:
-                                        deliveryPrices[address.city],
+                                      deliveryPrices[address.city],
                                       orderType,
                                     }),
                                   });

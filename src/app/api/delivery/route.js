@@ -51,7 +51,6 @@
 //   return Response.json(success_url);
 // }
 
-
 import mongoose from "mongoose";
 import { Order } from "@/app/models/Order";
 import { MenuItem } from "@/app/models/menuItems";
@@ -75,10 +74,17 @@ export async function POST(req) {
       orderType,
     } = await req.json();
 
+
+
     // Validate and sanitize address fields
     if (!address.name || !address.email || !address.phone) {
       return new Response("Missing required address fields", { status: 400 });
     }
+
+    if (paymentMethod !== "cash") {
+      return new Response("Error in payment method", { status: 400 });
+    }
+    
 
     // Validate email
     if (!validator.isEmail(address.email)) {
@@ -269,4 +275,3 @@ export async function POST(req) {
     return new Response("Internal Server Error", { status: 500 });
   }
 }
-

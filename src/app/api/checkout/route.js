@@ -126,15 +126,12 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(req) {
   try {
-    console.log("Connecting to MongoDB...");
     await mongoose.connect(process.env.MONGO_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log("Connected to MongoDB");
 
     const body = await req.json();
-    console.log("Request body:", body);
 
     const {
       cartProducts,
@@ -149,6 +146,10 @@ export async function POST(req) {
     if (!address.name || !address.email || !address.phone) {
       console.error("Missing required address fields:", address);
       return new Response("Missing required address fields", { status: 400 });
+    }
+
+    if (paymentMethod !== "credit card") {
+      return new Response("Error in payment method", { status: 400 });
     }
 
     if (!validator.isEmail(address.email)) {
@@ -167,7 +168,6 @@ export async function POST(req) {
       postalCode: sanitizeHtml(address.postalCode),
       deliveryTime: sanitizeHtml(address.deliveryTime),
     };
-    console.log("Sanitized address:", sanitizedAddress);
 
     // Validate and sanitize orderType
     if (!["delivery", "pickup"].includes(orderType)) {
@@ -186,7 +186,6 @@ export async function POST(req) {
     // Fetch delivery price and minimum order for the city
     let cityDeliveryInfo;
     if (orderType === "delivery") {
-      console.log("Fetching delivery price for city:", sanitizedAddress.city);
       cityDeliveryInfo = await DeliveryPrice.findOne({
         name: sanitizedAddress.city,
       }).lean();
@@ -236,20 +235,16 @@ export async function POST(req) {
       finalTotalPrice = subtotal;
       computedDeliveryPrice = 0;
     }
-    console.log("Final total price:", finalTotalPrice);
 
     // Fetch menu items for price validation
-    console.log("Fetching menu items for cart products...");
     const menuItems = await MenuItem.find({
       _id: { $in: cartProducts.map((item) => item._id) },
     }).lean();
-    console.log("Menu items fetched:", menuItems);
 
     let calculatedSubtotal = 0;
     const sanitizedCartProducts = [];
 
     for (const product of cartProducts) {
-      console.log("Processing cart product:", product);
       const menuItem = menuItems.find(
         (item) => item._id.toString() === product._id
       );
@@ -329,7 +324,6 @@ export async function POST(req) {
       });
     }
 
-    console.log("Calculated subtotal:", calculatedSubtotal);
     if (calculatedSubtotal !== subtotal) {
       console.error(
         "Subtotal mismatch. Calculated:",
@@ -343,7 +337,6 @@ export async function POST(req) {
       );
     }
 
-    console.log("Creating order document...");
     const orderDoc = await Order.create({
       name: sanitizedAddress.name,
       email: sanitizedAddress.email,
@@ -363,7 +356,6 @@ export async function POST(req) {
       paid: false,
     });
 
-    console.log("Order document created:", orderDoc);
 
     const stripeLineItems = [];
 
@@ -389,7 +381,6 @@ export async function POST(req) {
       });
     }
 
-    console.log("Creating Stripe session...");
     const stripeSession = await stripe.checkout.sessions.create({
       line_items: stripeLineItems,
       mode: "payment",
@@ -404,7 +395,6 @@ export async function POST(req) {
       payment_intent_data: { metadata: { orderId: orderDoc._id.toString() } },
     });
 
-    console.log("Stripe session created:", stripeSession);
 
     return Response.json(stripeSession.url);
   } catch (error) {

@@ -26,11 +26,27 @@ const OrderSchema = new Schema(
       enum: ["delivery", "pickup"],
       required: true,
     },
-    paypalOrderId: { type: String, required: false },
+    paypalOrderId: { 
+      type: String, 
+      required: function () {
+        return this.paymentMethod === "paypal";
+      },
+      validate: {
+        validator: function (value) {
+          // Ensure paypalOrderId is only present when paymentMethod is "paypal"
+          if (this.paymentMethod !== "paypal" && value) {
+            return false;
+          }
+          return true;
+        },
+        message: "paypalOrderId is only allowed when paymentMethod is 'paypal'.",
+      },
+    },
   },
   { timestamps: true }
 );
 
+// Ensure uniqueness of `paypalOrderId` for PayPal payments
 OrderSchema.index(
   { paypalOrderId: 1, paymentMethod: 1 },
   { unique: true, partialFilterExpression: { paymentMethod: "paypal" } }

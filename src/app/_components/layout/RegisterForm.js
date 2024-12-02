@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,22 +10,44 @@ export default function RegisterForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [phone, setphone] = useState("");
-  const [streetAdress, setstreetAdress] = useState("");
+  const [phone, setPhone] = useState("");
+  const [streetAddress, setStreetAddress] = useState("");
   const [creatingUser, setCreatingUser] = useState(false);
   const [userCreated, setUserCreated] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
+
+  // Regular expression to validate German mobile numbers
+  const validatePhoneNumber = (phone) => {
+    const regex = /^(?:\+49|0)[1-9][0-9]{9,10}$/;
+    return regex.test(phone);
+  };
 
   async function handleFormSubmit(e) {
     e.preventDefault();
 
+    // Basic validations
+    if (name.trim().length === 0) {
+      toast.error("Bitte gib deinen Namen ein.");
+      return;
+    }
+
+    if (!email.includes("@")) {
+      toast.error("Bitte gib eine gültige E-Mail-Adresse ein.");
+      return;
+    }
+
     if (password.length < 8) {
-      toast.error("Das Passwort muss mindestens 8 Zeichen lang sein");
+      toast.error("Das Passwort muss mindestens 8 Zeichen lang sein.");
+      return;
+    }
+
+    if (!validatePhoneNumber(phone)) {
+      toast.error("Bitte gib eine gültige deutsche Handynummer ein.");
       return;
     }
 
     setCreatingUser(true);
-    setError(false);
+    setError("");
     setUserCreated(false);
 
     toast.promise(
@@ -32,18 +55,26 @@ export default function RegisterForm() {
         try {
           const response = await fetch("/api/register", {
             method: "POST",
-            body: JSON.stringify({ name, email, password, phone, streetAdress }),
+            body: JSON.stringify({
+              name,
+              email,
+              password,
+              phone,
+              streetAddress,
+            }),
             headers: { "Content-Type": "application/json" },
           });
 
           if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.message || "Registrierung fehlgeschlagen");
+            throw new Error(
+              errorData.message || "Registrierung fehlgeschlagen."
+            );
           }
 
           setUserCreated(true);
         } catch (err) {
-          setError(true);
+          setError(err.message);
           throw err;
         } finally {
           setCreatingUser(false);
@@ -60,12 +91,12 @@ export default function RegisterForm() {
   return (
     <>
       {error && (
-        <div className="my-4 text-center">
-          Fehler. <br /> Bitte versuche es erneut.
+        <div className="my-4 text-center text-red-600">
+          Es gab einen Fehler, bitte versuche es erneut.
         </div>
       )}
       {userCreated ? (
-        <div className="my-4 text-center">
+        <div className="my-4 text-center text-green-600">
           Benutzer erstellt. <br /> Du kannst dich jetzt einloggen.{" "}
           <Link className="underline" href="/login">
             Einloggen &raquo;
@@ -94,20 +125,20 @@ export default function RegisterForm() {
           <input
             name="phone"
             type="tel"
-            placeholder="Telefonnummer"
+            placeholder="Handynummer"
             value={phone}
             required
             disabled={creatingUser}
-            onChange={(e) => setphone(e.target.value)}
+            onChange={(e) => setPhone(e.target.value)}
           />
           <input
-            name="streetAdress"
+            name="streetAddress"
             type="text"
             placeholder="Straßenadresse"
-            value={streetAdress}
+            value={streetAddress}
             required
             disabled={creatingUser}
-            onChange={(e) => setstreetAdress(e.target.value)}
+            onChange={(e) => setStreetAddress(e.target.value)}
           />
           <input
             name="password"
@@ -122,9 +153,11 @@ export default function RegisterForm() {
           <button
             type="submit"
             disabled={creatingUser}
-            className="bg-primary text-white px-6 py-2 rounded"
+            className={`bg-primary text-white px-6 py-2 rounded ${
+              creatingUser ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
-            Registrieren
+            {creatingUser ? "Registrieren..." : "Registrieren"}
           </button>
           <div className="text-center my-4 text-gray-500">
             Oder melde dich mit einem Anbieter an
@@ -133,6 +166,7 @@ export default function RegisterForm() {
             type="button"
             onClick={() => signIn("google", { callbackUrl: "/" })}
             className="mybutton mt-4 flex justify-center items-center gap-4"
+            disabled={creatingUser}
           >
             <Image
               src="/google-logo.png"

@@ -16,7 +16,7 @@ function AuthLinks({ status, userName, image, mobile = false }) {
               <Image
                 src={image || "/avatar.svg"}
                 alt={userName}
-                className="rounded-full"
+                className="rounded-[50%]"
                 width={40}
                 height={40}
               />
@@ -102,7 +102,7 @@ export default function Header() {
             <Image
               src={userData?.image || "/avatar.svg"}
               alt={userName}
-              className="rounded-full"
+              className="rounded-[50%]"
               width={40}
               height={40}
             />
