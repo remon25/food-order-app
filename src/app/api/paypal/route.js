@@ -172,11 +172,7 @@ export async function POST(req) {
       paid: false,
     });
 
-    // await Order.updateOne(
-    //   { _id: orderDoc._id },
-    //   { paypalOrderId: paypalResponse.result.id }
-    // );
-
+    
     // Return PayPal order ID and order details
     return Response.json({
       orderId: orderDoc._id,
