@@ -239,16 +239,42 @@ export async function POST(req) {
       paid: false,
     });
 
-
     const stripeLineItems = [];
+    for (const product of cartProducts) {
+      let productTotal = product.price;
 
-    for (const product of sanitizedCartProducts) {
+      if (product.size) {
+        const selectedSize = product.sizes.find(
+          (size) =>
+            size._id.toString() === product.size._id &&
+            size.price === product.size.price
+        );
+
+        if (selectedSize) {
+          productTotal += selectedSize.price;
+        }
+      }
+
+      if (product.extras && product.extras.length > 0) {
+        for (const extra of product.extras) {
+          const selectedExtra = product.extraIngredientPrice.find(
+            (menuExtra) =>
+              menuExtra._id.toString() === extra._id &&
+              menuExtra.price === extra.price
+          );
+
+          if (selectedExtra) {
+            productTotal += selectedExtra.price;
+          }
+        }
+      }
+
       stripeLineItems.push({
         quantity: 1,
         price_data: {
           currency: "EUR",
           product_data: { name: product.name },
-          unit_amount: product.price * 100,
+          unit_amount: productTotal * 100,
         },
       });
     }
@@ -277,7 +303,6 @@ export async function POST(req) {
       metadata: { orderId: orderDoc._id.toString() },
       payment_intent_data: { metadata: { orderId: orderDoc._id.toString() } },
     });
-
 
     return Response.json(stripeSession.url);
   } catch (error) {
