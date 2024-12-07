@@ -47,7 +47,7 @@ export async function POST(req) {
       return new Response("Invalid order type", { status: 400 });
     }
 
-    // Step 3: Handle delivery-related checks
+    // Fetch delivery price and minimum order for the city
     let cityDeliveryInfo;
     if (orderType === "delivery") {
       cityDeliveryInfo = await DeliveryPrice.findOne({
@@ -55,18 +55,48 @@ export async function POST(req) {
       }).lean();
 
       if (!cityDeliveryInfo) {
+        console.error(
+          "City not supported for delivery:",
+          sanitizedAddress.city
+        );
         return new Response("City not supported for delivery", { status: 400 });
       }
 
-      if (
-        (cityDeliveryInfo.isFreeDelivery && deliveryPrice > 0) ||
-        (!cityDeliveryInfo.isFreeDelivery && deliveryPrice === 0) ||
-        subtotal < cityDeliveryInfo.minimumOrder
-      ) {
-        return new Response("Invalid delivery price or subtotal", {
+      if (cityDeliveryInfo.isFreeDelivery && deliveryPrice > 0) {
+        console.error("Delivery should be free for this city:", deliveryPrice);
+        return new Response("Delivery is free for this city", { status: 400 });
+      }
+
+      if (!cityDeliveryInfo.isFreeDelivery && deliveryPrice === 0) {
+        console.error(
+          "Delivery price required for non-free delivery city:",
+          deliveryPrice
+        );
+        return new Response("Delivery is not free for this city", {
           status: 400,
         });
       }
+
+      if (subtotal < cityDeliveryInfo.minimumOrder) {
+        console.error(
+          "Subtotal below minimum order for city:",
+          subtotal,
+          cityDeliveryInfo.minimumOrder
+        );
+        return new Response(
+          `The minimum order for delivery in ${sanitizedAddress.city} is ${cityDeliveryInfo.minimumOrder}`,
+          { status: 400 }
+        );
+      }
+    }
+    let finalTotalPrice;
+    let computedDeliveryPrice;
+    if (orderType === "delivery") {
+      finalTotalPrice = subtotal + deliveryPrice;
+      computedDeliveryPrice = deliveryPrice;
+    } else {
+      finalTotalPrice = subtotal;
+      computedDeliveryPrice = 0;
     }
 
     // Step 4: Calculate final total price and validate cart items
@@ -133,8 +163,8 @@ export async function POST(req) {
       return new Response("Subtotal mismatch", { status: 400 });
     }
 
-    const finalTotalPrice =
-      orderType === "delivery" ? subtotal + deliveryPrice : subtotal;
+    finalTotalPrice =
+      orderType === "delivery" ? subtotal + computedDeliveryPrice : subtotal;
 
     // Step 5: Create the PayPal order
     const request = new paypal.orders.OrdersCreateRequest();
@@ -163,8 +193,9 @@ export async function POST(req) {
       postalCode: sanitizedAddress.postalCode,
       deliveryTime: sanitizedAddress.deliveryTime,
       cartProducts: sanitizedCartProducts,
+      payOnDelivery: false,
       subtotal,
-      deliveryPrice,
+      deliveryPrice: computedDeliveryPrice,
       finalTotalPrice,
       paymentMethod: "paypal",
       orderType,
@@ -172,7 +203,6 @@ export async function POST(req) {
       paid: false,
     });
 
-    
     // Return PayPal order ID and order details
     return Response.json({
       orderId: orderDoc._id,

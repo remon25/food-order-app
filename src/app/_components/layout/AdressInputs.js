@@ -82,7 +82,7 @@ export default function AddressInputs({
           <label>Hausnummer</label>
           <input
             disabled={disabled}
-            type="text"
+            type="number"
             placeholder="Hausnummer"
             value={buildNumber || ""}
             onChange={(ev) => setAddressProp("buildNumber", ev.target.value)}

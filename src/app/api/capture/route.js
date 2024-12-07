@@ -26,7 +26,7 @@ export async function POST(req) {
     request.requestBody({});
     const captureResponse = await client.execute(request);
 
-    // Verify that the payment was successful by checking the status
+    // Verify that the payment was successful
     if (captureResponse.result.status !== "COMPLETED") {
       return new Response("Payment not completed", { status: 400 });
     }
@@ -42,15 +42,94 @@ export async function POST(req) {
     if (orderDoc.paid) {
       return new Response("Order already marked as paid", { status: 400 });
     }
-    // Step 3-b: Verify that the order has not already been marked as paid
+
     if (orderDoc.paymentMethod !== "paypal") {
-      return new Response("not paypal order", { status: 400 });
+      return new Response("Not a PayPal order", { status: 400 });
     }
 
     // Step 4: Mark the order as paid
     await Order.updateOne({ paypalOrderId }, { paid: true });
 
-    // Step 5: Return the success URL
+    // Step 5: Push the order to ExpertOrder API
+    const expertOrderData = {
+      version: 1,
+      broker: "antalya-harsefeld.de",
+      id: orderDoc._id.toString(),
+      ordertime: new Date().toISOString(),
+      deliverytime: new Date().toISOString(),
+      customerinfo: orderDoc.name,
+      orderprice: orderDoc.finalTotalPrice,
+      orderdiscount: 0,
+      notification: orderDoc.orderType === "delivery" ? false : true,
+      deliverycost: orderDoc.deliveryPrice,
+      customer: {
+        phone: orderDoc.phone,
+        email: orderDoc.email,
+        name: orderDoc.name,
+        street:
+          orderDoc.orderType === "delivery"
+            ? `${orderDoc.streetAdress} ${orderDoc.buildNumber}`
+            : "Ing.-Honnef-Str. 13",
+        zip: orderDoc.orderType === "delivery" ? orderDoc.postalCode : "21509",
+        location: orderDoc.orderType === "delivery" ? orderDoc.city : "Glinde",
+      },
+      payment: {
+        type: 3,
+        provider: "PayPal",
+        transactionid: paypalOrderId,
+        prepaid: orderDoc.finalTotalPrice,
+      },
+      items: orderDoc.cartProducts.map((product) => {
+        const items = [];
+
+        if (product.size) {
+          items.push({
+            name: product.size.name,
+            price: product.size.price,
+            count: 1,
+          });
+        }
+
+        if (product.extras && product.extras.length > 0) {
+          product.extras.forEach((extra) => {
+            items.push({
+              name: extra.name,
+              price: extra.price,
+              count: 1,
+            });
+          });
+        }
+
+        return {
+          count: 1,
+          name: product.name,
+          price: product.price,
+          items,
+          type: "FOOD",
+        };
+      }),
+    };
+
+    try {
+      const response = await fetch(process.env.EXPERTORDER_URL, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          API_KEY: process.env.EXPERTORDER_API_KEY,
+        },
+        body: JSON.stringify(expertOrderData),
+      });
+
+      if (!response.ok) {
+        console.error("ExpertOrder API Error:", await response.text());
+      } else {
+        console.log("Order pushed to ExpertOrder successfully");
+      }
+    } catch (err) {
+      console.error("Error while sending data to ExpertOrder:", err);
+    }
+
+    // Step 6: Return success response
     return Response.json({
       successUrl:
         process.env.NEXTAUTH_URL +
