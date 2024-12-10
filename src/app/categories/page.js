@@ -137,9 +137,9 @@ function CategoriesPage() {
           categories.map((category) => (
             <div
               key={category._id}
-              className="w-full flex items-center gap-1 bg-gray-100 rounded-xl py-2 px-4 mt-1 mb-2"
+              className="w-full flex flex-col items-center sm:flex-row    gap-1 bg-gray-100 rounded-xl py-2 px-4 mt-1 mb-2"
             >
-              <div className="grow">{category.name}</div>
+              <div className="grow font-semibold">{category.name}</div>
               <div className="flex gap-1">
                 <button
                   onClick={() => {
