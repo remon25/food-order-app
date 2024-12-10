@@ -123,8 +123,7 @@ export default function Header() {
         >
           <Link href={"/"}>Startseite</Link>
           <Link href={"/menu/pdf/index.html"}>Speisekarte</Link>
-          <Link href={"/#about"}>Über uns</Link>
-          <Link href={"/#contact"}>Kontakt</Link>
+          <Link href={"tel:04164 909 55 22"}>Kontakt</Link>
           <AuthLinks status={status} userName={userName} mobile={true} />
         </div>
       )}
@@ -140,8 +139,7 @@ export default function Header() {
           </Link>
           <Link href={"/"}>Startseite</Link>
           <Link href={"/menu/pdf/index.html"}>Speisekarte</Link>
-          <Link href={"/#about"}>Über uns</Link>
-          <Link href={"/#contact"}>Kontakt</Link>
+          <Link href={"tel:04164 909 55 22"}>Kontakt</Link>
         </nav>
         <nav className="flex items-center gap-4 text-white font-semibold">
           <AuthLinks
