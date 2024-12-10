@@ -33,8 +33,15 @@ export default function Footer() {
           </div>
         </div>
       </div>
-
-      <div className="w-full text-center mt-8">
+      <div className="w-full flex gap-4 justify-center text-[14px]  text-center  mt-8 pb-2">
+        <Link href={"/terms-and-conditions"} className="font-semibold">
+          AGB
+        </Link>
+        <Link href={"/privacy-policy"} className="font-semibold">
+          Datenschutzerklärung
+        </Link>
+      </div>
+      <div className="w-full text-center">
         © Antalya Harsefeld. Alle Rechte vorbehalten.
       </div>
       <div className="w-full text-[15px] italic text-center mt-1 pb-2">

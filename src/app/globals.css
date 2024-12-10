@@ -106,6 +106,17 @@ div.tabs .active {
 .delivery-promo {
   background-color: #ffa184;
 }
+
+.privacy-page h2,
+.terms-and-conditions h2 {
+  @apply font-bold text-2xl my-3;
+}
+.terms-and-conditions strong {
+  @apply font-semibold text-xl my-4;
+}
+.terms-and-conditions p {
+  @apply my-6;
+}
 /* Responsive design */
 @media (max-width: 992px) {
   aside {
