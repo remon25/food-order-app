@@ -18,7 +18,7 @@ export default function Footer() {
             <h4 className="uppercase font-bold">Kontakt</h4>
             <p>Friedrich-Huth-Strasse 15 - 21698 Harsefeld</p>
           </div>
-          <a className="text-nowrap" href="tel:+04164 909 55 22">
+          <a className="text-nowrap" href="tel:04164 909 55 22">
             04164 909 55 22
           </a>
         </div>
