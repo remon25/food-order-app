@@ -25,7 +25,7 @@ function AuthLinks({ status, userName, image, mobile = false }) {
         </Link>
         <button
           onClick={() => signOut()}
-          className="bg-primary rounded-full text-white px-8 py-2"
+          className="bg-primary rounded-full text-white px-4 py-2"
         >
           Abmelden
         </button>
@@ -38,7 +38,7 @@ function AuthLinks({ status, userName, image, mobile = false }) {
         <Link href={"/login"}>Anmelden</Link>
         <Link
           href={"/register"}
-          className="bg-primary rounded-full text-white px-8 py-2"
+          className="bg-primary rounded-full text-white px-4 py-2"
         >
           Registrieren
         </Link>
@@ -123,6 +123,7 @@ export default function Header() {
         >
           <Link href={"/"}>Startseite</Link>
           <Link href={"/menu/pdf/index.html"}>Speisekarte</Link>
+          <Link href={"/menu/burger-lounge/index.html"}>Burger Lounge</Link>
           <Link href={"tel:04164 909 55 22"}>Kontakt</Link>
           <AuthLinks status={status} userName={userName} mobile={true} />
         </div>
@@ -139,6 +140,7 @@ export default function Header() {
           </Link>
           <Link href={"/"}>Startseite</Link>
           <Link href={"/menu/pdf/index.html"}>Speisekarte</Link>
+          <Link href={"/menu/burger-lounge/index.html"}>Burger Lounge</Link>
           <Link href={"tel:04164 909 55 22"}>Kontakt</Link>
         </nav>
         <nav className="flex items-center gap-4 text-white font-semibold">
